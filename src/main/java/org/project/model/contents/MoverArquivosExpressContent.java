@@ -1,95 +1,115 @@
 package org.project.model.contents;
 
+import org.project.functions.MoverArquivosExpress;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
-import javafx.scene.control.Separator;
-import org.project.functions.MoverArquivosExpress;
+import javafx.stage.Stage;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.Priority;
 
 import java.io.File;
 
 public class MoverArquivosExpressContent extends VBox {
 
-    private Label rootPathLabel;
-    private Label destPathLabel;
+    private TextField rootPathField;
+    private TextField destPathField;
     private File rootDirectory;
     private File destDirectory;
 
-    public MoverArquivosExpressContent() {
+    public MoverArquivosExpressContent(Stage primaryStage) {
         // Configura o layout principal
-        this.setSpacing(15);
-        this.setPadding(new Insets(20));
-        this.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5;");
-        this.setAlignment(Pos.CENTER); // Centraliza verticalmente
+        setPadding(new Insets(20));
+        setSpacing(15);
+        getStyleClass().add("mover-arquivos-express-content");
+
+        // VBox pai para centralização vertical
+        VBox parentBox = new VBox();
+        parentBox.setAlignment(Pos.CENTER);
+        VBox.setVgrow(parentBox, Priority.ALWAYS); // Expande verticalmente
 
         // Título
         Label titleLabel = new Label("Mover Arquivos");
         titleLabel.setFont(new Font("Arial", 20));
-        titleLabel.setStyle("-fx-text-fill: #333; -fx-font-weight: bold;");
+        titleLabel.getStyleClass().add("title");
+        VBox.setMargin(titleLabel, new Insets(0, 0, 15, 0)); // Adiciona margem inferior
 
-        // Cria a label para mostrar o caminho da pasta raiz
-        rootPathLabel = new Label("Caminho da pasta raiz: Nenhuma");
-        rootPathLabel.setStyle("-fx-text-fill: #555; -fx-padding: 5;");
+        // Campos de texto
+        rootPathField = new TextField();
+        rootPathField.setPromptText("Selecione a pasta raiz");
+        rootPathField.getStyleClass().add("text-field");
 
-        // Cria a label para mostrar o caminho da pasta de destino
-        destPathLabel = new Label("Caminho da pasta de destino: Nenhuma");
-        destPathLabel.setStyle("-fx-text-fill: #555; -fx-padding: 5;");
+        Button chooseRootButton = new Button("...");
+        chooseRootButton.getStyleClass().add("select-button");
+        chooseRootButton.setOnAction(e -> chooseRootDirectory(primaryStage));
 
-        // Cria o botão para escolher a pasta raiz
-        Button chooseRootButton = new Button("Pasta Raiz");
-        chooseRootButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #007bff; -fx-padding: 8; -fx-border-color: #007bff; -fx-border-radius: 3; -fx-border-width: 1;");
-        chooseRootButton.setMinWidth(150); // Define a largura mínima do botão
-        chooseRootButton.setMaxWidth(150); // Define a largura máxima do botão
-        chooseRootButton.setOnAction(e -> chooseRootDirectory());
+        destPathField = new TextField();
+        destPathField.setPromptText("Selecione a pasta de destino");
+        destPathField.getStyleClass().add("text-field");
 
-        // Cria o botão para escolher a pasta de destino
-        Button chooseDestButton = new Button("Pasta Destino");
-        chooseDestButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #007bff; -fx-padding: 8; -fx-border-color: #007bff; -fx-border-radius: 3; -fx-border-width: 1;");
-        chooseDestButton.setMinWidth(150); // Define a largura mínima do botão
-        chooseDestButton.setMaxWidth(150); // Define a largura máxima do botão
-        chooseDestButton.setOnAction(e -> chooseDestDirectory());
+        Button chooseDestButton = new Button("...");
+        chooseDestButton.getStyleClass().add("select-button");
+        chooseDestButton.setOnAction(e -> chooseDestDirectory(primaryStage));
 
-        // Cria o botão para processar
         Button processButton = new Button("Processar");
-        processButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #28a745; -fx-padding: 8; -fx-border-color: #28a745; -fx-border-radius: 3; -fx-border-width: 1;");
-        processButton.setMinWidth(150); // Define a largura mínima do botão
-        processButton.setMaxWidth(150); // Define a largura máxima do botão
-        processButton.setOnAction(e -> processDirectories());
+        processButton.getStyleClass().add("process-button");
+        processButton.setOnAction(e -> processDirectories(primaryStage));
+        VBox.setMargin(processButton, new Insets(15, 0, 0, 0)); // Adiciona margem superior
 
-        // Adiciona os controles ao layout
-        VBox buttonBox = new VBox(10, chooseRootButton, chooseDestButton, processButton);
-        buttonBox.setAlignment(Pos.CENTER);
+        // Criação de HBoxes para alinhamento dos campos de texto e botões
+        HBox rootBox = new HBox(10, rootPathField, chooseRootButton);
+        rootBox.setAlignment(Pos.CENTER);
+        rootBox.setMaxWidth(600); // Define uma largura máxima para o alinhamento
+        VBox.setMargin(rootBox, new Insets(0, 0, 15, 0)); // Adiciona margem inferior
 
-        // Adiciona os elementos ao VBox principal
-        this.getChildren().addAll(titleLabel, new Separator(), rootPathLabel, destPathLabel, buttonBox);
+        HBox destBox = new HBox(10, destPathField, chooseDestButton);
+        destBox.setAlignment(Pos.CENTER);
+        destBox.setMaxWidth(600); // Define uma largura máxima para o alinhamento
+        VBox.setMargin(destBox, new Insets(0, 0, 15, 0)); // Adiciona margem inferior
+
+        // Adiciona os controles ao layout do VBox pai
+        parentBox.getChildren().addAll(titleLabel, rootBox, destBox, processButton);
+        getChildren().add(parentBox);
     }
 
-    private void chooseRootDirectory() {
+    private void chooseRootDirectory(Stage primaryStage) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        rootDirectory = directoryChooser.showDialog(this.getScene().getWindow());
+        rootDirectory = directoryChooser.showDialog(primaryStage);
         if (rootDirectory != null) {
-            rootPathLabel.setText("Caminho da pasta raiz: " + rootDirectory.getAbsolutePath());
+            rootPathField.setText(rootDirectory.getAbsolutePath());
         }
     }
 
-    private void chooseDestDirectory() {
+    private void chooseDestDirectory(Stage primaryStage) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        destDirectory = directoryChooser.showDialog(this.getScene().getWindow());
+        destDirectory = directoryChooser.showDialog(primaryStage);
         if (destDirectory != null) {
-            destPathLabel.setText("Caminho da pasta de destino: " + destDirectory.getAbsolutePath());
+            destPathField.setText(destDirectory.getAbsolutePath());
         }
     }
 
-    private void processDirectories() {
+    private void processDirectories(Stage primaryStage) {
         if (rootDirectory != null && destDirectory != null) {
             MoverArquivosExpress mover = new MoverArquivosExpress(rootDirectory, destDirectory);
             mover.copiarArquivos(); // Atualize para chamar o método correto
         } else {
-            System.out.println("Pastas inválidas.");
+            showAlert(Alert.AlertType.WARNING, "Atenção", "Por favor, selecione as pastas.", primaryStage);
         }
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message, Stage primaryStage) {
+        Alert alert = new Alert(alertType);
+        alert.initOwner(primaryStage);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

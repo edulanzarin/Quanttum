@@ -148,7 +148,7 @@ public class MainWindow extends Application {
     private void handleMenuItemAction(String item) {
         switch (item) {
             case "Mover Arquivos":
-                showContent(new MoverArquivosExpressContent(), "Mover Arquivos - Express");
+                showContent(new MoverArquivosExpressContent(primaryStage), "Mover Arquivos - Express");
                 break;
             case "Com código conta":
                 showContent(new BancosComCodContent(), "Bancos - Contábil");
