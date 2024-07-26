@@ -55,7 +55,7 @@ public class MainWindow extends Application {
         sidebar.setMinWidth(250);
         sidebar.getStyleClass().add("sidebar");
 
-        TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliações", "Hiperlink");
+        TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliações", "Hyperlink");
         TitledPane fiscalMenu = createMenu("Fiscal", "Teste");
         TitledPane expressMenu = createMenu("Express", "Mover Arquivos");
 
@@ -98,7 +98,7 @@ public class MainWindow extends Application {
     }
 
     private boolean isDropdownItem(String item) {
-        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hiperlink");
+        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink");
     }
 
     private VBox createDropdownMenu(String title) {
@@ -134,7 +134,7 @@ public class MainWindow extends Application {
             case "Bancos": return new String[]{"Com código conta", "Sem código conta"};
             case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas"};
             case "Conciliações": return new String[]{"Gerar Excel"};
-            case "Hiperlink": return new String[]{"DCTF"};
+            case "Hyperlink": return new String[]{"DCTF"};
             default: return new String[]{};
         }
     }
@@ -165,7 +165,7 @@ public class MainWindow extends Application {
                 showContent(new ConciliacoesContabilContent(), "Conciliações - Contábil");
                 break;
             case "DCTF":
-                showContent(new HiperlinkDctfContabilContent(), "Hiperlink - Contábil");
+                showContent(new HyperlinkDctfContabilContent(primaryStage), "Hyperlink - Contábil");
                 break;
             case "Teste":
                 showContent(new TesteFiscalContent(), "Teste - Fiscal");
@@ -187,8 +187,8 @@ public class MainWindow extends Application {
             contentPanel.getChildren().setAll((EmpresasContabilContent) contentInstance);
         } else if (contentInstance instanceof ConciliacoesContabilContent) {
             contentPanel.getChildren().setAll((ConciliacoesContabilContent) contentInstance);
-        } else if (contentInstance instanceof HiperlinkDctfContabilContent) {
-            contentPanel.getChildren().setAll((HiperlinkDctfContabilContent) contentInstance);
+        } else if (contentInstance instanceof HyperlinkDctfContabilContent) {
+            contentPanel.getChildren().setAll((HyperlinkDctfContabilContent) contentInstance);
         } else if (contentInstance instanceof TesteFiscalContent) {
             contentPanel.getChildren().setAll((TesteFiscalContent) contentInstance);
         }
