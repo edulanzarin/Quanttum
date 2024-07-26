@@ -40,14 +40,14 @@ public class MoverArquivosExpressContent extends VBox {
         destPathLabel.setStyle("-fx-text-fill: #555; -fx-padding: 5;");
 
         // Cria o botão para escolher a pasta raiz
-        Button chooseRootButton = new Button("Escolher Pasta Raiz");
+        Button chooseRootButton = new Button("Pasta Raiz");
         chooseRootButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #007bff; -fx-padding: 8; -fx-border-color: #007bff; -fx-border-radius: 3; -fx-border-width: 1;");
         chooseRootButton.setMinWidth(150); // Define a largura mínima do botão
         chooseRootButton.setMaxWidth(150); // Define a largura máxima do botão
         chooseRootButton.setOnAction(e -> chooseRootDirectory());
 
         // Cria o botão para escolher a pasta de destino
-        Button chooseDestButton = new Button("Escolher Pasta de Destino");
+        Button chooseDestButton = new Button("Pasta Destino");
         chooseDestButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #007bff; -fx-padding: 8; -fx-border-color: #007bff; -fx-border-radius: 3; -fx-border-width: 1;");
         chooseDestButton.setMinWidth(150); // Define a largura mínima do botão
         chooseDestButton.setMaxWidth(150); // Define a largura máxima do botão
