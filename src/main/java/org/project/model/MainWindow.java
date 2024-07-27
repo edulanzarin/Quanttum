@@ -28,10 +28,10 @@ public class MainWindow extends Application {
         mainLayout.setLeft(sidebar);
 
         contentPanel = new StackPane();
-        contentPanel.setStyle("-fx-background-color: white;");
+        contentPanel.setStyle("-fx-background-color: #f8f9fa;");
         mainLayout.setCenter(contentPanel);
 
-        mainLayout.setBottom(createFooter()); // Adiciona o rodapé
+        mainLayout.setBottom(createFooter());
 
         Scene scene = new Scene(mainLayout, 800, 600);
 
@@ -91,7 +91,7 @@ public class MainWindow extends Application {
         footer.getStyleClass().add("footer");
 
         Label footerLabel = new Label("© 2024 Quanttum | Versão 1.0");
-        footerLabel.getStyleClass().add("footerLabel");
+        footerLabel.getStyleClass().add("footer-label");
 
         footer.setCenter(footerLabel);
         return footer;
@@ -197,5 +197,9 @@ public class MainWindow extends Application {
 
     private void updateTitle(String title) {
         primaryStage.setTitle(title);
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
