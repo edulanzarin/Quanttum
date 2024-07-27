@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.application.Platform;
 
 /**
  * A classe AuthWindow representa a janela de autenticação do usuário para a aplicação.
@@ -35,7 +34,7 @@ public class AuthWindow extends Application {
         // Cria um layout vertical com espaçamento de 15 pixels entre os elementos
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(30)); // Define o padding do layout
-        layout.setStyle("-fx-background-color: #f1f1f1;"); // Define a cor de fundo do layout
+        layout.getStyleClass().add("auth-container"); // Adiciona a classe de estilo para o container
 
         // Cria um rótulo para o campo de texto
         Label userLabel = new Label("Digite o usuário:");
@@ -52,7 +51,6 @@ public class AuthWindow extends Application {
         // Cria um label para mensagens de erro
         messageLabel = new Label();
         messageLabel.getStyleClass().add("message-label"); // Adiciona uma classe de estilo para o label de mensagem
-        messageLabel.setStyle("-fx-text-fill: red;"); // Define a cor do texto como vermelho
 
         verifyButton.setOnAction(e -> {
             // Define a ação a ser executada quando o botão é clicado

@@ -3,6 +3,9 @@
     -fx-background-color: #f1f1f1;
     -fx-padding: 30px;
     -fx-alignment: center;
+    -fx-spacing: 15px;
+    -fx-pref-width: 350px;
+    -fx-pref-height: 220px;
 }
 
 /* Estilo do rótulo do usuário */
@@ -44,4 +47,9 @@
 
 .verify-button:pressed {
     -fx-background-color: #1e7e34;
+}
+
+/* Estilo da mensagem de erro */
+.message-label {
+    -fx-text-fill: red;
 }

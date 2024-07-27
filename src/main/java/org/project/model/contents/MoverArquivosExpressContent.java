@@ -39,7 +39,7 @@ public class MoverArquivosExpressContent extends VBox {
         Label titleLabel = new Label("Mover Arquivos");
         titleLabel.setFont(new Font("Arial", 20));
         titleLabel.getStyleClass().add("title");
-        VBox.setMargin(titleLabel, new Insets(0, 0, 15, 0)); // Adiciona margem inferior
+        VBox.setMargin(titleLabel, new Insets(0, 0, 50, 0)); // Adiciona margem inferior
 
         // Campos de texto
         rootPathField = new TextField();

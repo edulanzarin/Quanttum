@@ -205,7 +205,7 @@ public class MainWindow extends Application {
      */
     private String[] getDropdownItems(String title) {
         switch (title) {
-            case "Bancos": return new String[]{"Com código conta", "Sem código conta"};
+            case "Bancos": return new String[]{"Processar Extrato"};
             case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas"};
             case "Conciliações": return new String[]{"Gerar Excel"};
             case "Hyperlink": return new String[]{"DCTF"};
@@ -234,11 +234,8 @@ public class MainWindow extends Application {
             case "Mover Arquivos":
                 showContent(new MoverArquivosExpressContent(primaryStage), "Mover Arquivos - Express");
                 break;
-            case "Com código conta":
-                showContent(new BancosComCodContent(), "Bancos - Contábil");
-                break;
-            case "Sem código conta":
-                showContent(new BancosSemCodContent(), "Bancos - Contábil");
+            case "Processar Extrato":
+                showContent(new ProcessarExtratoContabilContent(primaryStage), "Bancos - Contábil");
                 break;
             case "Lojão":
             case "Capital Six":
@@ -269,10 +266,8 @@ public class MainWindow extends Application {
     private void showContent(Object contentInstance, String title) {
         if (contentInstance instanceof MoverArquivosExpressContent) {
             contentPanel.getChildren().setAll((MoverArquivosExpressContent) contentInstance);
-        } else if (contentInstance instanceof BancosComCodContent) {
-            contentPanel.getChildren().setAll((BancosComCodContent) contentInstance);
-        } else if (contentInstance instanceof BancosSemCodContent) {
-            contentPanel.getChildren().setAll((BancosSemCodContent) contentInstance);
+        } else if (contentInstance instanceof ProcessarExtratoContabilContent) {
+            contentPanel.getChildren().setAll((ProcessarExtratoContabilContent) contentInstance);
         } else if (contentInstance instanceof EmpresasContabilContent) {
             contentPanel.getChildren().setAll((EmpresasContabilContent) contentInstance);
         } else if (contentInstance instanceof ConciliacoesContabilContent) {

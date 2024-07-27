@@ -41,7 +41,7 @@ public class HyperlinkDctfContabilContent extends VBox {
         Label titleLabel = new Label("Hyperlink DCTF");
         titleLabel.setFont(new Font("Arial", 20));
         titleLabel.getStyleClass().add("title");
-        VBox.setMargin(titleLabel, new Insets(0, 0, 15, 0)); // Adiciona margem inferior
+        VBox.setMargin(titleLabel, new Insets(0, 0, 50, 0)); // Adiciona margem inferior
 
         // Labels e campos de texto
         filePathField = new TextField();

@@ -71,3 +71,121 @@
     -fx-padding: 10 20;
     -fx-border-radius: 5;
 }
+
+.bancos-com-cod-content {
+    -fx-background-color: #f8f8f8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.bancos-com-cod-content .title {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+.bancos-com-cod-content .text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 10;
+    -fx-pref-width: 400px; /* Define uma largura preferencial para o campo de caminho do arquivo */
+}
+
+.bancos-com-cod-content .code-box .label {
+    -fx-text-fill: #333333; /* Cor do texto */
+    -fx-font-size: 14px; /* Tamanho da fonte */
+}
+
+.bancos-com-cod-content .cod-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 10;
+    -fx-pref-width: 80px; /* Define uma largura preferencial para o campo de código */
+}
+
+.bancos-com-cod-content .select-button {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 10;
+    -fx-min-width: 40px; /* Define uma largura mínima */
+    -fx-text-fill: #007bff; /* Cor do texto */
+}
+
+.bancos-com-cod-content .process-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #28a745;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+}
+
+.bancos-com-cod-content .codigo-combobox {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 6;
+    -fx-pref-width: 250px; /* Define a largura preferencial do ComboBox */
+}
+
+/* BancosComCodContent TableView styles */
+.bancos-com-cod-content .table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-border-width: 1;
+    -fx-padding: 10;
+}
+
+.bancos-com-cod-content .table-view .column {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+}
+
+.bancos-com-cod-content .table-view .column-header {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.bancos-com-cod-content .table-view .cell {
+    -fx-text-fill: #333333;
+    -fx-background-color: #ffffff;
+}
+
+.bancos-com-cod-content .table-view .cell:focused {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+}
+
+/* Estilo para CheckBox */
+.bancos-com-cod-content .comma-checkbox {
+    -fx-text-fill: #333333; /* Cor do texto do CheckBox */
+    -fx-font-size: 14px; /* Tamanho da fonte */
+    -fx-padding: 5; /* Espaçamento interno */
+    -fx-background-color: #f8f8f8; /* Cor de fundo do CheckBox */
+}
+
+.bancos-com-cod-content .comma-checkbox .checkbox {
+    -fx-text-fill: #333333; /* Cor do texto do CheckBox dentro do CheckBox */
+}
+
+.bancos-com-cod-content .comma-checkbox .checkbox .box {
+    -fx-background-color: #ffffff; /* Cor de fundo da caixa do CheckBox */
+    -fx-border-color: #cccccc; /* Cor da borda da caixa do CheckBox */
+    -fx-border-width: 1; /* Largura da borda da caixa do CheckBox */
+    -fx-border-radius: 3; /* Bordas arredondadas da caixa do CheckBox */
+}
+
+.bancos-com-cod-content .comma-checkbox .checkbox:selected {
+    -fx-background-color: #007bff; /* Cor de fundo quando selecionado */
+    -fx-border-color: #007bff; /* Cor da borda quando selecionado */
+}
+
+.bancos-com-cod-content .comma-checkbox .checkbox:selected .box {
+    -fx-background-color: #ffffff; /* Cor de fundo da caixa quando selecionado */
+    -fx-border-color: #007bff; /* Cor da borda da caixa quando selecionado */
+}
+
