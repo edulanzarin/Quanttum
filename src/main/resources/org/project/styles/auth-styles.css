@@ -1,0 +1,47 @@
+/* Estilo do container da janela de verificação */
+.auth-container {
+    -fx-background-color: #f1f1f1;
+    -fx-padding: 30px;
+    -fx-alignment: center;
+}
+
+/* Estilo do rótulo do usuário */
+.user-label {
+    -fx-font-size: 18px;
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+    -fx-padding-bottom: 15px;
+}
+
+/* Estilo do campo de texto do usuário */
+.user-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 8px;
+    -fx-padding: 12px;
+    -fx-font-size: 16px;
+    -fx-text-fill: #495057;
+    -fx-prompt-text-fill: #6c757d;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
+}
+
+/* Estilo do botão de verificação */
+.verify-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-padding: 12px 24px;
+    -fx-border-radius: 8px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
+}
+
+.verify-button:hover {
+    -fx-background-color: #218838;
+}
+
+.verify-button:pressed {
+    -fx-background-color: #1e7e34;
+}

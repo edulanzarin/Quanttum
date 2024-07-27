@@ -12,49 +12,71 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 
+/**
+ * Classe que representa a janela principal da aplicação.
+ * Extende a classe {@link Application} do JavaFX e define a estrutura da interface gráfica.
+ */
 public class MainWindow extends Application {
 
-    private StackPane contentPanel;
-    private Stage primaryStage;
+    private StackPane contentPanel; // Painel que exibe o conteúdo principal
+    private Stage primaryStage; // Janela principal da aplicação
 
+    /**
+     * Inicializa a aplicação e configura a interface gráfica principal.
+     *
+     * @param primaryStage O estágio principal da aplicação.
+     */
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Quanttum");
 
-        BorderPane mainLayout = new BorderPane();
-        VBox sidebar = createSidebar();
+        BorderPane mainLayout = new BorderPane(); // Layout principal da janela
+        VBox sidebar = createSidebar(); // Cria a barra lateral
         mainLayout.setLeft(sidebar);
 
-        contentPanel = new StackPane();
+        contentPanel = new StackPane(); // Painel central para exibir o conteúdo
         contentPanel.setStyle("-fx-background-color: #f8f9fa;");
         mainLayout.setCenter(contentPanel);
 
-        mainLayout.setBottom(createFooter());
+        mainLayout.setBottom(createFooter()); // Adiciona o rodapé
 
-        Scene scene = new Scene(mainLayout, 800, 600);
+        Scene scene = new Scene(mainLayout, 800, 600); // Cria a cena com o layout principal
 
-        String cssFile = getClass().getResource("/org/project/styles/styles.css") != null ?
-                getClass().getResource("/org/project/styles/styles.css").toExternalForm() : null;
+        // Carrega o arquivo de estilos CSS
+        String mainCssFile = getClass().getResource("/org/project/styles/main-styles.css") != null ?
+                getClass().getResource("/org/project/styles/main-styles.css").toExternalForm() : null;
 
-        if (cssFile != null) {
-            scene.getStylesheets().add(cssFile);
+        if (mainCssFile != null) {
+            scene.getStylesheets().add(mainCssFile);
         } else {
-            System.err.println("Arquivo CSS não encontrado!");
+            System.err.println("Arquivo main-styles.css não encontrado!");
         }
 
-        primaryStage.setScene(scene);
-        primaryStage.setMaximized(true);
-        primaryStage.show();
+        primaryStage.setScene(scene); // Define a cena para o estágio principal
+        primaryStage.setMaximized(true); // Maximiza a janela
+        primaryStage.show(); // Exibe a janela
     }
 
+    /**
+     * Cria a barra lateral da interface.
+     *
+     * @return O componente VBox que representa a barra lateral.
+     */
     private VBox createSidebar() {
         VBox sidebar = new VBox();
         sidebar.setPadding(new Insets(10));
         sidebar.setMinWidth(250);
         sidebar.getStyleClass().add("sidebar");
 
+        HBox header = createSidebarHeader(); // Cria o cabeçalho da barra lateral
+        sidebar.getChildren().add(header);
+
+        // Cria os menus da barra lateral
         TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliações", "Hyperlink");
         TitledPane fiscalMenu = createMenu("Fiscal", "Teste");
         TitledPane expressMenu = createMenu("Express", "Mover Arquivos");
@@ -63,6 +85,34 @@ public class MainWindow extends Application {
         return sidebar;
     }
 
+    /**
+     * Cria o cabeçalho da barra lateral.
+     *
+     * @return O componente HBox que representa o cabeçalho da barra lateral.
+     */
+    private HBox createSidebarHeader() {
+        HBox header = new HBox();
+        header.setSpacing(10);
+        header.setPadding(new Insets(10));
+        header.getStyleClass().add("sidebar-header");
+
+        // Carrega o ícone da barra lateral
+        Image icon = new Image(getClass().getResourceAsStream("/org/project/images/icon.png"));
+        ImageView iconView = new ImageView(icon);
+        iconView.setFitWidth(64);
+        iconView.setFitHeight(64);
+
+        header.getChildren().addAll(iconView);
+        return header;
+    }
+
+    /**
+     * Cria um menu com um título e itens.
+     *
+     * @param menuTitle O título do menu.
+     * @param items Os itens do menu.
+     * @return O componente TitledPane que representa o menu.
+     */
     private TitledPane createMenu(String menuTitle, String... items) {
         VBox content = new VBox();
         content.setSpacing(5);
@@ -82,9 +132,15 @@ public class MainWindow extends Application {
         TitledPane titledPane = new TitledPane(menuTitle, content);
         titledPane.setExpanded(false);
         titledPane.getStyleClass().add("titled-pane");
+
         return titledPane;
     }
 
+    /**
+     * Cria o rodapé da interface.
+     *
+     * @return O componente BorderPane que representa o rodapé.
+     */
     private BorderPane createFooter() {
         BorderPane footer = new BorderPane();
         footer.setPadding(new Insets(10));
@@ -97,10 +153,22 @@ public class MainWindow extends Application {
         return footer;
     }
 
+    /**
+     * Verifica se o item é um item de dropdown.
+     *
+     * @param item O nome do item.
+     * @return True se o item for um item de dropdown, false caso contrário.
+     */
     private boolean isDropdownItem(String item) {
         return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink");
     }
 
+    /**
+     * Cria um menu de dropdown para um título específico.
+     *
+     * @param title O título do menu de dropdown.
+     * @return O componente VBox que representa o menu de dropdown.
+     */
     private VBox createDropdownMenu(String title) {
         VBox dropdown = new VBox();
         dropdown.getStyleClass().add("dropdown");
@@ -129,6 +197,12 @@ public class MainWindow extends Application {
         return dropdown;
     }
 
+    /**
+     * Obtém os itens de dropdown para um título específico.
+     *
+     * @param title O título do menu de dropdown.
+     * @return Os itens de dropdown associados ao título.
+     */
     private String[] getDropdownItems(String title) {
         switch (title) {
             case "Bancos": return new String[]{"Com código conta", "Sem código conta"};
@@ -139,12 +213,22 @@ public class MainWindow extends Application {
         }
     }
 
+    /**
+     * Alterna a visibilidade do conteúdo do dropdown.
+     *
+     * @param dropdownContent O conteúdo do dropdown.
+     */
     private void toggleDropdown(VBox dropdownContent) {
         boolean isVisible = dropdownContent.isVisible();
         dropdownContent.setVisible(!isVisible);
         dropdownContent.setManaged(!isVisible);
     }
 
+    /**
+     * Manipula a ação dos itens do menu.
+     *
+     * @param item O nome do item do menu.
+     */
     private void handleMenuItemAction(String item) {
         switch (item) {
             case "Mover Arquivos":
@@ -171,11 +255,17 @@ public class MainWindow extends Application {
                 showContent(new TesteFiscalContent(), "Teste - Fiscal");
                 break;
             default:
-                // Handle other menu items if necessary
+                // Gerenciar outros itens do menu, se necessário
                 break;
         }
     }
 
+    /**
+     * Exibe o conteúdo associado ao item do menu.
+     *
+     * @param contentInstance Instância do conteúdo a ser exibido.
+     * @param title O título da janela principal.
+     */
     private void showContent(Object contentInstance, String title) {
         if (contentInstance instanceof MoverArquivosExpressContent) {
             contentPanel.getChildren().setAll((MoverArquivosExpressContent) contentInstance);
@@ -192,14 +282,33 @@ public class MainWindow extends Application {
         } else if (contentInstance instanceof TesteFiscalContent) {
             contentPanel.getChildren().setAll((TesteFiscalContent) contentInstance);
         }
+        applyContentStyles();
         updateTitle(title);
     }
 
-    private void updateTitle(String title) {
-        primaryStage.setTitle(title);
+    /**
+     * Aplica os estilos CSS ao painel de conteúdo.
+     */
+    private void applyContentStyles() {
+        String contentCssFile = getClass().getResource("/org/project/styles/content-styles.css") != null ?
+                getClass().getResource("/org/project/styles/content-styles.css").toExternalForm() : null;
+
+        if (contentCssFile != null) {
+            if (!contentPanel.getStylesheets().contains(contentCssFile)) {
+                contentPanel.getStylesheets().clear(); // Limpa os estilos anteriores do conteúdo
+                contentPanel.getStylesheets().add(contentCssFile);
+            }
+        } else {
+            System.err.println("Arquivo content-styles.css não encontrado!");
+        }
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    /**
+     * Atualiza o título da janela principal.
+     *
+     * @param title O novo título a ser definido.
+     */
+    private void updateTitle(String title) {
+        primaryStage.setTitle(title);
     }
 }

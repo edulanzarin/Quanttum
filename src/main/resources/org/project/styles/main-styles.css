@@ -1,0 +1,101 @@
+/* Estilo para a barra lateral */
+.sidebar {
+  -fx-background-color: #1f2937; /* Define a cor de fundo da barra lateral */
+  -fx-border-width: 0; /* Remove a borda da barra lateral */
+  -fx-padding: 10px 10px; /* Define o espaçamento interno da barra lateral */
+  -fx-spacing: 10; /* Define o espaçamento entre os itens na barra lateral */
+  -fx-min-width: 250px; /* Define a largura mínima da barra lateral */
+  -fx-font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Define a fonte padrão */
+}
+
+/* Estilo do cabeçalho da barra lateral */
+.sidebar-header {
+  -fx-background-color: #1f2937; /* Define a cor de fundo do cabeçalho da barra lateral */
+  -fx-alignment: center; /* Centraliza horizontalmente o conteúdo do cabeçalho */
+  -fx-padding: 20px 0 50px 0; /* Define o espaçamento interno do cabeçalho */
+}
+
+.sidebar-header .image-view {
+  -fx-padding: 0 10px 0 0; /* Define o espaçamento ao redor da imagem no cabeçalho */
+}
+
+/* Estilo para o TitledPane (menu) */
+.titled-pane {
+  -fx-background-color: transparent; /* Define o fundo transparente para o TitledPane */
+  -fx-border-width: 0; /* Remove a borda do TitledPane */
+  -fx-content-display: text-only; /* Exibe apenas o texto no TitledPane */
+  -fx-text-fill: #d1d5db; /* Define a cor do texto do TitledPane */
+}
+
+/* Estilo para o título do TitledPane */
+.titled-pane > .title {
+  -fx-background-color: #4b5563; /* Define a cor de fundo do título do TitledPane */
+  -fx-text-fill: #f9fafb; /* Define a cor do texto do título */
+  -fx-font-size: 16px; /* Define o tamanho da fonte do título */
+  -fx-padding: 10px 15px; /* Define o preenchimento interno do título */
+  -fx-font-weight: bold; /* Define a fonte em negrito para o título */
+}
+
+.titled-pane > .graphic {
+  -fx-graphic: null; /* Remove o gráfico, que inclui a seta padrão do TitledPane */
+}
+
+/* Estilo para o conteúdo do TitledPane */
+.titled-pane > .content {
+  -fx-background-color: #374151; /* Define a cor de fundo do conteúdo do TitledPane */
+  -fx-padding: 0; /* Remove o preenchimento interno do conteúdo */
+}
+
+/* Estilo para o dropdown */
+.dropdown {
+  -fx-background-color: #1f2937; /* Define a cor de fundo do dropdown */
+  -fx-padding: 0; /* Remove o preenchimento interno do dropdown */
+  -fx-spacing: 5; /* Define o espaçamento entre os itens do dropdown */
+}
+
+/* Estilo para o conteúdo do dropdown */
+.dropdown-content {
+  -fx-background-color: #374151; /* Define a cor de fundo do conteúdo do dropdown */
+  -fx-padding: 0; /* Remove o preenchimento interno do conteúdo do dropdown */
+  -fx-border-width: 2px 2px 2px 2px; /* Define a largura da borda do dropdown */
+  -fx-border-color: #1f2937; /* Define a cor da borda do dropdown */
+  -fx-border-radius: 0 0 5px 5px; /* Define o arredondamento das bordas do dropdown */
+}
+
+/* Estilo para os itens do menu */
+.menu-item {
+  -fx-background-color: #374151; /* Define a cor de fundo dos itens do menu */
+  -fx-text-fill: #f9fafb; /* Define a cor do texto dos itens do menu */
+  -fx-font-size: 14px; /* Define o tamanho da fonte dos itens do menu */
+  -fx-padding: 10px 15px; /* Define o preenchimento interno dos itens do menu */
+  -fx-border-width: 0; /* Remove a borda dos itens do menu */
+  -fx-font-weight: bold; /* Define a fonte em negrito para os itens do menu */
+}
+
+/* Estilo para os itens do menu ao passar o mouse */
+.menu-item:hover {
+  -fx-background-color: #10b981; /* Define a cor de fundo dos itens do menu ao passar o mouse */
+  -fx-text-fill: #f9fafb; /* Define a cor do texto dos itens do menu ao passar o mouse */
+}
+
+/* Estilo comum para todos os conteúdos */
+.content-background {
+  -fx-background-color: #f8f8f8; /* Define a cor de fundo do conteúdo */
+  -fx-border-color: #e0e0e0; /* Define a cor da borda do conteúdo */
+  -fx-border-radius: 5; /* Define o arredondamento das bordas do conteúdo */
+  -fx-background-radius: 5; /* Define o arredondamento do fundo do conteúdo */
+  -fx-padding: 10; /* Define o preenchimento interno do conteúdo */
+}
+
+/* Estilo para o rodapé */
+.footer {
+  -fx-background-color: #1f2937; /* Define a cor de fundo do rodapé */
+  -fx-padding: 10px; /* Define o preenchimento interno do rodapé */
+  -fx-alignment: center; /* Alinha o conteúdo ao centro do rodapé */
+}
+
+.footer-label {
+  -fx-text-fill: #f9fafb; /* Define a cor do texto do rodapé */
+  -fx-font-size: 12px; /* Define o tamanho da fonte do texto do rodapé */
+  -fx-font-weight: bold; /* Define a fonte em negrito para o texto do rodapé */
+}
