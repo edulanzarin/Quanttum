@@ -25,8 +25,11 @@ public class HyperlinkDctfContabilContent extends VBox {
     private TextField folderPathField;
     private File selectedFile;
     private File selectedFolder;
+    private String userId;
 
-    public HyperlinkDctfContabilContent(Stage primaryStage) {
+    public HyperlinkDctfContabilContent(Stage primaryStage, String userId) {
+        this.userId = userId;
+
         // Configura o layout principal
         setPadding(new Insets(20));
         setSpacing(15);
@@ -45,7 +48,7 @@ public class HyperlinkDctfContabilContent extends VBox {
 
         // Labels e campos de texto
         filePathField = new TextField();
-        filePathField.setPromptText("Selecione a planilha Excel");
+        filePathField.setPromptText("Selecione a planilha Excel ou ODS");
         filePathField.getStyleClass().add("text-field");
 
         Button selectFileButton = new Button("...");
@@ -83,7 +86,7 @@ public class HyperlinkDctfContabilContent extends VBox {
 
     private void selectFile(Stage primaryStage) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos Excel", "*.xlsx", "*.xls"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos de Planilha", "*.xlsx", "*.xls", "*.ods"));
         selectedFile = fileChooser.showOpenDialog(primaryStage);
         if (selectedFile != null) {
             filePathField.setText(selectedFile.getAbsolutePath());
@@ -105,7 +108,7 @@ public class HyperlinkDctfContabilContent extends VBox {
         }
 
         // Use the constructor with both file and folder
-        HyperlinkDctfContabil processor = new HyperlinkDctfContabil(selectedFile, selectedFolder);
+        HyperlinkDctfContabil processor = new HyperlinkDctfContabil(selectedFile, selectedFolder, userId);
         processor.processFiles(primaryStage);
     }
 

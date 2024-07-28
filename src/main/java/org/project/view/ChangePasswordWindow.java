@@ -40,7 +40,7 @@ public class ChangePasswordWindow extends Application {
 
         passwordContainer.getChildren().addAll(newPasswordLabel, newPasswordField, changePasswordButton, messageLabel);
 
-        Scene scene = new Scene(passwordContainer, 350, 220);
+        Scene scene = new Scene(passwordContainer, 350, 250);
         String authCssFile = getClass().getResource("/org/project/styles/auth-styles.css").toExternalForm();
         scene.getStylesheets().add(authCssFile);
 
@@ -49,8 +49,6 @@ public class ChangePasswordWindow extends Application {
     }
 
     private void handleChangePassword(String newPassword) {
-        System.out.println("User ID: " + userId);
-
         ChangePassword changePassword = new ChangePassword();
         boolean isPasswordUpdated = changePassword.updatePassword(userId, newPassword);
 

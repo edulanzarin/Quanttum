@@ -1,6 +1,7 @@
 package org.project.view.contents;
 
 import org.project.functions.MoverArquivosExpress;
+import org.project.functions.GetUsername;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,8 +24,11 @@ public class MoverArquivosExpressContent extends VBox {
     private TextField destPathField;
     private File rootDirectory;
     private File destDirectory;
+    private String userId; // Adiciona o campo userId
 
-    public MoverArquivosExpressContent(Stage primaryStage) {
+    public MoverArquivosExpressContent(Stage primaryStage, String userId) {
+        this.userId = userId; // Inicializa o campo userId
+
         // Configura o layout principal
         setPadding(new Insets(20));
         setSpacing(15);
@@ -98,7 +102,8 @@ public class MoverArquivosExpressContent extends VBox {
     private void processDirectories(Stage primaryStage) {
         if (rootDirectory != null && destDirectory != null) {
             MoverArquivosExpress mover = new MoverArquivosExpress(rootDirectory, destDirectory);
-            mover.copiarArquivos(); // Atualize para chamar o método correto
+            String username = GetUsername.getUsernameById(userId); // Obtém o nome de usuário pelo userId
+            mover.copiarArquivos(username); // Atualize para passar o nome de usuário
         } else {
             showAlert(Alert.AlertType.WARNING, "Atenção", "Por favor, selecione as pastas.", primaryStage);
         }
@@ -113,3 +118,4 @@ public class MoverArquivosExpressContent extends VBox {
         alert.showAndWait();
     }
 }
+

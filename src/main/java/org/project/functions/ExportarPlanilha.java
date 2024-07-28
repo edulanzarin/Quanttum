@@ -1,15 +1,17 @@
 package org.project.functions;
 
 import org.project.view.contents.ProcessarExtratoContabilContent.Transaction;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
-public class ExportarExtrato {
+public class ExportarPlanilha {
 
-    public static void exportToCSV(File file, List<Transaction> transactions) throws IOException {
+    public static void exportExtrato(File file, List<Transaction> transactions, String userId) throws IOException, GeneralSecurityException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             // Cabeçalho
             writer.write("Data;Descrição;Valor;Débito;Crédito");
@@ -31,6 +33,11 @@ public class ExportarExtrato {
                         credit);
                 writer.newLine();
             }
+
+            // Registrar log da ação de exportação da planilha
+            RegistrarLog registrarLog = new RegistrarLog();
+            String username = GetUsername.getUsernameById(userId);
+            registrarLog.logAction(username, "export-planilha");
         }
     }
 }

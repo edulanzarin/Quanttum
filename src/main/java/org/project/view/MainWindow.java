@@ -43,7 +43,8 @@ public class MainWindow extends Application {
         contentPanel.setStyle("-fx-background-color: #f8f9fa;");
         mainLayout.setCenter(contentPanel);
 
-        mainLayout.setBottom(createFooter()); // Adiciona o rodapé
+        // Define o conteúdo inicial
+        showContent(new MainContent(), "Main Content");
 
         Scene scene = new Scene(mainLayout, 800, 600); // Cria a cena com o layout principal
 
@@ -65,20 +66,20 @@ public class MainWindow extends Application {
         sidebar.setMinWidth(250);
         sidebar.getStyleClass().add("sidebar");
 
+        BorderPane footer = createFooter(); // Cria o rodapé
+        sidebar.getChildren().add(footer);
+
         HBox header = createSidebarHeader(); // Cria o cabeçalho da barra lateral
         sidebar.getChildren().add(header);
 
         // Cria os menus da barra lateral
         TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliações", "Hyperlink");
-        TitledPane fiscalMenu = createMenu("Fiscal", "Teste");
-        TitledPane expressMenu = createMenu("Express", "RH");
+        TitledPane fiscalMenu = createMenu("Fiscal", "Processar XML");
+        TitledPane expressMenu = createMenu("Express", "Fiscal", "RH");
 
         sidebar.getChildren().addAll(contabilMenu, fiscalMenu, expressMenu);
 
-        // Espaço vazio para empurrar o botão para baixo
-        VBox.setVgrow(sidebar, Priority.ALWAYS);
-
-        // Adiciona um espaço flexível para empurrar o botão para o final
+        // Espaço vazio para empurrar os menus e botões para cima
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
         sidebar.getChildren().add(spacer);
@@ -146,7 +147,7 @@ public class MainWindow extends Application {
     }
 
     private boolean isDropdownItem(String item) {
-        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink") || item.equals("RH");
+        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML");
     }
 
     private VBox createDropdownMenu(String title) {
@@ -183,7 +184,9 @@ public class MainWindow extends Application {
             case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas"};
             case "Conciliações": return new String[]{"Gerar Excel"};
             case "Hyperlink": return new String[]{"DCTF"};
+            case "Fiscal": return new String[]{"Renomear DAS"};
             case "RH": return new String[]{"Mover Arquivos"};
+            case "Processar XML": return new String[]{"Gerar Planilha"};
             default: return new String[]{};
         }
     }
@@ -197,10 +200,10 @@ public class MainWindow extends Application {
     private void handleMenuItemAction(String item) {
         switch (item) {
             case "Mover Arquivos":
-                showContent(new MoverArquivosExpressContent(primaryStage), "Mover Arquivos - Express");
+                showContent(new MoverArquivosExpressContent(primaryStage, userId), "Mover Arquivos - Express");
                 break;
             case "Processar Extrato":
-                showContent(new ProcessarExtratoContabilContent(primaryStage), "Bancos - Contábil");
+                showContent(new ProcessarExtratoContabilContent(primaryStage, userId), "Bancos - Contábil");
                 break;
             case "Lojão":
             case "Capital Six":
@@ -211,11 +214,13 @@ public class MainWindow extends Application {
                 showContent(new ConciliacoesContabilContent(), "Conciliações - Contábil");
                 break;
             case "DCTF":
-                showContent(new HyperlinkDctfContabilContent(primaryStage), "Hyperlink - Contábil");
+                showContent(new HyperlinkDctfContabilContent(primaryStage, userId), "Hyperlink - Contábil");
                 break;
-            case "Teste":
-                showContent(new TesteFiscalContent(), "Teste - Fiscal");
+            case "Gerar Planilha":
+                showContent(new ProcessarXmlFiscalContent(primaryStage, userId), "Gerar Planilha - Fiscal");
                 break;
+            case "Renomear DAS":
+                showContent(new RenomearGuiasExpressContent(primaryStage, userId), "Nome DAS - Express");
             default:
                 // Gerenciar outros itens do menu, se necessário
                 break;
@@ -223,7 +228,9 @@ public class MainWindow extends Application {
     }
 
     private void showContent(Object contentInstance, String title) {
-        if (contentInstance instanceof MoverArquivosExpressContent) {
+        if (contentInstance instanceof MainContent) {
+            contentPanel.getChildren().setAll((MainContent) contentInstance);
+        } else if (contentInstance instanceof MoverArquivosExpressContent) {
             contentPanel.getChildren().setAll((MoverArquivosExpressContent) contentInstance);
         } else if (contentInstance instanceof ProcessarExtratoContabilContent) {
             contentPanel.getChildren().setAll((ProcessarExtratoContabilContent) contentInstance);
@@ -233,8 +240,10 @@ public class MainWindow extends Application {
             contentPanel.getChildren().setAll((ConciliacoesContabilContent) contentInstance);
         } else if (contentInstance instanceof HyperlinkDctfContabilContent) {
             contentPanel.getChildren().setAll((HyperlinkDctfContabilContent) contentInstance);
-        } else if (contentInstance instanceof TesteFiscalContent) {
-            contentPanel.getChildren().setAll((TesteFiscalContent) contentInstance);
+        } else if (contentInstance instanceof ProcessarXmlFiscalContent) {
+            contentPanel.getChildren().setAll((ProcessarXmlFiscalContent) contentInstance);
+        } else if (contentInstance instanceof RenomearGuiasExpressContent) {
+            contentPanel.getChildren().setAll((RenomearGuiasExpressContent) contentInstance);
         }
         applyContentStyles();
         primaryStage.setTitle("Quanttum - " + title);

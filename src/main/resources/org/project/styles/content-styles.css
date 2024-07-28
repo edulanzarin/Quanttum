@@ -197,3 +197,155 @@
     -fx-padding: 10 20;
     -fx-border-radius: 5;
 }
+
+/* ProcessarXmlFiscalContent styles */
+.processar-xml-fiscal-content {
+    -fx-background-color: #f8f8f8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.processar-xml-fiscal-content .title {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+.processar-xml-fiscal-content .text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 10;
+    -fx-pref-width: 400px; /* Define uma largura preferencial */
+}
+
+.processar-xml-fiscal-content .select-button {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 10;
+    -fx-min-width: 40px; /* Define uma largura mínima */
+    -fx-text-fill: #007bff; /* Cor do texto */
+}
+
+.processar-xml-fiscal-content .process-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #28a745;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+}
+
+/* NomeDASFiscalContent styles */
+.nome-das-fiscal-content {
+    -fx-background-color: #f8f8f8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.nome-das-fiscal-content .title {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+.nome-das-fiscal-content .text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 10;
+    -fx-pref-width: 400px; /* Define uma largura preferencial */
+}
+
+.nome-das-fiscal-content .select-button {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 10;
+    -fx-min-width: 40px; /* Define uma largura mínima */
+    -fx-text-fill: #007bff; /* Cor do texto */
+}
+
+.nome-das-fiscal-content .process-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #28a745;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+}
+
+/* MainContent styles */
+.main-content {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-alignment: center;
+    -fx-spacing: 20;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.main-content .welcome-title {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+    -fx-text-alignment: center;
+}
+
+.readme-button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+}
+
+.readme-content {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-button {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+}
+
+.readme-content .close-button:hover {
+    -fx-background-color: #c82333;
+}
+
+.readme-content .scroll-pane {
+    -fx-background-color: #f8f8f8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.search-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+    -fx-prompt-text-fill: #999999;
+}
+
+.search-field:focused {
+    -fx-border-color: #007bff;
+}
+
+.search-nav-button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+
+.search-nav-button:hover {
+    -fx-background-color: #0056b3;
+}
+

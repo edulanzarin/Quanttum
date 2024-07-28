@@ -1,7 +1,7 @@
 package org.project.view.contents;
 
 import org.project.bancos.*;
-import org.project.functions.ExportarExtrato;
+import org.project.functions.ExportarPlanilha;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -13,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert;
 import java.io.File;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 public class ProcessarExtratoContabilContent extends VBox {
@@ -23,8 +24,11 @@ public class ProcessarExtratoContabilContent extends VBox {
     private File selectedFile;
     private TableView<Transaction> tableView;
     private CheckBox useCommaCheckBox;
+    private final String userId;
 
-    public ProcessarExtratoContabilContent(Stage primaryStage) {
+    public ProcessarExtratoContabilContent(Stage primaryStage, String userId) {
+        this.userId = userId;
+
         // Configura o layout principal
         setPadding(new Insets(20));
         setSpacing(15);
@@ -188,9 +192,9 @@ public class ProcessarExtratoContabilContent extends VBox {
             }
 
             try {
-                ExportarExtrato.exportToCSV(file, tableView.getItems());
+                ExportarPlanilha.exportExtrato(file, tableView.getItems(), userId);
                 showAlert(Alert.AlertType.INFORMATION, "Sucesso", "Arquivo CSV exportado com sucesso.");
-            } catch (IOException e) {
+            } catch (IOException | GeneralSecurityException e) {
                 showAlert(Alert.AlertType.ERROR, "Erro", "Erro ao exportar o arquivo CSV: " + e.getMessage());
             }
         }

@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class FazerLogin {
 
-    private static final String SHEET_URL = "https://sheets.googleapis.com/v4/spreadsheets/1G39rq0NGIMJ4LFHQ7-3unHAD39C_aZGAIZx1L3d7cD8/values/Sheet1?key=AIzaSyACkvpC78bwzQgV7bGC6auf_eR0TjHWhrY";
+    private static final String SHEET_URL = "https://sheets.googleapis.com/v4/spreadsheets/1G39rq0NGIMJ4LFHQ7-3unHAD39C_aZGAIZx1L3d7cD8/values/usuarios?key=AIzaSyACkvpC78bwzQgV7bGC6auf_eR0TjHWhrY";
 
     public String isUserActive(String user, String password) {
         try {

@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.project.functions.FazerLogin;
+import org.project.functions.RegistrarLog;
 
 public class LoginWindow extends Application {
 
@@ -62,6 +63,9 @@ public class LoginWindow extends Application {
         String userId = auth.isUserActive(user, password);
 
         if (userId != null) {
+            RegistrarLog logger = new RegistrarLog();
+            logger.logAction(user, "login");
+
             MainWindow mainWindow = new MainWindow(userId);
             try {
                 mainWindow.start(new Stage());
@@ -72,9 +76,5 @@ public class LoginWindow extends Application {
         } else {
             messageLabel.setText("Usuário ou senha inválidos, ou usuário inativo.");
         }
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

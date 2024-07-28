@@ -21,10 +21,12 @@ public class HyperlinkDctfContabil {
 
     private File excelFile;
     private File folder;
+    private String userId;
 
-    public HyperlinkDctfContabil(File excelFile, File folder) {
+    public HyperlinkDctfContabil(File excelFile, File folder, String userId) {
         this.excelFile = excelFile;
         this.folder = folder;
+        this.userId = userId;
     }
 
     public void processFiles(Stage primaryStage) {
@@ -44,6 +46,10 @@ public class HyperlinkDctfContabil {
                 workbook.write(fos);
                 System.out.println("Workbook salvo com sucesso."); // Debug output
             }
+
+            // Log the action
+            logAction("hyperlink-dctf");
+
             showAlert(primaryStage, Alert.AlertType.INFORMATION, "Concluído", "Processamento concluído.");
 
         } catch (IOException e) {
@@ -152,6 +158,11 @@ public class HyperlinkDctfContabil {
             default:
                 return "";
         }
+    }
+
+    private void logAction(String action) {
+        // Log the action with userId
+        System.out.println("User ID: " + userId + ", Action: " + action);
     }
 
     private void showAlert(Stage primaryStage, Alert.AlertType alertType, String title, String message) {
