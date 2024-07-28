@@ -1,7 +1,7 @@
-package org.project.model.contents;
+package org.project.view.contents;
 
 import org.project.bancos.*;
-
+import org.project.functions.ExportarExtrato;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -68,6 +68,11 @@ public class ProcessarExtratoContabilContent extends VBox {
         processButton.setOnAction(e -> processFile(primaryStage));
         VBox.setMargin(processButton, new Insets(15, 0, 50, 0));
 
+        Button exportButton = new Button("Exportar");
+        exportButton.getStyleClass().add("export-button");
+        exportButton.setOnAction(e -> exportTableData(primaryStage));
+        VBox.setMargin(exportButton, new Insets(15, 0, 50, 0));
+
         // Adiciona o CheckBox para selecionar o uso de vírgulas
         useCommaCheckBox = new CheckBox("Remover vírgulas");
         useCommaCheckBox.getStyleClass().add("comma-checkbox");
@@ -91,8 +96,8 @@ public class ProcessarExtratoContabilContent extends VBox {
 
         // Configuração da tabela
         tableView = new TableView<>();
-        tableView.setPrefWidth(802.1);
-        tableView.setMaxWidth(802.1);
+        tableView.setPrefWidth(792);
+        tableView.setMaxWidth(792);
 
         TableColumn<Transaction, String> dateColumn = new TableColumn<>("Data");
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -117,7 +122,11 @@ public class ProcessarExtratoContabilContent extends VBox {
         tableView.getColumns().addAll(dateColumn, descriptionColumn, valueColumn, debitColumn, creditColumn);
 
         // Adiciona os controles ao layout do VBox pai
-        parentBox.getChildren().addAll(titleLabel, codeBox, fileBox, checkBoxBox, processButton, tableView);
+        HBox buttonBox = new HBox(10, processButton, exportButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        VBox.setMargin(buttonBox, new Insets(15, 0, 50, 0));
+
+        parentBox.getChildren().addAll(titleLabel, codeBox, fileBox, checkBoxBox, buttonBox, tableView);
         getChildren().add(parentBox);
     }
 
@@ -158,6 +167,32 @@ public class ProcessarExtratoContabilContent extends VBox {
             }
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "Erro", "Erro ao processar o arquivo PDF: " + e.getMessage());
+        }
+    }
+
+    private void exportTableData(Stage primaryStage) {
+        if (tableView.getItems().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Atenção", "Não há dados para exportar.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Salvar Arquivo CSV");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        File file = fileChooser.showSaveDialog(primaryStage);
+
+        if (file != null) {
+            String filePath = file.getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".csv")) {
+                file = new File(filePath + ".csv");
+            }
+
+            try {
+                ExportarExtrato.exportToCSV(file, tableView.getItems());
+                showAlert(Alert.AlertType.INFORMATION, "Sucesso", "Arquivo CSV exportado com sucesso.");
+            } catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, "Erro", "Erro ao exportar o arquivo CSV: " + e.getMessage());
+            }
         }
     }
 

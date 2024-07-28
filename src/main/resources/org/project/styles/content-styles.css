@@ -189,3 +189,11 @@
     -fx-border-color: #007bff; /* Cor da borda da caixa quando selecionado */
 }
 
+/* Estilo para o botão de exportação */
+.bancos-com-cod-content .export-button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #007bff;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+}

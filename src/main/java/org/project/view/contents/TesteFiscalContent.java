@@ -1,4 +1,4 @@
-package org.project.model.contents;
+package org.project.view.contents;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;

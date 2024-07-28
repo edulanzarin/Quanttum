@@ -78,6 +78,21 @@
   -fx-text-fill: #f9fafb; /* Define a cor do texto dos itens do menu ao passar o mouse */
 }
 
+.change-button {
+  -fx-background-color: #374151;
+  -fx-text-fill: #f9fafb;
+  -fx-font-size: 14px;
+  -fx-padding: 10px 15px;
+  -fx-border-width: 0;
+  -fx-font-weight: bold;
+  -fx-alignment: BOTTOM_CENTER;
+}
+
+.change-button:hover {
+  -fx-background-color: #10b981;
+  -fx-text-fill: #f9fafb;
+}
+
 /* Estilo comum para todos os conteúdos */
 .content-background {
   -fx-background-color: #f8f8f8; /* Define a cor de fundo do conteúdo */

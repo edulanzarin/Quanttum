@@ -1,4 +1,4 @@
-package org.project.model.contents;
+package org.project.view.contents;
 
 import org.project.functions.MoverArquivosExpress;
 
