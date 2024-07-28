@@ -182,7 +182,7 @@ public class MainWindow extends Application {
         switch (title) {
             case "Bancos": return new String[]{"Processar Extrato"};
             case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas"};
-            case "Conciliações": return new String[]{"Gerar Excel"};
+            case "Conciliações": return new String[]{"Conciliar Pagos"};
             case "Hyperlink": return new String[]{"DCTF"};
             case "Fiscal": return new String[]{"Renomear DAS"};
             case "RH": return new String[]{"Mover Arquivos"};
@@ -207,11 +207,10 @@ public class MainWindow extends Application {
                 break;
             case "Lojão":
             case "Capital Six":
-            case "Qualitplacas":
                 showContent(new EmpresasContabilContent(), "Empresas - Contábil");
                 break;
-            case "Gerar Excel":
-                showContent(new ConciliacoesContabilContent(), "Conciliações - Contábil");
+            case "Conciliar Pagos":
+                showContent(new ConciliarPagosContabilContent(primaryStage), "Conciliações - Contábil");
                 break;
             case "DCTF":
                 showContent(new HyperlinkDctfContabilContent(primaryStage, userId), "Hyperlink - Contábil");
@@ -221,6 +220,8 @@ public class MainWindow extends Application {
                 break;
             case "Renomear DAS":
                 showContent(new RenomearGuiasExpressContent(primaryStage, userId), "Nome DAS - Express");
+            case "Qualitplacas":
+                showContent(new QualitplacasContabilContent(primaryStage), "Qualitplacas - Contábil");
             default:
                 // Gerenciar outros itens do menu, se necessário
                 break;
@@ -236,14 +237,16 @@ public class MainWindow extends Application {
             contentPanel.getChildren().setAll((ProcessarExtratoContabilContent) contentInstance);
         } else if (contentInstance instanceof EmpresasContabilContent) {
             contentPanel.getChildren().setAll((EmpresasContabilContent) contentInstance);
-        } else if (contentInstance instanceof ConciliacoesContabilContent) {
-            contentPanel.getChildren().setAll((ConciliacoesContabilContent) contentInstance);
+        } else if (contentInstance instanceof ConciliarPagosContabilContent) {
+            contentPanel.getChildren().setAll((ConciliarPagosContabilContent) contentInstance);
         } else if (contentInstance instanceof HyperlinkDctfContabilContent) {
             contentPanel.getChildren().setAll((HyperlinkDctfContabilContent) contentInstance);
         } else if (contentInstance instanceof ProcessarXmlFiscalContent) {
             contentPanel.getChildren().setAll((ProcessarXmlFiscalContent) contentInstance);
         } else if (contentInstance instanceof RenomearGuiasExpressContent) {
             contentPanel.getChildren().setAll((RenomearGuiasExpressContent) contentInstance);
+        } else if (contentInstance instanceof QualitplacasContabilContent) {
+                contentPanel.getChildren().setAll((QualitplacasContabilContent) contentInstance);
         }
         applyContentStyles();
         primaryStage.setTitle("Quanttum - " + title);

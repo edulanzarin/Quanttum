@@ -40,4 +40,25 @@ public class ExportarPlanilha {
             registrarLog.logAction(username, "export-planilha");
         }
     }
+
+    public static void exportConciliacao(List<List<String>> data, File file) {
+        if (!file.getName().endsWith(".csv")) {
+            file = new File(file.getAbsolutePath() + ".csv");
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            // Adicionar o cabeçalho
+            writer.write("Data;Descrição;Valor");
+            writer.newLine();
+
+            // Adicionar os dados
+            for (List<String> row : data) {
+                // Assumindo que os dados estão na ordem correta: Data, Descrição, Valor
+                writer.write(String.join(";", row));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao exportar dados para CSV: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
