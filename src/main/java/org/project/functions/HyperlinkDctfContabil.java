@@ -44,11 +44,7 @@ public class HyperlinkDctfContabil {
             // Save and close the workbook
             try (FileOutputStream fos = new FileOutputStream(excelFile)) {
                 workbook.write(fos);
-                System.out.println("Workbook salvo com sucesso."); // Debug output
             }
-
-            // Log the action
-            logAction("hyperlink-dctf");
 
             showAlert(primaryStage, Alert.AlertType.INFORMATION, "Concluído", "Processamento concluído.");
 
@@ -158,11 +154,6 @@ public class HyperlinkDctfContabil {
             default:
                 return "";
         }
-    }
-
-    private void logAction(String action) {
-        // Log the action with userId
-        System.out.println("User ID: " + userId + ", Action: " + action);
     }
 
     private void showAlert(Stage primaryStage, Alert.AlertType alertType, String title, String message) {

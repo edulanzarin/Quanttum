@@ -16,18 +16,12 @@ public class MoverArquivosExpress {
     }
 
     public void copiarArquivos(String username) {
-        if (pastaRaiz == null || pastaDestino == null || !pastaRaiz.isDirectory() || !pastaDestino.isDirectory()) {
-            System.out.println("Pastas inválidas.");
-            return;
-        }
 
         try {
             copiarArquivosRecursivo(pastaRaiz);
-            System.out.println("Arquivos copiados com sucesso.");
             new RegistrarLog().logAction(username, "mover-arquivos-express");
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Erro ao copiar arquivos.");
         }
     }
 

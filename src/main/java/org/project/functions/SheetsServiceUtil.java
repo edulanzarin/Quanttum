@@ -22,20 +22,32 @@ public class SheetsServiceUtil {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
     private static final String TOKENS_FILE_PATH = "tokens.json";
+    private static final String CREDENTIALS_FILE_PATH = "credentials.json";
 
     private static Credential getCredentials(final HttpTransport HTTP_TRANSPORT) throws IOException {
         JsonObject tokens = loadTokens();
-        if (tokens == null) {
-            throw new FileNotFoundException("Tokens file not found");
+        JsonObject credentials = loadCredentials();
+
+        if (tokens == null || credentials == null) {
+            throw new FileNotFoundException("Tokens or credentials file not found");
+        }
+
+        if (!tokens.has("access_token") || !tokens.has("refresh_token")) {
+            throw new IOException("Missing access_token or refresh_token in tokens.json");
+        }
+        if (!credentials.has("client_id") || !credentials.has("client_secret")) {
+            throw new IOException("Missing client_id or client_secret in credentials.json");
         }
 
         String accessToken = tokens.get("access_token").getAsString();
         String refreshToken = tokens.get("refresh_token").getAsString();
+        String clientId = credentials.get("client_id").getAsString();
+        String clientSecret = credentials.get("client_secret").getAsString();
 
         GoogleCredential credential = new GoogleCredential.Builder()
                 .setTransport(HTTP_TRANSPORT)
                 .setJsonFactory(JSON_FACTORY)
-                .setClientSecrets("CLIENT_ID", "CLIENT_SECRET")
+                .setClientSecrets(clientId, clientSecret)
                 .build()
                 .setAccessToken(accessToken)
                 .setRefreshToken(refreshToken);
@@ -55,11 +67,23 @@ public class SheetsServiceUtil {
     }
 
     private static JsonObject loadTokens() throws IOException {
-        File tokenFile = new File(TOKENS_FILE_PATH);
-        if (!tokenFile.exists()) {
-            throw new FileNotFoundException("Tokens file not found");
+        return loadJsonFromFile(TOKENS_FILE_PATH);
+    }
+
+    private static JsonObject loadCredentials() throws IOException {
+        JsonObject credentialsJson = loadJsonFromFile(CREDENTIALS_FILE_PATH);
+        if (credentialsJson != null && credentialsJson.has("web")) {
+            return credentialsJson.getAsJsonObject("web");
         }
-        try (FileReader reader = new FileReader(tokenFile)) {
+        throw new IOException("Invalid credentials format in credentials.json");
+    }
+
+    private static JsonObject loadJsonFromFile(String filePath) throws IOException {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new FileNotFoundException(filePath + " file not found");
+        }
+        try (FileReader reader = new FileReader(file)) {
             return new Gson().fromJson(reader, JsonObject.class);
         }
     }

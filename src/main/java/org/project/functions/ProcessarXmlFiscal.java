@@ -21,10 +21,6 @@ public class ProcessarXmlFiscal {
 
     public static void processarPasta(String camposDesejados, String pastaSelecionada, String caminhoCsv, String userId) {
         String username = GetUsername.getUsernameById(userId);
-        if (username == null) {
-            System.err.println("Erro: Usuário não encontrado para o userId: " + userId);
-            return;
-        }
 
         try (PrintWriter writer = new PrintWriter(new File(caminhoCsv))) {
             String[] campos = camposDesejados.split(";");
@@ -40,8 +36,6 @@ public class ProcessarXmlFiscal {
                     .filter(Files::isRegularFile)
                     .filter(path -> path.toString().endsWith(".xml"))
                     .forEach(path -> processarArquivoXML(path.toFile(), campos, writer));
-
-            System.out.println("Os dados foram salvos em: " + caminhoCsv);
 
             // Registrar log de sucesso
             RegistrarLog registrarLog = new RegistrarLog();
