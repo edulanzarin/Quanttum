@@ -63,7 +63,6 @@ public class MainWindow extends Application {
     private VBox createSidebar() {
         VBox sidebar = new VBox();
         sidebar.setPadding(new Insets(10));
-        sidebar.setMinWidth(250);
         sidebar.getStyleClass().add("sidebar");
 
         BorderPane footer = createFooter(); // Cria o rodapé
@@ -106,6 +105,7 @@ public class MainWindow extends Application {
         ImageView iconView = new ImageView(icon);
         iconView.setFitWidth(64);
         iconView.setFitHeight(64);
+        iconView.setOnMouseClicked(e -> showContent(new MainContent(), "Main Content"));
 
         header.getChildren().addAll(iconView);
         return header;

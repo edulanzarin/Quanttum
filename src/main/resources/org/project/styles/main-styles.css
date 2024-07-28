@@ -4,7 +4,8 @@
   -fx-border-width: 0; /* Remove a borda da barra lateral */
   -fx-padding: 10px 10px; /* Define o espaçamento interno da barra lateral */
   -fx-spacing: 10; /* Define o espaçamento entre os itens na barra lateral */
-  -fx-min-width: 250px; /* Define a largura mínima da barra lateral */
+  -fx-min-width: 280px; /* Define a largura mínima da barra lateral */
+  -fx-pref-width: 280px;
   -fx-font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Define a fonte padrão */
 }
 
