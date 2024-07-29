@@ -44,7 +44,7 @@ public class MainWindow extends Application {
         mainLayout.setCenter(contentPanel);
 
         // Define o conteúdo inicial
-        showContent(new MainContent(), "Main Content");
+        showContent(new MainContent(), "Início");
 
         Scene scene = new Scene(mainLayout, 800, 600); // Cria a cena com o layout principal
 

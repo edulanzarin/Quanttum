@@ -10,6 +10,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import java.nio.charset.StandardCharsets;
 
 import java.io.*;
 import java.security.GeneralSecurityException;
@@ -67,23 +68,23 @@ public class SheetsServiceUtil {
     }
 
     private static JsonObject loadTokens() throws IOException {
-        return loadJsonFromFile(TOKENS_FILE_PATH);
+        return loadJsonFromResource("tokens.json");
     }
 
     private static JsonObject loadCredentials() throws IOException {
-        JsonObject credentialsJson = loadJsonFromFile(CREDENTIALS_FILE_PATH);
+        JsonObject credentialsJson = loadJsonFromResource("credentials.json");
         if (credentialsJson != null && credentialsJson.has("web")) {
             return credentialsJson.getAsJsonObject("web");
         }
         throw new IOException("Invalid credentials format in credentials.json");
     }
 
-    private static JsonObject loadJsonFromFile(String filePath) throws IOException {
-        File file = new File(filePath);
-        if (!file.exists()) {
-            throw new FileNotFoundException(filePath + " file not found");
+    private static JsonObject loadJsonFromResource(String resourcePath) throws IOException {
+        InputStream inputStream = SheetsServiceUtil.class.getClassLoader().getResourceAsStream(resourcePath);
+        if (inputStream == null) {
+            throw new FileNotFoundException("Resource not found: " + resourcePath);
         }
-        try (FileReader reader = new FileReader(file)) {
+        try (InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
             return new Gson().fromJson(reader, JsonObject.class);
         }
     }

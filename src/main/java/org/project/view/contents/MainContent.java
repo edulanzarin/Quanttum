@@ -10,9 +10,8 @@ import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.input.KeyCode;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
@@ -50,7 +49,13 @@ public class MainContent extends StackPane {
         textArea.setEditable(false);
         textArea.setWrapText(true);
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("readme.txt"))) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("readme.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+
+            if (inputStream == null) {
+                throw new FileNotFoundException("Resource not found: readme.txt");
+            }
+
             StringBuilder content = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -59,6 +64,7 @@ public class MainContent extends StackPane {
             textArea.setText(content.toString());
         } catch (IOException e) {
             textArea.setText("Não foi possível carregar o conteúdo do manual.");
+            e.printStackTrace();  // Adiciona o trace para ajudar na depuração
         }
 
         TextField searchField = new TextField();
