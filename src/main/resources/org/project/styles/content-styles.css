@@ -638,3 +638,66 @@
     -fx-border-radius: 5;
     -fx-font-weight: bold;
 }
+
+/* styles.css */
+
+/* Estilo para o conteúdo do cronograma */
+.meu-cronograma-content {
+    -fx-background-color: #f9f9f9; /* Cor de fundo clara */
+    -fx-border-color: #ddd; /* Borda suave */
+    -fx-border-width: 1px; /* Largura da borda */
+    -fx-border-radius: 8px; /* Bordas arredondadas */
+    -fx-padding: 20px; /* Espaçamento interno */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0); /* Sombra suave */
+}
+
+/* Estilo para o GridPane do calendário */
+.calendar-grid {
+    -fx-background-color: transparent; /* Remove o fundo do GridPane */
+    -fx-padding: 10px; /* Espaçamento interno */
+}
+
+/* Estilo para os rótulos dos dias da semana */
+.day-label {
+    -fx-font-size: 14px; /* Tamanho da fonte */
+    -fx-text-fill: #555; /* Cor do texto */
+    -fx-padding: 10px; /* Espaçamento interno */
+    -fx-background-color: #e0e0e0; /* Cor de fundo dos rótulos */
+    -fx-background-radius: 5px; /* Bordas arredondadas */
+    -fx-border-color: transparent; /* Remove bordas */
+}
+
+/* Estilo para os botões dos dias */
+.day-button {
+    -fx-background-color: #ffffff; /* Cor de fundo branca */
+    -fx-border-color: #cccccc; /* Cor da borda */
+    -fx-border-radius: 8px; /* Bordas arredondadas */
+    -fx-text-fill: #333; /* Cor do texto */
+    -fx-font-size: 16px; /* Tamanho da fonte */
+    -fx-min-width: 50px; /* Largura mínima */
+    -fx-min-height: 50px; /* Altura mínima */
+    -fx-pref-width: 50px; /* Largura preferida */
+    -fx-pref-height: 50px; /* Altura preferida */
+    -fx-padding: 0; /* Remove o padding interno */
+    -fx-alignment: center; /* Alinha o texto ao centro */
+}
+
+/* Estilo para os botões ao passar o mouse */
+.day-button:hover {
+    -fx-background-color: #e7e7e7; /* Cor de fundo ao passar o mouse */
+    -fx-border-color: #b0b0b0; /* Cor da borda ao passar o mouse */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1); /* Sombra ao passar o mouse */
+}
+
+/* Estilo para o GridPane em dispositivos de toque */
+@media screen and (pointer: coarse) {
+    .day-button {
+        -fx-min-width: 60px; /* Largura mínima aumentada para telas sensíveis ao toque */
+        -fx-min-height: 60px; /* Altura mínima aumentada para telas sensíveis ao toque */
+        -fx-pref-width: 60px; /* Largura preferida aumentada para telas sensíveis ao toque */
+        -fx-pref-height: 60px; /* Altura preferida aumentada para telas sensíveis ao toque */
+    }
+}
+
+
+

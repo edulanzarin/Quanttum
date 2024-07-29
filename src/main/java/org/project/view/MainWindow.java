@@ -75,8 +75,9 @@ public class MainWindow extends Application {
         TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliações", "Hyperlink");
         TitledPane fiscalMenu = createMenu("Fiscal", "Processar XML");
         TitledPane expressMenu = createMenu("Express", "Contábil", "Fiscal", "RH");
+        TitledPane cronogramaMenu = createMenu("Cronograma", "Cronogramas");
 
-        sidebar.getChildren().addAll(contabilMenu, fiscalMenu, expressMenu);
+        sidebar.getChildren().addAll(contabilMenu, fiscalMenu, expressMenu, cronogramaMenu);
 
         // Espaço vazio para empurrar os menus e botões para cima
         Region spacer = new Region();
@@ -147,7 +148,7 @@ public class MainWindow extends Application {
     }
 
     private boolean isDropdownItem(String item) {
-        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink") || item.equals("Contábil") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML");
+        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink") || item.equals("Contábil") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML") || item.equals("Cronogramas");
     }
 
     private VBox createDropdownMenu(String title) {
@@ -188,6 +189,7 @@ public class MainWindow extends Application {
             case "Fiscal": return new String[]{"Renomear DAS"};
             case "RH": return new String[]{"Mover Arquivos"};
             case "Processar XML": return new String[]{"Gerar Planilha"};
+            case "Cronogramas": return new String[]{"Meu Cronograma"};
             default: return new String[]{};
         }
     }
@@ -224,6 +226,9 @@ public class MainWindow extends Application {
             case "Arquivos Reinf":
                 showContent(new ArquivosReinfExpressContent(primaryStage, userId), "Arquivos Reinf - Express");
                 break;
+            case "Meu Cronograma":
+                showContent(new MeuCronogramaContent(primaryStage), "Meu Cronograma");
+                break;
             default:
                 // Gerenciar outros itens do menu, se necessário
                 break;
@@ -251,6 +256,8 @@ public class MainWindow extends Application {
                     contentPanel.getChildren().setAll(qualitplacasContabilContent);
             case ArquivosReinfExpressContent arquivosReinfExpressContent ->
                     contentPanel.getChildren().setAll(arquivosReinfExpressContent);
+            case MeuCronogramaContent cronogramaContent ->
+                    contentPanel.getChildren().setAll(cronogramaContent);
             case null, default -> contentPanel.getChildren().setAll((MainContent) contentInstance);
         }
 
