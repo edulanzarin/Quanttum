@@ -22,8 +22,7 @@ public class SheetsServiceUtil {
     private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
-    private static final String TOKENS_FILE_PATH = "tokens.json";
-    private static final String CREDENTIALS_FILE_PATH = "credentials.json";
+    private static final String TOKENS_FILE_PATH = "org/project/json/tokens.json";
 
     private static Credential getCredentials(final HttpTransport HTTP_TRANSPORT) throws IOException {
         JsonObject tokens = loadTokens();
@@ -68,11 +67,11 @@ public class SheetsServiceUtil {
     }
 
     private static JsonObject loadTokens() throws IOException {
-        return loadJsonFromResource("tokens.json");
+        return loadJsonFromResource("org/project/json/tokens.json");
     }
 
     private static JsonObject loadCredentials() throws IOException {
-        JsonObject credentialsJson = loadJsonFromResource("credentials.json");
+        JsonObject credentialsJson = loadJsonFromResource("org/project/json/credentials.json");
         if (credentialsJson != null && credentialsJson.has("web")) {
             return credentialsJson.getAsJsonObject("web");
         }

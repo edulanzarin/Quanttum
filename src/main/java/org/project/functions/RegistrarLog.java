@@ -16,7 +16,7 @@ public class RegistrarLog {
     private static final String SPREADSHEET_ID = "1G39rq0NGIMJ4LFHQ7-3unHAD39C_aZGAIZx1L3d7cD8";
     private static final String RANGE = "logs!A:F";
 
-    public boolean logAction(String username, String action) {
+    public static boolean logAction(String username, String action) {
         try {
             Sheets service = SheetsServiceUtil.getSheetsService();
 

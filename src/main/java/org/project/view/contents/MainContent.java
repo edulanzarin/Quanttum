@@ -49,7 +49,7 @@ public class MainContent extends StackPane {
         textArea.setEditable(false);
         textArea.setWrapText(true);
 
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("readme.txt");
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("org/project/json/readme.txt");
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
             if (inputStream == null) {

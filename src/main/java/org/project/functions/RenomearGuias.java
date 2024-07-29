@@ -21,7 +21,12 @@ public class RenomearGuias {
             if (file.isFile() && file.getName().toLowerCase().endsWith(".pdf")) {
                 String newFileName = readPDF(file);
                 if (newFileName != null) {
-                    numRenamedFiles++;
+                    File newFile = new File(file.getParent(), newFileName);
+                    newFile = getUniqueFile(newFile);
+
+                    if (file.renameTo(newFile)) {
+                        numRenamedFiles++;
+                    }
                 }
             }
         }
@@ -29,8 +34,8 @@ public class RenomearGuias {
         // Registra log no Google Sheets
         try {
             String username = GetUsername.getUsernameById(userId);
-            String action = "renomear-das";
-            new RegistrarLog().logAction(username, action);
+            String action = "rename-pdf-files";
+            RegistrarLog.logAction(username, action);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,27 +47,16 @@ public class RenomearGuias {
         try (PDDocument document = PDDocument.load(file)) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
-            List<String> lines = Arrays.asList(text.split("\\r?\\n"));
+            String[] lines = text.split("\\r?\\n");
 
-            String newFileName = null;
-
-            if (lines.size() >= 3) {
-                if (lines.get(2).contains("/")) {
-                    List<String> secondLineParts = Arrays.asList(lines.get(2).split("\\s+")).subList(1, lines.get(2).split("\\s+").length);
-                    newFileName = String.join(" ", secondLineParts) + ".pdf";
-                } else if (lines.size() >= 4) {
-                    List<String> thirdLineParts = Arrays.asList(lines.get(3).split("\\s+")).subList(1, lines.get(3).split("\\s+").length);
-                    newFileName = String.join(" ", thirdLineParts) + ".pdf";
+            if (lines.length >= 3) {
+                String thirdLine = lines[2];
+                if (thirdLine.contains("/")) {
+                    List<String> parts = Arrays.asList(thirdLine.split("\\s+"));
+                    return String.join("_", parts.subList(1, parts.size())) + ".pdf";
                 }
-
-                if (newFileName != null) {
-                    File newFile = new File(file.getParent(), newFileName);
-                    newFile = getUniqueFile(newFile);
-
-                    if (file.renameTo(newFile)) {
-                        return newFileName;
-                    }
-                }
+            } else {
+                System.out.println("O arquivo PDF não possui pelo menos 3 linhas.");
             }
         } catch (IOException e) {
             e.printStackTrace();
