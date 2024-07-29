@@ -55,8 +55,8 @@ public class ProcessarXmlFiscalContent extends VBox {
         // Campo de texto para os campos desejados
         camposDesejadosField = new TextField();
         camposDesejadosField.setPromptText("Digite os campos desejados separados por ';'");
-        camposDesejadosField.getStyleClass().add("text-field");
-        camposDesejadosField.setMaxWidth(500); // Define a largura máxima
+        camposDesejadosField.getStyleClass().add("dados-field");
+        camposDesejadosField.setPrefWidth(450); // Define a largura máxima
 
         Button processButton = new Button("Processar");
         processButton.getStyleClass().add("process-button");

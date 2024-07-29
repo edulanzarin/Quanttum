@@ -74,7 +74,7 @@ public class MainWindow extends Application {
         // Cria os menus da barra lateral
         TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliações", "Hyperlink");
         TitledPane fiscalMenu = createMenu("Fiscal", "Processar XML");
-        TitledPane expressMenu = createMenu("Express", "Fiscal", "RH");
+        TitledPane expressMenu = createMenu("Express", "Contábil", "Fiscal", "RH");
 
         sidebar.getChildren().addAll(contabilMenu, fiscalMenu, expressMenu);
 
@@ -147,7 +147,7 @@ public class MainWindow extends Application {
     }
 
     private boolean isDropdownItem(String item) {
-        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML");
+        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink") || item.equals("Contábil") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML");
     }
 
     private VBox createDropdownMenu(String title) {
@@ -184,6 +184,7 @@ public class MainWindow extends Application {
             case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas"};
             case "Conciliações": return new String[]{"Conciliar Pagos"};
             case "Hyperlink": return new String[]{"DCTF"};
+            case "Contábil": return new String[]{"Arquivos Reinf"};
             case "Fiscal": return new String[]{"Renomear DAS"};
             case "RH": return new String[]{"Mover Arquivos"};
             case "Processar XML": return new String[]{"Gerar Planilha"};
@@ -205,10 +206,6 @@ public class MainWindow extends Application {
             case "Processar Extrato":
                 showContent(new ProcessarExtratoContabilContent(primaryStage, userId), "Bancos - Contábil");
                 break;
-            case "Lojão":
-            case "Capital Six":
-                showContent(new EmpresasContabilContent(), "Empresas - Contábil");
-                break;
             case "Conciliar Pagos":
                 showContent(new ConciliarPagosContabilContent(primaryStage), "Conciliações - Contábil");
                 break;
@@ -219,9 +216,14 @@ public class MainWindow extends Application {
                 showContent(new ProcessarXmlFiscalContent(primaryStage, userId), "Gerar Planilha - Fiscal");
                 break;
             case "Renomear DAS":
-                showContent(new RenomearGuiasExpressContent(primaryStage, userId), "Nome DAS - Express");
+                showContent(new RenomearGuiasExpressContent(primaryStage, userId), "Renomear DAS - Express");
+                break;
             case "Qualitplacas":
                 showContent(new QualitplacasContabilContent(primaryStage), "Qualitplacas - Contábil");
+                break;
+            case "Arquivos Reinf":
+                showContent(new ArquivosReinfExpressContent(primaryStage, userId), "Arquivos Reinf - Express");
+                break;
             default:
                 // Gerenciar outros itens do menu, se necessário
                 break;
@@ -229,25 +231,29 @@ public class MainWindow extends Application {
     }
 
     private void showContent(Object contentInstance, String title) {
-        if (contentInstance instanceof MainContent) {
-            contentPanel.getChildren().setAll((MainContent) contentInstance);
-        } else if (contentInstance instanceof MoverArquivosExpressContent) {
-            contentPanel.getChildren().setAll((MoverArquivosExpressContent) contentInstance);
-        } else if (contentInstance instanceof ProcessarExtratoContabilContent) {
-            contentPanel.getChildren().setAll((ProcessarExtratoContabilContent) contentInstance);
-        } else if (contentInstance instanceof EmpresasContabilContent) {
-            contentPanel.getChildren().setAll((EmpresasContabilContent) contentInstance);
-        } else if (contentInstance instanceof ConciliarPagosContabilContent) {
-            contentPanel.getChildren().setAll((ConciliarPagosContabilContent) contentInstance);
-        } else if (contentInstance instanceof HyperlinkDctfContabilContent) {
-            contentPanel.getChildren().setAll((HyperlinkDctfContabilContent) contentInstance);
-        } else if (contentInstance instanceof ProcessarXmlFiscalContent) {
-            contentPanel.getChildren().setAll((ProcessarXmlFiscalContent) contentInstance);
-        } else if (contentInstance instanceof RenomearGuiasExpressContent) {
-            contentPanel.getChildren().setAll((RenomearGuiasExpressContent) contentInstance);
-        } else if (contentInstance instanceof QualitplacasContabilContent) {
-                contentPanel.getChildren().setAll((QualitplacasContabilContent) contentInstance);
+
+        switch (contentInstance) {
+            case MoverArquivosExpressContent moverArquivosExpressContent ->
+                    contentPanel.getChildren().setAll(moverArquivosExpressContent);
+            case ProcessarExtratoContabilContent processarExtratoContabilContent ->
+                    contentPanel.getChildren().setAll(processarExtratoContabilContent);
+            case EmpresasContabilContent empresasContabilContent ->
+                    contentPanel.getChildren().setAll(empresasContabilContent);
+            case ConciliarPagosContabilContent conciliarPagosContabilContent ->
+                    contentPanel.getChildren().setAll(conciliarPagosContabilContent);
+            case HyperlinkDctfContabilContent hyperlinkDctfContabilContent ->
+                    contentPanel.getChildren().setAll(hyperlinkDctfContabilContent);
+            case ProcessarXmlFiscalContent processarXmlFiscalContent ->
+                    contentPanel.getChildren().setAll(processarXmlFiscalContent);
+            case RenomearGuiasExpressContent renomearGuiasExpressContent ->
+                    contentPanel.getChildren().setAll(renomearGuiasExpressContent);
+            case QualitplacasContabilContent qualitplacasContabilContent ->
+                    contentPanel.getChildren().setAll(qualitplacasContabilContent);
+            case ArquivosReinfExpressContent arquivosReinfExpressContent ->
+                    contentPanel.getChildren().setAll(arquivosReinfExpressContent);
+            case null, default -> contentPanel.getChildren().setAll((MainContent) contentInstance);
         }
+
         applyContentStyles();
         primaryStage.setTitle("Quanttum - " + title);
     }
