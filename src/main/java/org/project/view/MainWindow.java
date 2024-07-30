@@ -234,7 +234,7 @@ public class MainWindow extends Application {
                 showContent(new ConferenciaFiscalAnaliticoContent(primaryStage), "Conferência Fiscal - Contábil");
                 break;
             case "Cadastrar Natureza":
-                showContent(new CadastrarNaturezaContabilContent(primaryStage), "Cadastrar Natureza - Contábil");
+                showContent(new GerenciarNaturezasContabilContent(primaryStage), "Cadastrar Natureza - Contábil");
                 break;
             default:
                 // Gerenciar outros itens do menu, se necessário
@@ -267,7 +267,7 @@ public class MainWindow extends Application {
                     contentPanel.getChildren().setAll(cronogramaContent);
             case ConferenciaFiscalAnaliticoContent conferenciaFiscalAnaliticoContent ->
                 contentPanel.getChildren().setAll(conferenciaFiscalAnaliticoContent);
-            case CadastrarNaturezaContabilContent cadastrarNaturezaContabilContent ->
+            case GerenciarNaturezasContabilContent cadastrarNaturezaContabilContent ->
                 contentPanel.getChildren().setAll(cadastrarNaturezaContabilContent);
             case null, default -> contentPanel.getChildren().setAll((MainContent) contentInstance);
         }

@@ -740,7 +740,7 @@
     -fx-text-fill: #ffffff;
     -fx-border-color: #007bff;
     -fx-border-radius: 5;
-    -fx-padding: 10 20;
+    -fx-padding: 8 20;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
 }
@@ -770,7 +770,7 @@
     -fx-background-color: #ffffff;
     -fx-border-color: #cccccc;
     -fx-border-radius: 3;
-    -fx-padding: 12;
+    -fx-padding: 10;
     -fx-pref-width: 250px;
     -fx-font-weight: bold;
 }
@@ -806,9 +806,4 @@
 .cadastrar-natureza-contabil-content.table-view .cell {
     -fx-text-fill: #333333;
     -fx-background-color: #ffffff;
-}
-
-.cadastrar-natureza-contabil-content .table-view .cell:focused {
-    -fx-background-color: #f0f0f0;
-    -fx-text-fill: #333333;
 }
