@@ -72,7 +72,7 @@ public class MainWindow extends Application {
         sidebar.getChildren().add(header);
 
         // Cria os menus da barra lateral
-        TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliações", "Hyperlink");
+        TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliações", "Hyperlink", "Conferência Fiscal");
         TitledPane fiscalMenu = createMenu("Fiscal", "Processar XML");
         TitledPane expressMenu = createMenu("Express", "Contábil", "Fiscal", "RH");
         TitledPane cronogramaMenu = createMenu("Cronograma", "Cronogramas");
@@ -148,7 +148,7 @@ public class MainWindow extends Application {
     }
 
     private boolean isDropdownItem(String item) {
-        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink") || item.equals("Contábil") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML") || item.equals("Cronogramas");
+        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink") || item.equals("Contábil") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML") || item.equals("Cronogramas") || item.equals("Conferência Fiscal");
     }
 
     private VBox createDropdownMenu(String title) {
@@ -190,6 +190,7 @@ public class MainWindow extends Application {
             case "RH": return new String[]{"Mover Arquivos"};
             case "Processar XML": return new String[]{"Gerar Planilha"};
             case "Cronogramas": return new String[]{"Meu Cronograma"};
+            case "Conferência Fiscal": return new String[]{"Analítico", "Cadastrar Natureza"};
             default: return new String[]{};
         }
     }
@@ -229,6 +230,12 @@ public class MainWindow extends Application {
             case "Meu Cronograma":
                 showContent(new MeuCronogramaContent(primaryStage), "Meu Cronograma");
                 break;
+            case "Analítico":
+                showContent(new ConferenciaFiscalAnaliticoContent(primaryStage), "Conferência Fiscal - Contábil");
+                break;
+            case "Cadastrar Natureza":
+                showContent(new CadastrarNaturezaContabilContent(primaryStage), "Cadastrar Natureza - Contábil");
+                break;
             default:
                 // Gerenciar outros itens do menu, se necessário
                 break;
@@ -258,6 +265,10 @@ public class MainWindow extends Application {
                     contentPanel.getChildren().setAll(arquivosReinfExpressContent);
             case MeuCronogramaContent cronogramaContent ->
                     contentPanel.getChildren().setAll(cronogramaContent);
+            case ConferenciaFiscalAnaliticoContent conferenciaFiscalAnaliticoContent ->
+                contentPanel.getChildren().setAll(conferenciaFiscalAnaliticoContent);
+            case CadastrarNaturezaContabilContent cadastrarNaturezaContabilContent ->
+                contentPanel.getChildren().setAll(cadastrarNaturezaContabilContent);
             case null, default -> contentPanel.getChildren().setAll((MainContent) contentInstance);
         }
 
