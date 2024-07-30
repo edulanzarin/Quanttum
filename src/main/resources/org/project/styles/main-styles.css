@@ -67,7 +67,7 @@
 .menu-item {
   -fx-background-color: #374151; /* Define a cor de fundo dos itens do menu */
   -fx-text-fill: #f9fafb; /* Define a cor do texto dos itens do menu */
-  -fx-font-size: 14px; /* Define o tamanho da fonte dos itens do menu */
+  -fx-font-size: 12px; /* Define o tamanho da fonte dos itens do menu */
   -fx-padding: 10px 15px; /* Define o preenchimento interno dos itens do menu */
   -fx-border-width: 0; /* Remove a borda dos itens do menu */
   -fx-font-weight: bold; /* Define a fonte em negrito para os itens do menu */

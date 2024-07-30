@@ -72,7 +72,7 @@ public class MainWindow extends Application {
         sidebar.getChildren().add(header);
 
         // Cria os menus da barra lateral
-        TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliações", "Hyperlink", "Conferência Fiscal");
+        TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliação", "Hyperlink", "Conferência Fiscal");
         TitledPane fiscalMenu = createMenu("Fiscal", "Processar XML");
         TitledPane expressMenu = createMenu("Express", "Contábil", "Fiscal", "RH");
         TitledPane cronogramaMenu = createMenu("Cronograma", "Cronogramas");
@@ -148,7 +148,7 @@ public class MainWindow extends Application {
     }
 
     private boolean isDropdownItem(String item) {
-        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliações") || item.equals("Hyperlink") || item.equals("Contábil") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML") || item.equals("Cronogramas") || item.equals("Conferência Fiscal");
+        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliação") || item.equals("Hyperlink") || item.equals("Contábil") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML") || item.equals("Cronogramas") || item.equals("Conferência Fiscal");
     }
 
     private VBox createDropdownMenu(String title) {
@@ -183,7 +183,7 @@ public class MainWindow extends Application {
         switch (title) {
             case "Bancos": return new String[]{"Processar Extrato"};
             case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas"};
-            case "Conciliações": return new String[]{"Conciliar Pagos"};
+            case "Conciliação": return new String[]{"Conciliar Planilha de Pagos", };
             case "Hyperlink": return new String[]{"DCTF"};
             case "Contábil": return new String[]{"Arquivos Reinf"};
             case "Fiscal": return new String[]{"Renomear DAS"};
@@ -209,7 +209,7 @@ public class MainWindow extends Application {
             case "Processar Extrato":
                 showContent(new ProcessarExtratoContabilContent(primaryStage, userId), "Bancos - Contábil");
                 break;
-            case "Conciliar Pagos":
+            case "Conciliar Planilha de Pagos":
                 showContent(new ConciliarPagosContabilContent(primaryStage), "Conciliações - Contábil");
                 break;
             case "DCTF":

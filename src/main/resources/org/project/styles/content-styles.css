@@ -740,7 +740,7 @@
     -fx-text-fill: #ffffff;
     -fx-border-color: #007bff;
     -fx-border-radius: 5;
-    -fx-padding: 8 20;
+    -fx-padding: 10 20;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
 }
@@ -770,7 +770,7 @@
     -fx-background-color: #ffffff;
     -fx-border-color: #cccccc;
     -fx-border-radius: 3;
-    -fx-padding: 10;
+    -fx-padding: 12;
     -fx-pref-width: 250px;
     -fx-font-weight: bold;
 }
@@ -788,22 +788,4 @@
     -fx-background-radius: 5;
     -fx-border-width: 1;
     -fx-padding: 10;
-}
-
-.cadastrar-natureza-contabil-content .table-view .column {
-    -fx-text-fill: #333333;
-    -fx-font-size: 14px;
-}
-
-.cadastrar-natureza-contabil-content .table-view .column-header {
-    -fx-background-color: #f0f0f0;
-    -fx-text-fill: #333333;
-    -fx-font-weight: bold;
-    -fx-border-color: #e0e0e0;
-    -fx-border-width: 0 0 1 0;
-}
-
-.cadastrar-natureza-contabil-content.table-view .cell {
-    -fx-text-fill: #333333;
-    -fx-background-color: #ffffff;
 }

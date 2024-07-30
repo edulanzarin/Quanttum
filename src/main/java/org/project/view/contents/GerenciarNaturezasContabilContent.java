@@ -12,7 +12,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.project.functions.GerenciarNaturezas;
 
-import java.io.IOException;
 import java.util.List;
 
 public class GerenciarNaturezasContabilContent extends VBox {
@@ -20,22 +19,17 @@ public class GerenciarNaturezasContabilContent extends VBox {
     private TableView<GerenciarNaturezas.NaturezaConta> tabela;
     private TextField txtValor;
     private Stage primaryStage;
-    private GerenciarNaturezas gerenciarNaturezas;
+    private GerenciarNaturezas cadastrarNatureza;
 
     public GerenciarNaturezasContabilContent(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.gerenciarNaturezas = new GerenciarNaturezas();
 
-        configureLayout();
-        configureTable();
-        configureButtons();
-    }
-
-    private void configureLayout() {
+        // Configura o layout principal
         setPadding(new Insets(20));
         setSpacing(15);
         getStyleClass().add("cadastrar-natureza-contabil-content");
 
+        // VBox pai para centralização vertical
         VBox parentBox = new VBox();
         parentBox.setAlignment(Pos.CENTER);
         VBox.setVgrow(parentBox, javafx.scene.layout.Priority.ALWAYS);
@@ -43,86 +37,66 @@ public class GerenciarNaturezasContabilContent extends VBox {
         txtValor = new TextField();
         txtValor.setPromptText("Código da Empresa");
         txtValor.getStyleClass().add("txtvalor-field");
-        txtValor.setPrefWidth(300);
+        txtValor.setPrefWidth(300); // Define a largura do campo de texto
+        txtValor.setMaxWidth(300);
 
+        // Botão Carregar
+        Button btnCarregar = new Button("Carregar");
+        btnCarregar.getStyleClass().add("botao");
+        btnCarregar.setOnAction(e -> carregarDados());
+
+        // Criação do campo de texto e botão Carregar
         HBox txtValorBox = new HBox();
         txtValorBox.setAlignment(Pos.CENTER);
-        txtValorBox.setSpacing(10);
-        txtValorBox.getChildren().addAll(txtValor, createButton("Carregar", e -> carregarDados()));
+        txtValorBox.setSpacing(10); // Espaçamento entre o campo de texto e o botão
+        txtValorBox.getChildren().addAll(txtValor, btnCarregar);
 
+        // Criação da tabela
         tabela = new TableView<>();
-        tabela.setPrefWidth(400);
-        tabela.getStyleClass().add("table-view");
+        tabela.setPrefWidth(400); // Define a largura preferencial da tabela
+        tabela.setMaxWidth(400);  // Define a largura máxima da tabela
+        tabela.getStyleClass().add("table-view"); // Aplicar a classe correta
 
-        parentBox.getChildren().addAll(txtValorBox, tabela, createButton("Cadastrar Natureza", e -> mostrarJanelaCadastro()));
-        getChildren().add(parentBox);
-    }
+        TableColumn<GerenciarNaturezas.NaturezaConta, String> colunaNatureza = new TableColumn<>("Natureza");
+        TableColumn<GerenciarNaturezas.NaturezaConta, String> colunaConta = new TableColumn<>("Conta");
 
-    private void configureTable() {
-        TableColumn<GerenciarNaturezas.NaturezaConta, String> colId = createColumn("ID", "id", 0);
-        TableColumn<GerenciarNaturezas.NaturezaConta, String> colunaNatureza = createColumn("Natureza", "natureza", 200);
-        TableColumn<GerenciarNaturezas.NaturezaConta, String> colunaConta = createColumn("Conta", "conta", 178);
+        colunaNatureza.setCellValueFactory(new PropertyValueFactory<>("natureza"));
+        colunaNatureza.setPrefWidth(200);
 
-        tabela.getColumns().addAll(colId, colunaNatureza, colunaConta);
-        tabela.setRowFactory(tv -> createTableRow());
-    }
+        colunaConta.setCellValueFactory(new PropertyValueFactory<>("conta"));
+        colunaConta.setPrefWidth(178);
 
-    private TableColumn<GerenciarNaturezas.NaturezaConta, String> createColumn(String title, String property, double width) {
-        TableColumn<GerenciarNaturezas.NaturezaConta, String> column = new TableColumn<>(title);
-        column.setCellValueFactory(new PropertyValueFactory<>(property));
-        column.setPrefWidth(width);
-        return column;
-    }
+        tabela.getColumns().addAll(colunaNatureza, colunaConta);
+        tabela.getStyleClass().add("tabela");
 
-    private TableRow<GerenciarNaturezas.NaturezaConta> createTableRow() {
-        TableRow<GerenciarNaturezas.NaturezaConta> row = new TableRow<>();
-        ContextMenu contextMenu = new ContextMenu();
-
-        MenuItem editItem = new MenuItem("Editar");
-        editItem.setOnAction(e -> editarNatureza(row.getItem()));
-
-        MenuItem deleteItem = new MenuItem("Excluir");
-        deleteItem.setOnAction(e -> excluirNatureza(row.getItem()));
-
-        contextMenu.getItems().addAll(editItem, deleteItem);
-
-        row.contextMenuProperty().bind(
-                javafx.beans.binding.Bindings.when(row.emptyProperty())
-                        .then((ContextMenu) null)
-                        .otherwise(contextMenu)
-        );
-
-        return row;
-    }
-
-    private void configureButtons() {
-        // Configura o botão de cadastro de natureza
-        Button btnCadastrar = createButton("Cadastrar Natureza", e -> mostrarJanelaCadastro());
+        // Botão de cadastrar
+        Button btnCadastrar = new Button("Cadastrar Natureza");
+        btnCadastrar.getStyleClass().add("botao");
+        btnCadastrar.setOnAction(e -> mostrarJanelaCadastro());
 
         HBox buttonBox = new HBox();
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(10);
         buttonBox.getChildren().add(btnCadastrar);
 
-        VBox.setMargin(buttonBox, new Insets(20, 0, 0, 0));
-    }
+        VBox.setMargin(buttonBox, new Insets(20, 0, 0, 0)); // Margem superior do botão
+        VBox.setMargin(txtValorBox, new Insets(0, 0, 15, 0));
+        parentBox.getChildren().addAll(txtValorBox, tabela, buttonBox);
+        getChildren().add(parentBox);
 
-    private Button createButton(String text, javafx.event.EventHandler<javafx.event.ActionEvent> eventHandler) {
-        Button button = new Button(text);
-        button.getStyleClass().add("botao");
-        button.setOnAction(eventHandler);
-        return button;
+        // Inicialização do CadastrarNatureza
+        cadastrarNatureza = new GerenciarNaturezas();
     }
 
     private void carregarDados() {
-        String codigo = txtValor.getText().trim();
+        String codigo = txtValor.getText();
 
-        if (codigo.isEmpty()) {
+        if (codigo == null || codigo.trim().isEmpty()) {
             showAlert(AlertType.WARNING, "Atenção", "O código da empresa não pode estar vazio.", primaryStage);
             return;
         }
 
-        List<GerenciarNaturezas.NaturezaConta> naturezas = gerenciarNaturezas.verificarCodigoECarregarNaturezas(codigo);
+        List<GerenciarNaturezas.NaturezaConta> naturezas = cadastrarNatureza.verificarCodigoECarregarNaturezas(codigo);
 
         if (naturezas != null) {
             tabela.getItems().clear();
@@ -136,81 +110,38 @@ public class GerenciarNaturezasContabilContent extends VBox {
         Stage janelaCadastro = new Stage();
         janelaCadastro.setTitle("Cadastro de Natureza");
 
+        Label lblNatureza = new Label("Natureza:");
+        lblNatureza.getStyleClass().add("label");
         TextField txtNatureza = new TextField();
-        TextField txtConta = new TextField();
+        txtNatureza.getStyleClass().add("text-field");
 
-        Button btnCadastrar = createButton("Cadastrar", e -> {
-            String natureza = txtNatureza.getText().trim();
-            String conta = txtConta.getText().trim();
+        Label lblConta = new Label("Conta:");
+        lblConta.getStyleClass().add("label");
+        TextField txtConta = new TextField();
+        txtConta.getStyleClass().add("text-field");
+
+        Button btnCadastrar = new Button("Cadastrar");
+        btnCadastrar.getStyleClass().add("botao");
+        btnCadastrar.setOnAction(e -> {
+            String natureza = txtNatureza.getText();
+            String conta = txtConta.getText();
 
             if (!natureza.isEmpty() && !conta.isEmpty()) {
-                tabela.getItems().add(new GerenciarNaturezas.NaturezaConta(natureza, natureza, conta));
+                tabela.getItems().add(new GerenciarNaturezas.NaturezaConta(natureza, conta));
                 janelaCadastro.close();
             } else {
                 showAlert(AlertType.WARNING, "Atenção", "Natureza e Conta não podem estar vazios.", janelaCadastro);
             }
         });
 
-        VBox layout = new VBox(10, new Label("Natureza:"), txtNatureza, new Label("Conta:"), txtConta, btnCadastrar);
+        VBox layout = new VBox(10, lblNatureza, txtNatureza, lblConta, txtConta, btnCadastrar);
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER);
+        Scene cena = new Scene(layout, 300, 200);
         janelaCadastro.initModality(Modality.APPLICATION_MODAL);
         janelaCadastro.initOwner(primaryStage);
-        janelaCadastro.setScene(new Scene(layout, 300, 200));
+        janelaCadastro.setScene(cena);
         janelaCadastro.show();
-    }
-
-    private void editarNatureza(GerenciarNaturezas.NaturezaConta naturezaConta) {
-        Stage janelaEdicao = new Stage();
-        janelaEdicao.setTitle("Editar Natureza");
-
-        TextField txtConta = new TextField(naturezaConta.getConta());
-
-        Button btnAtualizar = createButton("Atualizar", e -> {
-            String novaConta = txtConta.getText().trim();
-            if (!novaConta.isEmpty()) {
-                try {
-                    atualizarNaturezaNaPlanilha(naturezaConta.getId(), novaConta);
-                    GerenciarNaturezas.NaturezaConta updatedNatureza = new GerenciarNaturezas.NaturezaConta(naturezaConta.getId(), naturezaConta.getNatureza(), novaConta);
-                    tabela.getItems().set(tabela.getSelectionModel().getSelectedIndex(), updatedNatureza);
-                    janelaEdicao.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    showAlert(AlertType.ERROR, "Erro", "Erro ao atualizar natureza.", janelaEdicao);
-                }
-            } else {
-                showAlert(AlertType.WARNING, "Atenção", "Conta não pode estar vazia.", janelaEdicao);
-            }
-        });
-
-        VBox layout = new VBox(10, new Label("Conta:"), txtConta, btnAtualizar);
-        layout.setPadding(new Insets(20));
-        layout.setAlignment(Pos.CENTER);
-        janelaEdicao.initModality(Modality.APPLICATION_MODAL);
-        janelaEdicao.initOwner(primaryStage);
-        janelaEdicao.setScene(new Scene(layout, 300, 150));
-        janelaEdicao.show();
-    }
-
-    private void excluirNatureza(GerenciarNaturezas.NaturezaConta naturezaConta) {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Confirmar Exclusão");
-        alert.setHeaderText("Você tem certeza que deseja excluir a natureza?");
-        alert.setContentText("Esta ação não pode ser desfeita.");
-
-        if (alert.showAndWait().get() == ButtonType.OK) {
-            try {
-                gerenciarNaturezas.marcarNaturezaComoInativa(naturezaConta.getId());
-                tabela.getItems().remove(naturezaConta);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                showAlert(AlertType.ERROR, "Erro", "Erro ao excluir natureza.", primaryStage);
-            }
-        }
-    }
-
-    private void atualizarNaturezaNaPlanilha(String id, String novaConta) throws IOException {
-        gerenciarNaturezas.atualizarNatureza(id, novaConta);
     }
 
     private void showAlert(AlertType type, String title, String message, Stage owner) {
