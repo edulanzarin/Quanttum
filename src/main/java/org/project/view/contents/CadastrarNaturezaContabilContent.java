@@ -10,12 +10,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.project.functions.CadastrarNatureza;
+import java.io.IOException;
+import java.util.List;
 
 public class CadastrarNaturezaContabilContent extends VBox {
 
-    private TableView<NaturezaConta> tabela;
+    private TableView<CadastrarNatureza.NaturezaConta> tabela;
     private TextField txtValor;
     private Stage primaryStage;
+    private CadastrarNatureza cadastrarNatureza;
 
     public CadastrarNaturezaContabilContent(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -31,30 +35,36 @@ public class CadastrarNaturezaContabilContent extends VBox {
         VBox.setVgrow(parentBox, javafx.scene.layout.Priority.ALWAYS);
 
         txtValor = new TextField();
-        txtValor.setPromptText("Número da Empresa");
+        txtValor.setPromptText("Código da Empresa");
         txtValor.getStyleClass().add("txtvalor-field");
         txtValor.setPrefWidth(300); // Define a largura do campo de texto
         txtValor.setMaxWidth(300);
 
-        // Criação do campo de texto para valor
+        // Botão Carregar
+        Button btnCarregar = new Button("Carregar");
+        btnCarregar.getStyleClass().add("botao");
+        btnCarregar.setOnAction(e -> carregarDados());
+
+        // Criação do campo de texto e botão Carregar
         HBox txtValorBox = new HBox();
         txtValorBox.setAlignment(Pos.CENTER);
-        txtValorBox.setSpacing(10); // Espaçamento entre os botões
-        txtValorBox.getChildren().add(txtValor);
+        txtValorBox.setSpacing(10); // Espaçamento entre o campo de texto e o botão
+        txtValorBox.getChildren().addAll(txtValor, btnCarregar);
 
         // Criação da tabela
         tabela = new TableView<>();
         tabela.setPrefWidth(792); // Define a largura preferencial da tabela
         tabela.setMaxWidth(792);  // Define a largura máxima da tabela
+        tabela.getStyleClass().add("table-view"); // Aplicar a classe correta
 
-        TableColumn<NaturezaConta, String> colunaNatureza = new TableColumn<>("Natureza");
-        TableColumn<NaturezaConta, String> colunaConta = new TableColumn<>("Conta");
+        TableColumn<CadastrarNatureza.NaturezaConta, String> colunaNatureza = new TableColumn<>("Natureza");
+        TableColumn<CadastrarNatureza.NaturezaConta, String> colunaConta = new TableColumn<>("Conta");
 
         colunaNatureza.setCellValueFactory(new PropertyValueFactory<>("natureza"));
         colunaNatureza.setPrefWidth(400);
 
         colunaConta.setCellValueFactory(new PropertyValueFactory<>("conta"));
-        colunaConta.setPrefWidth(380);
+        colunaConta.setPrefWidth(370);
 
         tabela.getColumns().addAll(colunaNatureza, colunaConta);
         tabela.getStyleClass().add("tabela");
@@ -73,6 +83,27 @@ public class CadastrarNaturezaContabilContent extends VBox {
         VBox.setMargin(txtValorBox, new Insets(0, 0, 20, 0));
         parentBox.getChildren().addAll(txtValorBox, tabela, buttonBox);
         getChildren().add(parentBox);
+
+        // Inicialização do CadastrarNatureza
+        cadastrarNatureza = new CadastrarNatureza();
+    }
+
+    private void carregarDados() {
+        String codigo = txtValor.getText();
+
+        if (codigo == null || codigo.trim().isEmpty()) {
+            showAlert(AlertType.WARNING, "Atenção", "O código da empresa não pode estar vazio.", primaryStage);
+            return;
+        }
+
+        List<CadastrarNatureza.NaturezaConta> naturezas = cadastrarNatureza.verificarCodigoECarregarNaturezas(codigo);
+
+        if (naturezas != null) {
+            tabela.getItems().clear();
+            tabela.getItems().addAll(naturezas);
+        } else {
+            showAlert(AlertType.INFORMATION, "Informação", "Código da empresa não encontrado.", primaryStage);
+        }
     }
 
     private void mostrarJanelaCadastro() {
@@ -96,48 +127,29 @@ public class CadastrarNaturezaContabilContent extends VBox {
             String conta = txtConta.getText();
 
             if (!natureza.isEmpty() && !conta.isEmpty()) {
-                tabela.getItems().add(new NaturezaConta(natureza, conta));
+                tabela.getItems().add(new CadastrarNatureza.NaturezaConta(natureza, conta));
                 janelaCadastro.close();
             } else {
-                showAlert(AlertType.WARNING, "Atenção", "Preencha todos os campos.", janelaCadastro);
+                showAlert(AlertType.WARNING, "Atenção", "Natureza e Conta não podem estar vazios.", janelaCadastro);
             }
         });
 
-        VBox vboxCadastro = new VBox(10, lblNatureza, txtNatureza, lblConta, txtConta, btnCadastrar);
-        vboxCadastro.setPadding(new Insets(10));
-        vboxCadastro.getStyleClass().add("vbox-cadastro");
-
-        Scene sceneCadastro = new Scene(vboxCadastro, 300, 200);
+        VBox layout = new VBox(10, lblNatureza, txtNatureza, lblConta, txtConta, btnCadastrar);
+        layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.CENTER);
+        Scene cena = new Scene(layout, 300, 200);
         janelaCadastro.initModality(Modality.APPLICATION_MODAL);
         janelaCadastro.initOwner(primaryStage);
-        janelaCadastro.setScene(sceneCadastro);
+        janelaCadastro.setScene(cena);
         janelaCadastro.show();
     }
 
-    private void showAlert(AlertType alertType, String title, String message, Stage owner) {
-        Alert alert = new Alert(alertType);
-        alert.initOwner(owner);
+    private void showAlert(AlertType type, String title, String message, Stage owner) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        alert.initOwner(owner);
         alert.showAndWait();
-    }
-
-    public static class NaturezaConta {
-        private final String natureza;
-        private final String conta;
-
-        public NaturezaConta(String natureza, String conta) {
-            this.natureza = natureza;
-            this.conta = conta;
-        }
-
-        public String getNatureza() {
-            return natureza;
-        }
-
-        public String getConta() {
-            return conta;
-        }
     }
 }
