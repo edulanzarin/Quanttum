@@ -749,20 +749,6 @@
     -fx-font-size: 14px;
 }
 
-/* Estilo para a tabela */
-.cadastrar-natureza-contabil-content .tabela {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
-    -fx-border-radius: 5;
-    -fx-padding: 10;
-}
-
-/* Estilo para as colunas da tabela */
-.cadastrar-natureza-contabil-content .column {
-    -fx-font-size: 14px;
-    -fx-text-fill: #333333;
-}
-
 /* Estilo para as labels */
 .cadastrar-natureza-contabil-content .label {
     -fx-text-fill: #333333;
@@ -785,6 +771,7 @@
     -fx-padding: 15;
 }
 
+/* BancosComCodContent TableView styles */
 .cadastrar-natureza-contabil-content .table-view {
     -fx-background-color: #ffffff;
     -fx-border-color: #cccccc;
@@ -799,7 +786,7 @@
     -fx-font-size: 14px;
 }
 
-.qcadastrar-natureza-contabil-content.table-view .column-header {
+.cadastrar-natureza-contabil-content .table-view .column-header {
     -fx-background-color: #f0f0f0;
     -fx-text-fill: #333333;
     -fx-font-weight: bold;
@@ -810,6 +797,11 @@
 .cadastrar-natureza-contabil-content .table-view .cell {
     -fx-text-fill: #333333;
     -fx-background-color: #ffffff;
+}
+
+.cadastrar-natureza-contabil-content .table-view .cell:focused {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
 }
 
 /* Estilos para EditarContaContent */
@@ -824,16 +816,6 @@
     -fx-border-width: 1;
 }
 
-/* Estilo para o campo de texto na janela de edição */
-.text-field {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
-    -fx-border-radius: 3;
-    -fx-padding: 10;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-
 /* Estilo para o botão na janela de edição */
 .botao-edicao {
     -fx-background-color: #28a745;
@@ -842,12 +824,6 @@
     -fx-border-radius: 5;
     -fx-padding: 10 20;
     -fx-font-weight: bold;
-    -fx-font-size: 14px;
-}
-
-/* Estilo para as labels */
-.label {
-    -fx-text-fill: #333333;
     -fx-font-size: 14px;
 }
 
@@ -863,16 +839,6 @@
     -fx-border-width: 1;
 }
 
-/* Estilo para o campo de texto */
-.text-field {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
-    -fx-border-radius: 3;
-    -fx-padding: 10;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-
 /* Estilo para o botão de cadastro */
 .botao-edicao {
     -fx-background-color: #28a745;
@@ -882,13 +848,6 @@
     -fx-padding: 10 20;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
-}
-
-/* Estilo para as labels */
-.label {
-    -fx-text-fill: #333333;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
 }
 
 /* Estilos para DuplicarNaturezasContent */
