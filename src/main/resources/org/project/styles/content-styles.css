@@ -722,7 +722,7 @@
 
 .conferencia-fiscal-contabil-content .table-view {
     -fx-background-color: #ffffff;
-    -fx-border-color: #ababab;
+    -fx-border-color: #cccccc;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
     -fx-border-width: 1;
@@ -735,7 +735,7 @@
 }
 
 .conferencia-fiscal-contabil-content .table-view .column-header {
-    -fx-background-color: #d5d5d5;
+    -fx-background-color: #f0f0f0;
     -fx-text-fill: #333333;
     -fx-font-weight: bold;
     -fx-border-color: #e0e0e0;
@@ -748,8 +748,8 @@
 }
 
 .conferencia-fiscal-contabil-content .table-view .cell:focused {
-    -fx-background-color: #f0f0f0;
     -fx-text-fill: #333333;
+    -fx-background-color: #ffffff;
 }
 /* Estilos para CadastrarNaturezaContabilContent */
 
