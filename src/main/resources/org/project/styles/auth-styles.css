@@ -58,47 +58,58 @@
 }
 
 .update-container {
-    -fx-background-color: #f1f1f1;
-    -fx-padding: 30px;
-    -fx-alignment: center;
-    -fx-spacing: 15px;
-    -fx-pref-width: 400px;
-    -fx-pref-height: 300px;
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 20;
+    -fx-spacing: 10;
 }
 
-.title-label {
-    -fx-font-size: 22px;
+/* Estilo para o título */
+.title {
+    -fx-font-size: 20px;
     -fx-text-fill: #333;
-    -fx-font-weight: bold;
 }
 
-.message-label {
-    -fx-text-fill: red;
-    -fx-font-size: 14px;
-    -fx-padding-top: 10px;
+/* Estilo para os campos de texto */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3;
+    -fx-padding: 12;
 }
 
-.progress-bar {
-    -fx-pref-width: 100%;
-    -fx-padding: 10px;
-}
-
-.download-button {
+/* Estilo para os botões */
+.select-button, .download-button {
     -fx-background-color: #007bff;
     -fx-text-fill: #ffffff;
-    -fx-font-size: 16px;
-    -fx-padding: 12px 24px;
-    -fx-border-radius: 8px;
+    -fx-border-color: #007bff;
+    -fx-border-radius: 5;
+    -fx-padding: 10 20;
     -fx-font-weight: bold;
-    -fx-cursor: hand;
-    -fx-border-color: transparent;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
+    -fx-font-size: 14px;
 }
 
-.download-button:hover {
+.select-button:hover, .download-button:hover {
     -fx-background-color: #0056b3;
 }
 
-.download-button:pressed {
-    -fx-background-color: #004085;
+.select-button:pressed, .download-button:pressed {
+    -fx-background-color: #003f7f;
+}
+
+/* Estilo para a barra de progresso */
+.progress-bar {
+    -fx-accent: #007bff;
+}
+
+/* Estilo para as labels */
+.label {
+    -fx-text-fill: #333;
+}
+
+.message-label {
+    -fx-text-fill: #ff0000; /* Exemplo de cor vermelha para mensagens */
+}
+
+.change-label {
+    -fx-text-fill: #007bff; /* Exemplo de cor azul para mensagens de mudança */
 }
