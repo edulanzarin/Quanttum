@@ -724,7 +724,6 @@
     -fx-border-radius: 5;
     -fx-font-weight: bold;
 }
-
 /* Estilos para CadastrarNaturezaContabilContent */
 
 /* Estilo para o VBox principal */
@@ -789,3 +788,83 @@
     -fx-border-width: 1;
     -fx-padding: 10;
 }
+
+/* Estilos para EditarContaContent */
+
+/* Estilo para o VBox na janela de edição */
+.vbox-edicao {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-border-radius: 5;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+}
+
+/* Estilo para o campo de texto na janela de edição */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Estilo para o botão na janela de edição */
+.botao-edicao {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #28a745;
+    -fx-border-radius: 5;
+    -fx-padding: 10 20;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Estilo para as labels */
+.label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+}
+
+/* Estilos para CadastrarNaturezaContent */
+
+/* Estilo para o VBox na janela de cadastro */
+.vbox-edicao {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-border-radius: 5;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+}
+
+/* Estilo para o campo de texto */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Estilo para o botão de cadastro */
+.botao-edicao {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #28a745;
+    -fx-border-radius: 5;
+    -fx-padding: 10 20;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Estilo para as labels */
+.label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
