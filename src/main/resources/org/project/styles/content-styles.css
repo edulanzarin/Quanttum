@@ -593,11 +593,6 @@
     -fx-background-color: #ffffff;
 }
 
-.qualitplacas-content .table-view .cell:focused {
-    -fx-background-color: #f0f0f0;
-    -fx-text-fill: #333333;
-}
-
 /* ArquivosReinfExpressContent styles */
 .arquivos-reinf-express-content {
     -fx-background-color: #f8f8f8;
@@ -797,6 +792,24 @@
     -fx-background-radius: 5;
     -fx-border-width: 1;
     -fx-padding: 10;
+}
+
+.cadastrar-natureza-contabil-content .table-view .column {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+}
+
+.qcadastrar-natureza-contabil-content.table-view .column-header {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.cadastrar-natureza-contabil-content .table-view .cell {
+    -fx-text-fill: #333333;
+    -fx-background-color: #ffffff;
 }
 
 /* Estilos para EditarContaContent */

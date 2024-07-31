@@ -13,12 +13,12 @@ public class EditarContaContent extends VBox {
 
     private TextField txtConta;
     private Button btnSalvar;
-    private Stage dialogStage; // Mude de 'owner' para 'dialogStage'
+    private Stage dialogStage;
     private GerenciarNaturezas.NaturezaConta naturezaConta;
     private Runnable onSave;
 
     public EditarContaContent(Stage dialogStage, GerenciarNaturezas.NaturezaConta naturezaConta, Runnable onSave) {
-        this.dialogStage = dialogStage; // Use o 'dialogStage' para fechar a janela de edição
+        this.dialogStage = dialogStage;
         this.naturezaConta = naturezaConta;
         this.onSave = onSave;
 
@@ -44,13 +44,17 @@ public class EditarContaContent extends VBox {
         if (!txtConta.getText().isEmpty()) {
             naturezaConta.setConta(txtConta.getText());
             GerenciarNaturezas gerenciarNaturezas = new GerenciarNaturezas();
-            String range = "naturezas!C" + (naturezaConta.getId() + 1); // Ajuste conforme necessário
+
+            // Ajuste para o intervalo correto: a coluna C deve ser usada
+            int rowIndex = naturezaConta.getId() + 1; // Ajuste para a linha correta, considerando que o índice começa em 0
+            String range = "naturezas!C" + rowIndex; // Coluna C é para Conta
+
             try {
                 gerenciarNaturezas.atualizarConta(GerenciarNaturezas.SHEET_ID, range, txtConta.getText());
                 if (onSave != null) {
                     onSave.run();
                 }
-                dialogStage.close(); // Feche apenas o diálogo de edição
+                dialogStage.close();
             } catch (Exception e) {
                 e.printStackTrace();
                 showAlert(Alert.AlertType.ERROR, "Erro", "Não foi possível atualizar a conta.");

@@ -103,9 +103,7 @@ public class GerenciarNaturezas {
             Sheets sheetsService = SheetsServiceUtil.getSheetsService();
 
             ValueRange body = new ValueRange()
-                    .setValues(Arrays.asList(
-                            Arrays.asList(novoValor)
-                    ));
+                    .setValues(Collections.singletonList(Collections.singletonList(novoValor)));
             Sheets.Spreadsheets.Values.Update request = sheetsService.spreadsheets().values()
                     .update(spreadsheetId, range, body);
             request.setValueInputOption("RAW");
