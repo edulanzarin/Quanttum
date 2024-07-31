@@ -56,3 +56,49 @@
     -fx-font-size: 14px;
     -fx-padding-top: 10px;
 }
+
+.update-container {
+    -fx-background-color: #f1f1f1;
+    -fx-padding: 30px;
+    -fx-alignment: center;
+    -fx-spacing: 15px;
+    -fx-pref-width: 400px;
+    -fx-pref-height: 300px;
+}
+
+.title-label {
+    -fx-font-size: 22px;
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+}
+
+.message-label {
+    -fx-text-fill: red;
+    -fx-font-size: 14px;
+    -fx-padding-top: 10px;
+}
+
+.progress-bar {
+    -fx-pref-width: 100%;
+    -fx-padding: 10px;
+}
+
+.download-button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-padding: 12px 24px;
+    -fx-border-radius: 8px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
+}
+
+.download-button:hover {
+    -fx-background-color: #0056b3;
+}
+
+.download-button:pressed {
+    -fx-background-color: #004085;
+}
