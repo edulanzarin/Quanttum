@@ -9,6 +9,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.List;
+
 public class CadastrarNaturezaContent {
 
     private static GerenciarNaturezas gerenciarNaturezas = new GerenciarNaturezas(); // Inicialize o GerenciarNaturezas
@@ -37,22 +40,30 @@ public class CadastrarNaturezaContent {
         btnCadastrar.getStyleClass().add("botao-edicao"); // Alterado para botao-edicao
         btnCadastrar.setOnAction(e -> {
             String natureza = txtNatureza.getText();
-            String conta = txtConta.getText();
 
-            if (!natureza.isEmpty() && !conta.isEmpty()) {
-                GerenciarNaturezas.NaturezaConta novaNatureza = new GerenciarNaturezas.NaturezaConta(
-                        0, // ID será definido após o cadastro
-                        natureza,
-                        conta,
-                        codigo
-                );
+            if (!natureza.isEmpty() && !txtConta.getText().isEmpty()) {
+                // Verifica se a natureza já existe para a empresa
+                boolean naturezaExiste = verificarNaturezaExistente(codigo, natureza);
 
-                // Atualiza a planilha
-                gerenciarNaturezas.cadastrarNatureza(codigo, natureza, conta);
+                if (!naturezaExiste) {
+                    // Natureza não existe, então faz o cadastro
+                    String conta = txtConta.getText();
+                    GerenciarNaturezas.NaturezaConta novaNatureza = new GerenciarNaturezas.NaturezaConta(
+                            0, // ID será definido após o cadastro
+                            natureza,
+                            conta,
+                            codigo
+                    );
 
-                // Adiciona na tabela e fecha o diálogo
-                tabela.getItems().add(novaNatureza);
-                cadastroStage.close();
+                    // Atualiza a planilha
+                    gerenciarNaturezas.cadastrarNatureza(codigo, natureza, conta);
+
+                    // Adiciona na tabela e fecha o diálogo
+                    tabela.getItems().add(novaNatureza);
+                    cadastroStage.close();
+                } else {
+                    showAlert(Alert.AlertType.WARNING, "Atenção", "A natureza já existe para a empresa.", cadastroStage);
+                }
             } else {
                 showAlert(Alert.AlertType.WARNING, "Atenção", "Natureza e Conta não podem estar vazios.", cadastroStage);
             }
@@ -73,6 +84,18 @@ public class CadastrarNaturezaContent {
         cadastroStage.show();
     }
 
+    private static boolean verificarNaturezaExistente(String codigo, String natureza) {
+        List<GerenciarNaturezas.NaturezaConta> naturezas = gerenciarNaturezas.verificarCodigoECarregarNaturezas(codigo);
+        if (naturezas != null) {
+            for (GerenciarNaturezas.NaturezaConta nc : naturezas) {
+                if (nc.getNatureza().equals(natureza)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private static void showAlert(Alert.AlertType type, String title, String message, Stage owner) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
@@ -82,3 +105,4 @@ public class CadastrarNaturezaContent {
         alert.showAndWait();
     }
 }
+

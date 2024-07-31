@@ -99,10 +99,23 @@ public class GerenciarNaturezasContabilContent extends VBox {
             }
         });
 
+        // Botão de duplicar
+        Button btnDuplicar = new Button("Duplicar Naturezas");
+        btnDuplicar.getStyleClass().add("botao"); // Use a mesma classe de estilo que o botão de cadastrar
+        btnDuplicar.setOnAction(e -> {
+            String codigo = txtValor.getText();
+            if (codigo != null && !codigo.trim().isEmpty()) {
+                DuplicarNaturezasContent.showDuplicarDialog(primaryStage, codigo);
+            } else {
+                showAlert(AlertType.WARNING, "Atenção", "O código da empresa deve ser fornecido.", primaryStage);
+            }
+        });
+
+        // HBox para os botões
         HBox buttonBox = new HBox();
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(10);
-        buttonBox.getChildren().add(btnCadastrar);
+        buttonBox.getChildren().addAll(btnCadastrar, btnDuplicar);
 
         VBox.setMargin(buttonBox, new Insets(20, 0, 0, 0)); // Margem superior do botão
         VBox.setMargin(txtValorBox, new Insets(0, 0, 15, 0));
@@ -136,13 +149,11 @@ public class GerenciarNaturezasContabilContent extends VBox {
 
         MenuItem editarItem = new MenuItem("Editar Conta");
         editarItem.setOnAction(e -> {
-            System.out.println("Editar - ID: " + item.getId()); // Exibe o ID no console
             mostrarJanelaEdicao(item);
         });
 
         MenuItem excluirItem = new MenuItem("Excluir Natureza");
         excluirItem.setOnAction(e -> {
-            System.out.println("Excluir - ID: " + item.getId()); // Exibe o ID no console
             tabela.getItems().remove(item);
         });
 

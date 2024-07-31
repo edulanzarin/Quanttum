@@ -744,6 +744,16 @@
     -fx-font-size: 14px;
 }
 
+.cadastrar-natureza-contabil-content .dupli-botao {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #28a745;
+    -fx-border-radius: 5;
+    -fx-padding: 10 20;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
 /* Estilo para a tabela */
 .cadastrar-natureza-contabil-content .tabela {
     -fx-background-color: #ffffff;
@@ -867,4 +877,45 @@
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
+
+/* Estilos para DuplicarNaturezasContent */
+
+/* Estilo para o VBox na janela de duplicação */
+.vbox-duplicar {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+    -fx-border-radius: 5;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+}
+
+/* Estilo para o campo de texto */
+.txtvalor-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Estilo para o botão de duplicar */
+.botao {
+    -fx-background-color: #007bff;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #007bff;
+    -fx-border-radius: 5;
+    -fx-padding: 10 20;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Estilo para as labels */
+.label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
 

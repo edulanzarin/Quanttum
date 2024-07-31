@@ -63,9 +63,8 @@ public class ProcessarXmlFiscal {
                     valores.add(nodeList.item(i).getTextContent());
                 }
 
-                // Adiciona valores vazios se o campo não for encontrado
                 if (valores.isEmpty()) {
-                    valores.add("-");
+                    valores.add("");
                 }
 
                 dados.put(campo, valores);

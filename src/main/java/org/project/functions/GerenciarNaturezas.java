@@ -111,15 +111,18 @@ public class GerenciarNaturezas {
             request.setValueInputOption("RAW");
 
             request.execute();
-            System.out.println("Conta atualizada com sucesso!");
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
-            System.out.println("Não foi possível atualizar a conta");
         }
     }
 
     public void cadastrarNatureza(String codigo, String natureza, String conta) {
         try {
+            // Verificar se a natureza já existe para o código da empresa
+            if (naturezaExiste(codigo, natureza, conta)) {
+                return; // Não prossegue se a natureza já existe
+            }
+
             Sheets sheetsService = SheetsServiceUtil.getSheetsService();
 
             // 1. Encontrar o maior ID existente
@@ -137,10 +140,8 @@ public class GerenciarNaturezas {
             request.setInsertDataOption("INSERT_ROWS");
 
             request.execute();
-            System.out.println("Natureza cadastrada com sucesso!");
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
-            System.out.println("Não foi possível cadastrar a natureza");
         }
     }
 
@@ -175,6 +176,75 @@ public class GerenciarNaturezas {
             }
         }
         return maxId > 0 ? maxId : 1; // Retorna 1 se nenhum ID for encontrado
+    }
+
+    private static void duplicarNaturezas(GerenciarNaturezas gerenciarNaturezas, String codigoOriginal, String novoCodigo) {
+        // 1. Recupera todas as naturezas da empresa original
+        List<NaturezaConta> naturezasOriginal = gerenciarNaturezas.verificarCodigoECarregarNaturezas(codigoOriginal);
+
+        if (naturezasOriginal != null) {
+            // 2. Recupera todas as naturezas da nova empresa para comparação
+            List<NaturezaConta> naturezasNovaEmpresa = gerenciarNaturezas.verificarCodigoECarregarNaturezas(novoCodigo);
+
+            // Cria um conjunto para verificar rapidamente a existência
+            Set<String> naturezasExistentes = new HashSet<>();
+            if (naturezasNovaEmpresa != null) {
+                for (NaturezaConta natureza : naturezasNovaEmpresa) {
+                    naturezasExistentes.add(natureza.getNatureza() + "|" + natureza.getConta());
+                }
+            }
+
+            // 3. Para cada natureza da empresa original
+            for (NaturezaConta naturezaOriginal : naturezasOriginal) {
+                String chaveNatureza = naturezaOriginal.getNatureza() + "|" + naturezaOriginal.getConta();
+
+                // 4. Verifica se a combinação já existe na nova empresa
+                if (!naturezasExistentes.contains(chaveNatureza)) {
+                    // Adiciona a natureza na nova empresa
+                    gerenciarNaturezas.cadastrarNatureza(novoCodigo, naturezaOriginal.getNatureza(), naturezaOriginal.getConta());
+                }
+            }
+        }
+    }
+
+    public boolean empresaExiste(String codigo) throws IOException {
+        URL url = new URL("https://sheets.googleapis.com/v4/spreadsheets/" + SHEET_ID + "/values/" + EMPRESAS_RANGE + "?key=" + API_KEY);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            Scanner scanner = new Scanner(conn.getInputStream());
+            StringBuilder response = new StringBuilder();
+            while (scanner.hasNext()) {
+                response.append(scanner.nextLine());
+            }
+            scanner.close();
+
+            JSONObject jsonResponse = new JSONObject(response.toString());
+            JSONArray values = jsonResponse.optJSONArray("values");
+            if (values != null) {
+                for (int i = 0; i < values.length(); i++) {
+                    JSONArray row = values.getJSONArray(i);
+                    if (row.length() > 0 && row.getString(0).equals(codigo)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean naturezaExiste(String codigo, String natureza, String conta) throws IOException {
+        List<NaturezaConta> naturezas = carregarNaturezas(codigo);
+        if (naturezas != null) {
+            for (NaturezaConta nc : naturezas) {
+                if (nc.getNatureza().equals(natureza) && nc.getConta().equals(conta)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static class NaturezaConta {
