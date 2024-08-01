@@ -193,8 +193,6 @@ public class AtualizarVersao {
                     // Imprime a versão obtida da planilha
                     System.out.println("Versão remota obtida da planilha: " + remoteVersion);
 
-                    // Atualize o URL de download (também pode estar na planilha, ajuste conforme necessário)
-                    // Por exemplo, para URL de download na célula B1:
                     range = "version!B1";
                     ValueRange responseUrl = service.spreadsheets().values()
                             .get(spreadsheetId, range)

@@ -19,7 +19,7 @@ public class AtualizarVersaoWindow extends Application {
     private ProgressBar progressBar;
     private Button downloadButton;
     private String defaultDirectory = "C:\\Program Files\\Quanttum"; // Diretório padrão
-    private String configFilePath = "org/project/resources/config.properties"; // Caminho para o config.properties
+    private String configFilePath = "/org/project/config.properties"; // Caminho para o config.properties
 
     @Override
     public void start(Stage primaryStage) {
