@@ -52,7 +52,7 @@ public class ProcessarExtratoContabilContent extends VBox {
 
         // Adiciona o ComboBox ao lado do campo de código
         codeTypeComboBox = new ComboBox<>();
-        codeTypeComboBox.getItems().addAll("VIACREDI", "Sicredi", "Bradesco");
+        codeTypeComboBox.getItems().addAll("VIACREDI", "SICREDI", "Bradesco");
         codeTypeComboBox.setValue("Selecionar banco");
         codeTypeComboBox.getStyleClass().add("codigo-combobox");
         codeTypeComboBox.setPrefWidth(150);
@@ -109,11 +109,11 @@ public class ProcessarExtratoContabilContent extends VBox {
 
         TableColumn<Transaction, String> descriptionColumn = new TableColumn<>("Descrição");
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        descriptionColumn.setPrefWidth(310);
+        descriptionColumn.setPrefWidth(350);
 
         TableColumn<Transaction, String> valueColumn = new TableColumn<>("Valor");
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
-        valueColumn.setPrefWidth(180);
+        valueColumn.setPrefWidth(140);
 
         TableColumn<Transaction, String> debitColumn = new TableColumn<>("Débito");
         debitColumn.setCellValueFactory(new PropertyValueFactory<>("debit"));
@@ -159,7 +159,9 @@ public class ProcessarExtratoContabilContent extends VBox {
                 case "VIACREDI":
                     dataRows = ProcessarViacredi.processarPDF(selectedFile, codigo, useComma);
                     break;
-                // Adicione aqui os cases para outros bancos quando as funções estiverem prontas.
+                case "SICREDI":
+                    dataRows = ProcessarSicredi.processarPDF(selectedFile, codigo, useComma);
+                    break;
                 default:
                     showAlert(Alert.AlertType.INFORMATION, "Atenção", "Processamento para o banco " + bancoSelecionado + " não está disponível ainda.");
                     return;
