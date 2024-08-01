@@ -73,19 +73,6 @@ public class VerificarAtualizacao {
         }
     }
 
-    public static void writeVersionToFile(String newVersion) {
-        try {
-            JSONObject json = new JSONObject();
-            json.put("version", newVersion);
-
-            // O caminho para o recurso não pode ser usado para escrita; salvar fora do JAR
-            File versionFile = new File(System.getProperty("user.home") + File.separator + "Downloads" + File.separator + "version.json");
-            Files.write(versionFile.toPath(), json.toString(4).getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     // Converter o link do Google Drive para um link de download direto
     private static String convertToDirectDownloadLink(String viewLink) {
         // Extrair o ID do arquivo
@@ -120,12 +107,6 @@ public class VerificarAtualizacao {
                         outputStream.write(buffer, 0, bytesRead);
                     }
                     System.out.println("Download concluído!");
-
-                    // Atualizar a versão no arquivo JSON
-                    writeVersionToFile(readVersionFromFile());
-
-                    // Reiniciar a aplicação
-                    restartApplication();
                 }
             } else {
                 System.out.println("Nenhum arquivo encontrado. Código de resposta: " + responseCode);

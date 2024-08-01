@@ -15,8 +15,9 @@ import javafx.stage.Window;
 
 import org.project.functions.VerificarAtualizacao;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class VerificarAtualizacaoWindow extends Application {
 
@@ -30,6 +31,7 @@ public class VerificarAtualizacaoWindow extends Application {
     private Label changeLabel;
     private TextField filePathField;
     private Button downloadButton;
+    private Button updateButton;
 
     public static void setVersions(String actual, String newV, String link) {
         actualVersion = actual;
@@ -62,7 +64,7 @@ public class VerificarAtualizacaoWindow extends Application {
         filePathField = new TextField();
         filePathField.setPromptText("Selecione um diretório");
         filePathField.setPrefWidth(300);
-        filePathField.setText(System.getProperty("user.home") + "\\Downloads\\quanttum.jar"); // Define o caminho padrão para Downloads
+        filePathField.setText("C:\\Program Files\\Quanttum\\quanttum.jar"); // Define o caminho padrão para o diretório especificado
         filePathField.getStyleClass().add("text-field");
 
         Button chooseDirButton = new Button("...");
@@ -74,12 +76,15 @@ public class VerificarAtualizacaoWindow extends Application {
         downloadButton.getStyleClass().add("download-button");
         downloadButton.setOnAction(e -> startDownload());
 
-        // Layout horizontal para campo de texto e botão
         HBox fileBox = new HBox(10, filePathField, chooseDirButton);
         fileBox.setAlignment(Pos.CENTER); // Alinha horizontalmente no centro
 
+        // Layout horizontal para botões
+        HBox buttonBox = new HBox(10, downloadButton);
+        buttonBox.setAlignment(Pos.CENTER); // Alinha horizontalmente no centro
+
         // Layout vertical
-        VBox vbox = new VBox(10, titleLabel, currentVersionLabel, newVersionLabel, fileBox, downloadButton, messageLabel, changeLabel);
+        VBox vbox = new VBox(10, titleLabel, currentVersionLabel, newVersionLabel, fileBox, buttonBox, messageLabel, changeLabel);
         vbox.setPadding(new Insets(20));
         vbox.setAlignment(Pos.CENTER); // Alinha verticalmente no centro
         vbox.getStyleClass().add("update-container");
@@ -115,26 +120,40 @@ public class VerificarAtualizacaoWindow extends Application {
             // Atualizar a interface gráfica no FX Application Thread
             Platform.runLater(() -> {
                 messageLabel.setText("Download concluído!");
-
-                // Atualizar a versão no arquivo JSON
-                try {
-                    VerificarAtualizacao.writeVersionToFile(newVersion);
-
-                    // Executar o .bat para mover o JAR e fechar a aplicação
-                    String batFilePath = "C:\\Program Files\\Quanttum\\move.bat";
-                    ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", batFilePath);
-                    processBuilder.start();
-
-                    // Fechar a aplicação após iniciar o processo
-                    Platform.exit();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    messageLabel.setText("Erro ao substituir o arquivo JAR.");
-                }
             });
         }).start();
 
         // Atualizar a mensagem
         Platform.runLater(() -> messageLabel.setText("Download em progresso..."));
+    }
+
+    private void executeUpdateScript() {
+        try {
+            String batFilePath = "C:\\Program Files\\Quanttum\\move.bat";
+            File batFile = new File(batFilePath);
+
+            if (batFile.exists()) {
+                ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", batFilePath);
+                processBuilder.redirectErrorStream(true);
+                Process process = processBuilder.start();
+
+                try (InputStream inputStream = process.getInputStream();
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                }
+
+                process.waitFor();
+
+                messageLabel.setText("Atualização concluída!");
+            } else {
+                messageLabel.setText("Arquivo move.bat não encontrado na pasta especificada.");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            messageLabel.setText("Erro ao executar o arquivo move.bat.");
+        }
     }
 }
