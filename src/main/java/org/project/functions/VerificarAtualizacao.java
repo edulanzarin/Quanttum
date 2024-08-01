@@ -21,7 +21,7 @@ public class VerificarAtualizacao {
 
     private static final String SPREADSHEET_ID = "1G39rq0NGIMJ4LFHQ7-3unHAD39C_aZGAIZx1L3d7cD8";
     private static final String RANGE = "version!A2:B2";
-    private static final String VERSION_FILE_PATH = "src/main/resources/org/project/json/version.json";
+    private static final String VERSION_FILE_PATH = "/org/project/json/version.json"; // Caminho para recursos no JAR
 
     public static void verificarAtualizacao() {
         try {
@@ -61,8 +61,11 @@ public class VerificarAtualizacao {
     }
 
     private static String readVersionFromFile() {
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(VERSION_FILE_PATH)));
+        try (InputStream inputStream = VerificarAtualizacao.class.getResourceAsStream(VERSION_FILE_PATH)) {
+            if (inputStream == null) {
+                throw new FileNotFoundException("Arquivo não encontrado: " + VERSION_FILE_PATH);
+            }
+            String content = new String(inputStream.readAllBytes());
             JSONObject json = new JSONObject(content);
             return json.getString("version");
         } catch (IOException e) {
@@ -75,7 +78,10 @@ public class VerificarAtualizacao {
         try {
             JSONObject json = new JSONObject();
             json.put("version", newVersion);
-            Files.write(Paths.get(VERSION_FILE_PATH), json.toString(4).getBytes());
+
+            // O caminho para o recurso não pode ser usado para escrita; salvar fora do JAR
+            File versionFile = new File("version.json");
+            Files.write(versionFile.toPath(), json.toString(4).getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

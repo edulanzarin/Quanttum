@@ -122,7 +122,9 @@ public class VerificarAtualizacaoWindow extends Application {
                     VerificarAtualizacao.writeVersionToFile(newVersion);
 
                     // Substituir o JAR atual e reiniciar a aplicação
-                    VerificarAtualizacao.replaceCurrentJar(new File(filePath), new File(System.getProperty("user.dir") + "/quanttum.jar"));
+                    File downloadedJar = new File(filePath);
+                    File targetJar = new File("C:\\Program Files\\Quanttum\\quanttum.jar");
+                    VerificarAtualizacao.replaceCurrentJar(downloadedJar, targetJar);
                     VerificarAtualizacao.restartApplication();
                 } catch (IOException e) {
                     e.printStackTrace();
