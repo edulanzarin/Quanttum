@@ -39,7 +39,7 @@ public class ProcessarReinfExpress {
 
                 for (int j = 3; j < row.getLastCellNum(); j++) {
                     Cell cell = row.getCell(j);
-                    if (cell == null || cell.getCellType() != CellType.STRING) continue;
+                    if (cell == null) continue;
 
                     String header = getCellValue(headerRow.getCell(j));
                     String value = getCellValue(cell);
