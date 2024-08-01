@@ -1,11 +1,11 @@
 package org.project;
 
-import javafx.application.Application;
-import org.project.view.AtualizarVersaoWindow;
+import org.project.functions.VerificarAtualizacao;
 
 public class App {
 
     public static void main(String[] args) {
-        Application.launch(AtualizarVersaoWindow.class, args);
+        // Verifica se há uma atualização antes de iniciar a aplicação
+        VerificarAtualizacao.verificarAtualizacao();
     }
 }
