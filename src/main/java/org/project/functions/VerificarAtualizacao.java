@@ -2,7 +2,6 @@ package org.project.functions;
 
 import org.project.view.VerificarAtualizacaoWindow;
 import org.project.view.LoginWindow;
-
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import javafx.application.Application;
@@ -21,7 +20,7 @@ public class VerificarAtualizacao {
 
     private static final String SPREADSHEET_ID = "1G39rq0NGIMJ4LFHQ7-3unHAD39C_aZGAIZx1L3d7cD8";
     private static final String RANGE = "version!A2:B2";
-    private static final String VERSION_FILE_PATH = "/org/project/json/version.json"; // Caminho para recursos no JAR
+    private static final String VERSION_FILE_PATH = "/org/project/json/version.json";
 
     public static void verificarAtualizacao() {
         try {
@@ -80,7 +79,7 @@ public class VerificarAtualizacao {
             json.put("version", newVersion);
 
             // O caminho para o recurso não pode ser usado para escrita; salvar fora do JAR
-            File versionFile = new File("version.json");
+            File versionFile = new File(System.getProperty("user.home") + File.separator + "Downloads" + File.separator + "version.json");
             Files.write(versionFile.toPath(), json.toString(4).getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,17 +96,21 @@ public class VerificarAtualizacao {
     // Função para baixar o arquivo
     public static void downloadFile(String fileURL, String saveDir) {
         try {
-            File tempFile = File.createTempFile("quanttum", ".jar");
-            tempFile.deleteOnExit();
+            // Cria o diretório se não existir
+            File saveFile = new File(saveDir);
+            if (!saveFile.getParentFile().exists()) {
+                saveFile.getParentFile().mkdirs();
+            }
 
-            try (InputStream inputStream = new URL(fileURL).openStream();
-                 FileOutputStream outputStream = new FileOutputStream(tempFile)) {
+            // Cria a conexão e baixa o arquivo
+            HttpURLConnection httpConn = (HttpURLConnection) new URL(fileURL).openConnection();
+            int responseCode = httpConn.getResponseCode();
 
-                HttpURLConnection httpConn = (HttpURLConnection) new URL(fileURL).openConnection();
-                int responseCode = httpConn.getResponseCode();
+            // Verifica o código de resposta HTTP
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                try (InputStream inputStream = httpConn.getInputStream();
+                     FileOutputStream outputStream = new FileOutputStream(saveFile)) {
 
-                // Verifica o código de resposta HTTP
-                if (responseCode == HttpURLConnection.HTTP_OK) {
                     // Define o buffer para leitura do arquivo
                     byte[] buffer = new byte[4096];
                     int bytesRead;
@@ -118,18 +121,16 @@ public class VerificarAtualizacao {
                     }
                     System.out.println("Download concluído!");
 
-                    // Substituir o arquivo atual pelo novo arquivo baixado
-                    replaceCurrentJar(tempFile, new File(saveDir));
-
                     // Atualizar a versão no arquivo JSON
                     writeVersionToFile(readVersionFromFile());
 
                     // Reiniciar a aplicação
                     restartApplication();
-                } else {
-                    System.out.println("Nenhum arquivo encontrado. Código de resposta: " + responseCode);
                 }
+            } else {
+                System.out.println("Nenhum arquivo encontrado. Código de resposta: " + responseCode);
             }
+            httpConn.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }

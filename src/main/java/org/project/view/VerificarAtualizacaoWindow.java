@@ -28,7 +28,6 @@ public class VerificarAtualizacaoWindow extends Application {
     private Label newVersionLabel;
     private Label messageLabel;
     private Label changeLabel;
-    private DirectoryChooser directoryChooser;
     private TextField filePathField;
     private Button downloadButton;
 
@@ -63,7 +62,7 @@ public class VerificarAtualizacaoWindow extends Application {
         filePathField = new TextField();
         filePathField.setPromptText("Selecione um diretório");
         filePathField.setPrefWidth(300);
-        filePathField.setText("C:\\Program Files\\Quanttum\\quanttum.jar"); // Define o caminho padrão
+        filePathField.setText(System.getProperty("user.home") + "\\Downloads\\quanttum.jar"); // Define o caminho padrão para Downloads
         filePathField.getStyleClass().add("text-field");
 
         Button chooseDirButton = new Button("...");
@@ -94,7 +93,7 @@ public class VerificarAtualizacaoWindow extends Application {
     }
 
     private void showDirectoryChooser(Window window) {
-        directoryChooser = new DirectoryChooser();
+        DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Selecione o Diretório de Download");
         File selectedDirectory = directoryChooser.showDialog(window);
         if (selectedDirectory != null) {
@@ -121,23 +120,21 @@ public class VerificarAtualizacaoWindow extends Application {
                 try {
                     VerificarAtualizacao.writeVersionToFile(newVersion);
 
-                    // Substituir o JAR atual e reiniciar a aplicação
-                    File downloadedJar = new File(filePath);
-                    File targetJar = new File("C:\\Program Files\\Quanttum\\quanttum.jar");
-                    VerificarAtualizacao.replaceCurrentJar(downloadedJar, targetJar);
-                    VerificarAtualizacao.restartApplication();
+                    // Executar o .bat para mover o JAR e fechar a aplicação
+                    String batFilePath = "C:\\Program Files\\Quanttum\\move.bat";
+                    ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", batFilePath);
+                    processBuilder.start();
+
+                    // Fechar a aplicação após iniciar o processo
+                    Platform.exit();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    messageLabel.setText("Erro ao substituir o arquivo JAR ou reiniciar a aplicação.");
+                    messageLabel.setText("Erro ao substituir o arquivo JAR.");
                 }
             });
         }).start();
 
         // Atualizar a mensagem
         Platform.runLater(() -> messageLabel.setText("Download em progresso..."));
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
