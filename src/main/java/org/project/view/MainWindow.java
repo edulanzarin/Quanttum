@@ -65,10 +65,10 @@ public class MainWindow extends Application {
         sidebar.setPadding(new Insets(10));
         sidebar.getStyleClass().add("sidebar");
 
-        BorderPane footer = createFooter(); // Cria o rodapé
+        BorderPane footer = createFooter();
         sidebar.getChildren().add(footer);
 
-        HBox header = createSidebarHeader(); // Cria o cabeçalho da barra lateral
+        HBox header = createSidebarHeader();
         sidebar.getChildren().add(header);
 
         // Cria os menus da barra lateral
@@ -182,7 +182,7 @@ public class MainWindow extends Application {
     private String[] getDropdownItems(String title) {
         switch (title) {
             case "Bancos": return new String[]{"Processar Extrato"};
-            case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas"};
+            case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas", "Supermercado JK"};
             case "Conciliação": return new String[]{"Conciliar Planilha de Pagos", };
             case "Hyperlink": return new String[]{"DCTF"};
             case "Contábil": return new String[]{"Arquivos Reinf"};
@@ -236,6 +236,9 @@ public class MainWindow extends Application {
             case "Cadastrar Natureza":
                 showContent(new GerenciarNaturezasContabilContent(primaryStage), "Cadastrar Natureza - Contábil");
                 break;
+            case "Supermercado JK":
+                showContent(new SupermercadoJKContabilContent(primaryStage), "Supermercado JK - Contábil");
+                break;
             default:
                 // Gerenciar outros itens do menu, se necessário
                 break;
@@ -269,6 +272,8 @@ public class MainWindow extends Application {
                 contentPanel.getChildren().setAll(conferenciaFiscalAnaliticoContent);
             case GerenciarNaturezasContabilContent cadastrarNaturezaContabilContent ->
                 contentPanel.getChildren().setAll(cadastrarNaturezaContabilContent);
+            case SupermercadoJKContabilContent supermercadoJKContabilContent ->
+                contentPanel.getChildren().setAll(supermercadoJKContabilContent);
             case null, default -> contentPanel.getChildren().setAll((MainContent) contentInstance);
         }
 

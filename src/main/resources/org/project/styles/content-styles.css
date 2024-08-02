@@ -922,4 +922,123 @@
     -fx-font-weight: bold;
 }
 
+/* MANUAIS */
+/* Estilo para o VBox na janela de anexos */
+.vbox-anexos {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-border-radius: 5;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+}
+
+/* Estilo para o botão de anexar */
+.botao-anexar {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #28a745;
+    -fx-border-radius: 5;
+    -fx-padding: 10 20;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Estilo para os labels de anexos */
+.label-anexo {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Estilo para o container principal */
+.root-container {
+    -fx-background-color: #e9ecef;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-border-radius: 5;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1;
+}
+
+/* SupermercadoJKContabilContent styles */
+.supermercadojk-content {
+    -fx-background-color: #f8f8f8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.supermercadojk-content .title {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+.supermercadojk-content .text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 10;
+    -fx-pref-width: 300px; /* Define uma largura preferencial para o campo de caminho do arquivo */
+}
+
+.supermercadojk-content .select-button {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 10;
+    -fx-min-width: 40px; /* Define uma largura mínima para o botão */
+    -fx-text-fill: #007bff; /* Cor do texto */
+    -fx-font-weight: bold;
+}
+
+.supermercadojk-content .process-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #28a745;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+    -fx-font-weight: bold;
+}
+
+.supermercadojk-content .export-button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #007bff;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+    -fx-font-weight: bold;
+}
+
+/* SupermercadoJKContabilContent TableView styles */
+.supermercadojk-content .table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-border-width: 1;
+    -fx-padding: 10;
+}
+
+.supermercadojk-content .table-view .column {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+}
+
+.supermercadojk-content .table-view .column-header {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.supermercadojk-content .table-view .cell {
+    -fx-text-fill: #333333;
+    -fx-background-color: #ffffff;
+}
+
+
 
