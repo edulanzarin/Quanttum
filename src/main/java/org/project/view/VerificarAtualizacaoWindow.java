@@ -64,7 +64,7 @@ public class VerificarAtualizacaoWindow extends Application {
         filePathField = new TextField();
         filePathField.setPromptText("Selecione um diretório");
         filePathField.setPrefWidth(300);
-        filePathField.setText("C:\\Program Files\\Quanttum\\quanttum.jar"); // Define o caminho padrão para o diretório especificado
+        filePathField.setText("C:\\Quanttum\\quanttum.jar"); // Define o caminho padrão para o diretório especificado
         filePathField.getStyleClass().add("text-field");
 
         Button chooseDirButton = new Button("...");
