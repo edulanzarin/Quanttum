@@ -140,7 +140,7 @@ public class MainWindow extends Application {
         footer.setPadding(new Insets(10));
         footer.getStyleClass().add("footer");
 
-        Label footerLabel = new Label("© 2024 Quanttum | Versão 1.0");
+        Label footerLabel = new Label("© 2024 Quanttum");
         footerLabel.getStyleClass().add("footer-label");
 
         footer.setCenter(footerLabel);
