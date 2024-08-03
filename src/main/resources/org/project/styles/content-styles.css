@@ -632,54 +632,176 @@
     -fx-font-weight: bold;
 }
 
-/* styles.css */
-
-/* Estilo para o conteúdo do cronograma */
+/* Estilo para o container principal */
 .meu-cronograma-content {
-    -fx-background-color: #f9f9f9; /* Cor de fundo clara */
-    -fx-border-color: #ddd; /* Borda suave */
-    -fx-border-width: 1px; /* Largura da borda */
-    -fx-border-radius: 8px; /* Bordas arredondadas */
-    -fx-padding: 20px; /* Espaçamento interno */
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0); /* Sombra suave */
+    -fx-background-color: #f4f4f9; /* Cor de fundo muito clara e moderna */
+    -fx-border-color: #e0e0e0; /* Borda suave e discreta */
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 2); /* Sombra leve */
+}
+
+/* Estilo para os containers individuais */
+.container {
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 2); /* Sombra suave */
+    -fx-alignment: center; /* Alinha o conteúdo vertical e horizontalmente */
+}
+
+/* Estilo para o título da lista de tarefas */
+.tarefas-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding-bottom: 10px;
 }
 
 /* Estilo para o GridPane do calendário */
 .calendar-grid {
-    -fx-background-color: transparent; /* Remove o fundo do GridPane */
-    -fx-padding: 10px; /* Espaçamento interno */
+    -fx-background-color: transparent;
+    -fx-padding: 0; /* Remove o padding interno */
 }
 
 /* Estilo para os rótulos dos dias da semana */
 .day-label {
-    -fx-font-size: 14px; /* Tamanho da fonte */
-    -fx-text-fill: #555; /* Cor do texto */
-    -fx-padding: 10px; /* Espaçamento interno */
-    -fx-background-color: #e0e0e0; /* Cor de fundo dos rótulos */
-    -fx-background-radius: 5px; /* Bordas arredondadas */
-    -fx-border-color: transparent; /* Remove bordas */
+    -fx-font-size: 14px;
+    -fx-text-fill: #666; /* Cor do texto mais suave */
+    -fx-padding: 8px;
+    -fx-background-color: #e9ecef; /* Cor de fundo neutra */
+    -fx-background-radius: 6px;
+    -fx-border-color: transparent;
+    -fx-alignment: center; /* Alinha o conteúdo vertical e horizontalmente */
 }
 
 /* Estilo para os botões dos dias */
 .day-button {
-    -fx-background-color: #ffffff; /* Cor de fundo branca */
-    -fx-border-color: #cccccc; /* Cor da borda */
-    -fx-border-radius: 8px; /* Bordas arredondadas */
-    -fx-text-fill: #333; /* Cor do texto */
-    -fx-font-size: 16px; /* Tamanho da fonte */
-    -fx-min-width: 50px; /* Largura mínima */
-    -fx-min-height: 50px; /* Altura mínima */
-    -fx-pref-width: 50px; /* Largura preferida */
-    -fx-pref-height: 50px; /* Altura preferida */
-    -fx-padding: 0; /* Remove o padding interno */
-    -fx-alignment: center; /* Alinha o texto ao centro */
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8px;
+    -fx-text-fill: #333;
+    -fx-font-size: 14px;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+    -fx-padding: 0;
+    -fx-alignment: center; /* Alinha o conteúdo vertical e horizontalmente */
+}
+
+/* Estilo para o botão do dia atual */
+.today-button {
+    -fx-border-color: #007bff;
+    -fx-border-width: 2px;
 }
 
 /* Estilo para os botões ao passar o mouse */
 .day-button:hover {
-    -fx-background-color: #e7e7e7; /* Cor de fundo ao passar o mouse */
-    -fx-border-color: #b0b0b0; /* Cor da borda ao passar o mouse */
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1); /* Sombra ao passar o mouse */
+    -fx-background-color: #f1f3f5; /* Cor de fundo clara ao passar o mouse */
+    -fx-border-color: #ced4da;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 2); /* Sombra ao passar o mouse */
+}
+
+/* Estilo para os botões de navegação entre meses */
+.nav-button {
+    -fx-background-color: #007bff; /* Cor de fundo azul */
+    -fx-text-fill: white; /* Texto branco */
+    -fx-font-size: 16px;
+    -fx-border-radius: 8px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-padding: 0;
+    -fx-alignment: center; /* Alinha o conteúdo vertical e horizontalmente */
+    -fx-cursor: hand; /* Cursor de mão ao passar sobre o botão */
+}
+
+/* Estilo para os botões de navegação ao passar o mouse */
+.nav-button:hover {
+    -fx-background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+}
+
+/* Estilo para o rótulo do mês */
+.month-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* Estilo para o botão de cadastrar tarefa */
+.cadastrar-tarefa-button {
+    -fx-background-color: #007bff; /* Cor de fundo azul */
+    -fx-text-fill: white; /* Texto branco */
+    -fx-font-size: 14px;
+    -fx-border-radius: 8px;
+    -fx-min-width: 150px;
+    -fx-min-height: 40px;
+    -fx-pref-width: 150px;
+    -fx-pref-height: 40px;
+    -fx-padding: 0;
+    -fx-alignment: center;
+    -fx-cursor: hand; /* Cursor de mão ao passar sobre o botão */
+    -fx-margin: 10px 0 0 0; /* Margem superior para separar do conteúdo acima */
+}
+
+.cadastrar-tarefa-button:hover {
+    -fx-background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+}
+
+.resetar-tarefas-button {
+    -fx-background-color: #b30000; /* Cor de fundo vermelha */
+    -fx-text-fill: white; /* Texto branco */
+    -fx-font-size: 14px;
+    -fx-border-radius: 8px;
+    -fx-min-width: 150px;
+    -fx-min-height: 40px;
+    -fx-pref-width: 150px;
+    -fx-pref-height: 40px;
+    -fx-padding: 0;
+    -fx-alignment: center;
+    -fx-cursor: hand; /* Cursor de mão ao passar sobre o botão */
+    -fx-margin: 10px 0 0 0; /* Margem superior para separar do conteúdo acima */
+}
+
+.resetar-tarefas-button:hover {
+    -fx-background-color: #b30000; /* Cor mais escura ao passar o mouse */
+}
+
+/* Estilo para cada bloco de tarefa */
+.tarefa-box {
+    -fx-background-color: #ffffff; /* Cor de fundo branca */
+    -fx-border-color: #e0e0e0; /* Borda cinza clara */
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-padding: 10px;
+    -fx-margin: 5px 0; /* Margem entre as tarefas */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 2); /* Sombra leve */
+}
+
+/* Estilo para o título da tarefa */
+.tarefa-titulo {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding-bottom: 5px;
+}
+
+/* Estilo para a descrição da tarefa */
+.tarefa-descricao {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666;
+}
+
+.export-button {
+    -fx-background-color: #4CAF50; /* Cor de fundo verde */
+    -fx-text-fill: white; /* Cor do texto */
+    -fx-padding: 10px 20px; /* Espaçamento interno */
+    -fx-font-size: 14px; /* Tamanho da fonte */
+    -fx-border-radius: 5px; /* Bordas arredondadas */
+    -fx-background-radius: 5px; /* Bordas arredondadas do fundo */
 }
 
 .conferencia-fiscal-contabil-content {

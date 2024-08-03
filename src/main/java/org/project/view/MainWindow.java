@@ -232,7 +232,7 @@ public class MainWindow extends Application {
                 showContent(new ArquivosReinfExpressContent(primaryStage, userId), "Arquivos Reinf - Express");
                 break;
             case "Meu Cronograma":
-                showContent(new MeuCronogramaContent(primaryStage), "Meu Cronograma");
+                showContent(new MeuCronogramaContent(primaryStage, userId), "Meu Cronograma");
                 break;
             case "Analítico":
                 showContent(new ConferenciaFiscalAnaliticoContent(primaryStage), "Conferência Fiscal - Contábil");
