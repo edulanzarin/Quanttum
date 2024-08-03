@@ -141,34 +141,4 @@ public class VerificarAtualizacaoWindow extends Application {
         // Atualizar a mensagem
         Platform.runLater(() -> messageLabel.setText("Download em progresso..."));
     }
-
-    private void executeUpdateScript() {
-        try {
-            String batFilePath = "C:\\Program Files\\Quanttum\\move.bat";
-            File batFile = new File(batFilePath);
-
-            if (batFile.exists()) {
-                ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", batFilePath);
-                processBuilder.redirectErrorStream(true);
-                Process process = processBuilder.start();
-
-                try (InputStream inputStream = process.getInputStream();
-                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                }
-
-                process.waitFor();
-
-                messageLabel.setText("Atualização concluída!");
-            } else {
-                messageLabel.setText("Arquivo move.bat não encontrado na pasta especificada.");
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            messageLabel.setText("Erro ao executar o arquivo move.bat.");
-        }
-    }
 }
