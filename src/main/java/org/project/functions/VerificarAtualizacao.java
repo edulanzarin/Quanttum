@@ -83,7 +83,7 @@ public class VerificarAtualizacao {
     // Função para baixar o arquivo
     public static void downloadFile(String fileURL, String saveDir) {
         try {
-            // Cria o diretório se não existir
+            // Cria o arquivo e diretório se não existir
             File saveFile = new File(saveDir);
             if (!saveFile.getParentFile().exists()) {
                 saveFile.getParentFile().mkdirs();
@@ -115,28 +115,5 @@ public class VerificarAtualizacao {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void replaceCurrentJar(File source, File target) throws IOException {
-        Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
-    }
-
-    public static void restartApplication() throws IOException {
-        String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
-        File currentJar = new File(VerificarAtualizacao.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-
-        /* is it a jar file? */
-        if (!currentJar.getName().endsWith(".jar"))
-            return;
-
-        /* Build command: java -jar application.jar */
-        final ArrayList<String> command = new ArrayList<>();
-        command.add(javaBin);
-        command.add("-jar");
-        command.add(currentJar.getPath());
-
-        final ProcessBuilder builder = new ProcessBuilder(command);
-        builder.start();
-        System.exit(0);
     }
 }

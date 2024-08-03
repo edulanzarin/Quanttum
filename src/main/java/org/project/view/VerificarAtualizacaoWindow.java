@@ -17,6 +17,7 @@ import org.project.functions.VerificarAtualizacao;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class VerificarAtualizacaoWindow extends Application {
@@ -67,7 +68,7 @@ public class VerificarAtualizacaoWindow extends Application {
         filePathField = new TextField();
         filePathField.setPromptText("Selecione um diretório");
         filePathField.setPrefWidth(300);
-        String quanttumPath = "C:\\Quanttum\\Quanttum.exe";
+        String quanttumPath = "C:\\Quanttum\\quanttum.jar";
         filePathField.setText(quanttumPath);
         filePathField.getStyleClass().add("text-field");
 
@@ -107,7 +108,7 @@ public class VerificarAtualizacaoWindow extends Application {
         directoryChooser.setTitle("Selecione o Diretório de Download");
         File selectedDirectory = directoryChooser.showDialog(window);
         if (selectedDirectory != null) {
-            filePathField.setText(selectedDirectory.getAbsolutePath() + "\\Quanttum.exe");
+            filePathField.setText(selectedDirectory.getAbsolutePath() + "\\quanttum.jar");
         }
     }
 
@@ -118,24 +119,13 @@ public class VerificarAtualizacaoWindow extends Application {
             return;
         }
 
-        // Caminho para a área de trabalho
-        String desktopPath = System.getProperty("user.home") + "\\Desktop\\Quanttum.exe";
-
         // Iniciar o download
         new Thread(() -> {
-            // Baixar para o caminho especificado
+            // Baixar o arquivo para o caminho especificado
             VerificarAtualizacao.downloadFile(downloadLink, filePath);
-            // Copiar o arquivo para a área de trabalho
-            try {
-                Files.copy(Paths.get(filePath), Paths.get(desktopPath), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
             // Atualizar a interface gráfica no FX Application Thread
-            Platform.runLater(() -> {
-                messageLabel.setText("Download concluído!");
-            });
+            Platform.runLater(() -> messageLabel.setText("Download concluído!"));
         }).start();
 
         // Atualizar a mensagem
