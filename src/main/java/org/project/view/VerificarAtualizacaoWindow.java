@@ -13,7 +13,6 @@ import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
 import org.project.functions.VerificarAtualizacao;
 
 import java.io.*;
@@ -32,7 +31,6 @@ public class VerificarAtualizacaoWindow extends Application {
     private Label changeLabel;
     private TextField filePathField;
     private Button downloadButton;
-    private Button updateButton;
 
     public static void setVersions(String actual, String newV, String link) {
         actualVersion = actual;
@@ -69,7 +67,8 @@ public class VerificarAtualizacaoWindow extends Application {
         filePathField = new TextField();
         filePathField.setPromptText("Selecione um diretório");
         filePathField.setPrefWidth(300);
-        filePathField.setText("C:\\Quanttum\\quanttum.jar"); // Define o caminho padrão para o diretório especificado
+        String quanttumPath = "C:\\Quanttum\\Quanttum.exe";
+        filePathField.setText(quanttumPath);
         filePathField.getStyleClass().add("text-field");
 
         Button chooseDirButton = new Button("...");
@@ -108,7 +107,7 @@ public class VerificarAtualizacaoWindow extends Application {
         directoryChooser.setTitle("Selecione o Diretório de Download");
         File selectedDirectory = directoryChooser.showDialog(window);
         if (selectedDirectory != null) {
-            filePathField.setText(selectedDirectory.getAbsolutePath() + "\\quanttum.jar");
+            filePathField.setText(selectedDirectory.getAbsolutePath() + "\\Quanttum.exe");
         }
     }
 
@@ -119,9 +118,19 @@ public class VerificarAtualizacaoWindow extends Application {
             return;
         }
 
+        // Caminho para a área de trabalho
+        String desktopPath = System.getProperty("user.home") + "\\Desktop\\Quanttum.exe";
+
         // Iniciar o download
         new Thread(() -> {
+            // Baixar para o caminho especificado
             VerificarAtualizacao.downloadFile(downloadLink, filePath);
+            // Copiar o arquivo para a área de trabalho
+            try {
+                Files.copy(Paths.get(filePath), Paths.get(desktopPath), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             // Atualizar a interface gráfica no FX Application Thread
             Platform.runLater(() -> {
