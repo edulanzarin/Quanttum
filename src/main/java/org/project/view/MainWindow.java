@@ -35,6 +35,10 @@ public class MainWindow extends Application {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Quanttum");
 
+        // Adicionar o ícone
+        String iconPath = "/org/project/images/icon.png";
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream(iconPath)));
+
         BorderPane mainLayout = new BorderPane(); // Layout principal da janela
         VBox sidebar = createSidebar(); // Cria a barra lateral
         mainLayout.setLeft(sidebar);

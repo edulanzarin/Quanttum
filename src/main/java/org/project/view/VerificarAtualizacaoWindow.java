@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -42,6 +43,10 @@ public class VerificarAtualizacaoWindow extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Verificar Atualização");
+
+        // Adicionar o ícone
+        String iconPath = "/org/project/images/icon.ico";
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream(iconPath)));
 
         // Título
         Label titleLabel = new Label("Atualizar Versão");
@@ -96,6 +101,7 @@ public class VerificarAtualizacaoWindow extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 
     private void showDirectoryChooser(Window window) {
         DirectoryChooser directoryChooser = new DirectoryChooser();

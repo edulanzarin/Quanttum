@@ -8,6 +8,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.project.functions.ChangePassword;
+import javafx.scene.image.Image;
 
 public class ChangePasswordWindow extends Application {
 
@@ -21,6 +22,10 @@ public class ChangePasswordWindow extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Alterar Senha");
+
+        // Adicionar o ícone
+        String iconPath = "/org/project/images/icon.png";
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream(iconPath)));
 
         VBox passwordContainer = new VBox();
         passwordContainer.getStyleClass().add("auth-container");

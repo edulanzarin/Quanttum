@@ -21,11 +21,15 @@ public class LoginWindow extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Login");
 
+        // Adicionar o ícone
+        String iconPath = "/org/project/images/icon.png";
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream(iconPath)));
+
         VBox authContainer = new VBox();
         authContainer.getStyleClass().add("auth-container");
 
-        // Adicionando o ícone
-        ImageView iconView = new ImageView(new Image(getClass().getResourceAsStream("/org/project/images/icon.png")));
+        // Adicionando o ícone na interface
+        ImageView iconView = new ImageView(new Image(getClass().getResourceAsStream(iconPath)));
         iconView.setFitWidth(60);  // Defina a largura desejada do ícone
         iconView.setFitHeight(60); // Defina a altura desejada do ícone
 
