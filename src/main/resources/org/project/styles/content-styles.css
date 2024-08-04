@@ -644,10 +644,8 @@
 
 /* Estilo para os containers individuais */
 .container {
-    -fx-border-width: 1px;
     -fx-border-radius: 10px;
     -fx-padding: 10px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 2); /* Sombra suave */
     -fx-alignment: center; /* Alinha o conteúdo vertical e horizontalmente */
 }
 
@@ -679,8 +677,6 @@
 /* Estilo para os botões dos dias */
 .day-button {
     -fx-background-color: #ffffff;
-    -fx-border-color: #e0e0e0;
-    -fx-border-radius: 8px;
     -fx-text-fill: #333;
     -fx-font-size: 14px;
     -fx-min-width: 50px;
@@ -701,7 +697,6 @@
 .day-button:hover {
     -fx-background-color: #f1f3f5; /* Cor de fundo clara ao passar o mouse */
     -fx-border-color: #ced4da;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 2); /* Sombra ao passar o mouse */
 }
 
 /* Estilo para os botões de navegação entre meses */
@@ -752,7 +747,7 @@
 }
 
 .resetar-tarefas-button {
-    -fx-background-color: #b30000; /* Cor de fundo vermelha */
+    -fx-background-color: #f52626; /* Cor de fundo vermelha */
     -fx-text-fill: white; /* Texto branco */
     -fx-font-size: 14px;
     -fx-border-radius: 8px;
@@ -770,29 +765,51 @@
     -fx-background-color: #b30000; /* Cor mais escura ao passar o mouse */
 }
 
+.filtrar-button {
+    -fx-background-color: #007bff; /* Cor de fundo vermelha */
+    -fx-text-fill: white; /* Texto branco */
+    -fx-font-size: 12px;
+    -fx-border-radius: 8px;
+    -fx-min-width: 100px;
+    -fx-min-height: 30px;
+    -fx-pref-width: 100px;
+    -fx-pref-height: 30px;
+    -fx-padding: 0;
+    -fx-alignment: center;
+    -fx-cursor: hand; /* Cursor de mão ao passar sobre o botão */
+    -fx-margin: 10px 0 0 0; /* Margem superior para separar do conteúdo acima */
+}
+
+.filtrar-button:hover {
+    -fx-background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+}
+
 /* Estilo para cada bloco de tarefa */
 .tarefa-box {
     -fx-background-color: #ffffff; /* Cor de fundo branca */
-    -fx-border-color: #e0e0e0; /* Borda cinza clara */
     -fx-border-width: 1px;
-    -fx-border-radius: 8px;
     -fx-padding: 10px;
     -fx-margin: 5px 0; /* Margem entre as tarefas */
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 2); /* Sombra leve */
 }
 
-/* Estilo para o título da tarefa */
-.tarefa-titulo {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333;
-    -fx-padding-bottom: 5px;
+.cadastrar-tarefa-combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
 }
 
 /* Estilo para a descrição da tarefa */
 .tarefa-descricao {
     -fx-font-size: 14px;
     -fx-text-fill: #666;
+}
+
+.filter-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
 }
 
 .export-button {

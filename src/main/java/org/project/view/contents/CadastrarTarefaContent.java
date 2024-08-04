@@ -4,10 +4,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.project.functions.MeuCronograma;
@@ -30,19 +30,20 @@ public class CadastrarTarefaContent {
         formBox.setSpacing(10);
         formBox.setAlignment(Pos.CENTER);
 
-        // Campo para título da tarefa
-        Label titleLabel = new Label("Título:");
+        // Campo para título da tarefa (ComboBox)
+        Label titleLabel = new Label("Tipo:");
         titleLabel.getStyleClass().add("cadastrar-tarefa-label"); // Aplica o estilo
-        TextField titleField = new TextField();
-        titleField.getStyleClass().add("cadastrar-tarefa-text-field"); // Aplica o estilo
-        titleField.setPromptText("Digite o título da tarefa");
+        ComboBox<String> titleComboBox = new ComboBox<>();
+        titleComboBox.getItems().addAll("Digitação", "Fechamento", "Obrigação Acessória", "Outros"); // Substitua pelos títulos desejados
+        titleComboBox.setValue("Selecione o tipo"); // Define o valor padrão
+        titleComboBox.getStyleClass().add("cadastrar-tarefa-combo-box"); // Aplica o estilo
 
         // Campo para descrição da tarefa
         Label descriptionLabel = new Label("Descrição:");
         descriptionLabel.getStyleClass().add("cadastrar-tarefa-label"); // Aplica o estilo
         TextArea descriptionArea = new TextArea();
         descriptionArea.getStyleClass().add("cadastrar-tarefa-text-area"); // Aplica o estilo
-        descriptionArea.setPromptText("Digite a descrição da tarefa");
+        descriptionArea.setPromptText("Digite a descrição ou a empresa");
 
         // Campo para data da tarefa
         Label dateLabel = new Label("Data:");
@@ -54,7 +55,7 @@ public class CadastrarTarefaContent {
         Button confirmButton = new Button("Confirmar");
         confirmButton.getStyleClass().add("cadastrar-tarefa-button"); // Aplica o estilo
         confirmButton.setOnAction(e -> {
-            String titulo = titleField.getText();
+            String titulo = titleComboBox.getValue(); // Obtém o título selecionado no ComboBox
             String descricao = descriptionArea.getText();
             LocalDate data = datePicker.getValue(); // Obtém a data selecionada
 
@@ -69,9 +70,9 @@ public class CadastrarTarefaContent {
             cadastroStage.close(); // Fecha a janela após confirmar
         });
 
-        formBox.getChildren().addAll(titleLabel, titleField, descriptionLabel, descriptionArea, dateLabel, datePicker, confirmButton);
+        formBox.getChildren().addAll(titleLabel, titleComboBox, descriptionLabel, descriptionArea, dateLabel, datePicker, confirmButton);
 
-        Scene scene = new Scene(formBox, 300, 300); // Ajusta o tamanho da janela para incluir o novo campo
+        Scene scene = new Scene(formBox, 300, 350); // Ajusta o tamanho da janela para incluir o novo campo
         scene.getStylesheets().add(getClass().getResource("/org/project/styles/content-styles.css").toExternalForm()); // Aplica o CSS
         cadastroStage.setScene(scene);
         cadastroStage.show();

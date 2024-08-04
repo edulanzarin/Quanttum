@@ -198,5 +198,35 @@ public class MeuCronograma {
             service.spreadsheets().values().batchUpdate(SPREADSHEET_ID, body).execute();
         }
     }
+
+    public static void atualizarStatusTarefa(String tarefaId, String novoStatus) throws IOException, GeneralSecurityException {
+        Sheets service = SheetsServiceUtil.getSheetsService();
+        String range = SHEET_NAME + "!A:F"; // Colunas da planilha (A a F)
+
+        // Obter todas as tarefas
+        ValueRange response = service.spreadsheets().values()
+                .get(SPREADSHEET_ID, range)
+                .execute();
+        List<List<Object>> values = response.getValues();
+
+        // Encontrar a tarefa com o ID correspondente e atualizar o status
+        List<List<Object>> updatedData = new ArrayList<>();
+        if (values != null) {
+            for (List<Object> row : values) {
+                if (row.size() > 0 && tarefaId.equals(row.get(0).toString())) {
+                    row.set(4, novoStatus); // Atualiza o status na quinta coluna (índice 4)
+                }
+                updatedData.add(row);
+            }
+        }
+
+        // Atualizar a planilha com os dados modificados
+        ValueRange body = new ValueRange().setValues(updatedData);
+        UpdateValuesResponse result = service.spreadsheets().values()
+                .update(SPREADSHEET_ID, SHEET_NAME, body)
+                .setValueInputOption("RAW")
+                .execute();
+    }
+
 }
 
