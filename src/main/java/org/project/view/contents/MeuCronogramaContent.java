@@ -450,13 +450,13 @@ public class MeuCronogramaContent extends HBox {
                 tarefaBox.setStyle("-fx-border-color: lightgray; -fx-border-width: 2px;");
                 break;
             case "Atrasada":
-                tarefaBox.setStyle("-fx-border-color: lightcoral; -fx-border-width: 2px;");
+                tarefaBox.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
                 break;
             case "Concluída":
-                tarefaBox.setStyle("-fx-border-color: lightgreen; -fx-border-width: 2px;");
+                tarefaBox.setStyle("-fx-border-color: green; -fx-border-width: 2px;");
                 break;
             case "Pendência":
-                tarefaBox.setStyle("-fx-border-color: lightgoldenrodyellow; -fx-border-width: 2px;");
+                tarefaBox.setStyle("-fx-border-color: yellow; -fx-border-width: 2px;");
                 break;
             default:
                 tarefaBox.setStyle("-fx-border-color: black; -fx-border-width: 2px;"); // Cor padrão
