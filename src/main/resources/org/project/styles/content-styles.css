@@ -746,8 +746,8 @@
     -fx-background-color: #0056b3; /* Cor mais escura ao passar o mouse */
 }
 
-.resetar-tarefas-button {
-    -fx-background-color: #f52626; /* Cor de fundo vermelha */
+.duplicar-tarefas-button {
+    -fx-background-color: #2ca912; /* Cor de fundo vermelha */
     -fx-text-fill: white; /* Texto branco */
     -fx-font-size: 14px;
     -fx-border-radius: 8px;
@@ -761,8 +761,8 @@
     -fx-margin: 10px 0 0 0; /* Margem superior para separar do conteúdo acima */
 }
 
-.resetar-tarefas-button:hover {
-    -fx-background-color: #b30000; /* Cor mais escura ao passar o mouse */
+.duplicar-tarefas-button:hover {
+    -fx-background-color: #248602; /* Cor mais escura ao passar o mouse */
 }
 
 .filtrar-button {
@@ -819,6 +819,34 @@
     -fx-font-size: 14px; /* Tamanho da fonte */
     -fx-border-radius: 5px; /* Bordas arredondadas */
     -fx-background-radius: 5px; /* Bordas arredondadas do fundo */
+}
+
+.duplicar-dialog-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.duplicar-dialog-combobox {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-pref-width: 150px;
+}
+
+.duplicar-dialog-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.duplicar-dialog-button:hover {
+    -fx-background-color: #45a049;
 }
 
 .conferencia-fiscal-contabil-content {

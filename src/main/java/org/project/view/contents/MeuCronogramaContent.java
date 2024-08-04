@@ -25,8 +25,9 @@ import org.project.functions.MeuCronograma;
 import java.io.*;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 public class MeuCronogramaContent extends HBox {
 
@@ -43,6 +44,8 @@ public class MeuCronogramaContent extends HBox {
     private ScrollPane tarefaContentScrollPane;
     private ComboBox<String> statusFilterComboBox;
     private ComboBox<String> tituloFilterComboBox;
+    private DatePicker dataFilterDatePickerInicial;
+    private DatePicker dataFilterDatePickerFinal;
 
     public MeuCronogramaContent(Stage primaryStage, String userId) {
         this.primaryStage = primaryStage;
@@ -80,18 +83,18 @@ public class MeuCronogramaContent extends HBox {
         cadastrarTarefaButton.getStyleClass().add("cadastrar-tarefa-button");
         cadastrarTarefaButton.setOnAction(e -> new CadastrarTarefaContent(primaryStage, userId, this::atualizarTarefas));
 
-        Button resetarTarefasButton = new Button("Resetar");
-        resetarTarefasButton.setMinSize(100, 30);
-        resetarTarefasButton.getStyleClass().add("resetar-tarefas-button");
-        resetarTarefasButton.setOnAction(e -> resetarTarefas());
+        Button duplicarTarefasButton = new Button("Duplicar");
+        duplicarTarefasButton.setMinSize(100, 30);
+        duplicarTarefasButton.getStyleClass().add("duplicar-tarefas-button");
+        duplicarTarefasButton.setOnAction(e -> duplicarTarefas());
 
-        buttonBox.getChildren().addAll(cadastrarTarefaButton, resetarTarefasButton);
+        buttonBox.getChildren().addAll(cadastrarTarefaButton, duplicarTarefasButton);
 
         Label statusLabel = new Label("Status:");
         statusLabel.getStyleClass().add("filter-label");
 
         statusFilterComboBox = new ComboBox<>();
-        statusFilterComboBox.getItems().addAll("Todos", "Pendente", "Concluída", "Pendência", "Atrasada");
+        statusFilterComboBox.getItems().addAll("Todos", "Aberta", "Concluída", "Pendência Interna", "Pendência Externa", "Atrasada");
         statusFilterComboBox.setValue("Todos"); // Define o valor padrão
         statusFilterComboBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
 
@@ -111,12 +114,19 @@ public class MeuCronogramaContent extends HBox {
         tipoFilterBox.setAlignment(Pos.CENTER); // Alinha ao centro
         tipoFilterBox.getChildren().addAll(tipoLabel, tituloFilterComboBox);
 
+        dataFilterDatePickerInicial = new DatePicker();
+        dataFilterDatePickerFinal = new DatePicker();
+
+        HBox dataFilterBox = new HBox(10);
+        dataFilterBox.setAlignment(Pos.CENTER);
+        dataFilterBox.getChildren().addAll(dataFilterDatePickerInicial, dataFilterDatePickerFinal);
+
         Button filtrarButton = new Button("Filtrar");
         filtrarButton.setMinSize(100, 30);
         filtrarButton.getStyleClass().add("filtrar-button");
         filtrarButton.setOnAction(e -> atualizarTarefas()); // Chama a função de atualizar as tarefas
 
-        buttonAndFilterBox.getChildren().addAll(buttonBox, statusFilterBox, tipoFilterBox, filtrarButton);
+        buttonAndFilterBox.getChildren().addAll(buttonBox, statusFilterBox, tipoFilterBox, dataFilterBox, filtrarButton);
 
         tarefasBox.getChildren().addAll(tarefasTitle, buttonAndFilterBox);
 
@@ -176,7 +186,7 @@ public class MeuCronogramaContent extends HBox {
         // Cria uma VBox para o botão de exportar com margem inferior
         HBox exportBox = new HBox();
         exportBox.setAlignment(Pos.CENTER);
-        exportBox.setPadding(new Insets(10, 0, 10, 0)); // Adiciona margem inferior
+        exportBox.setPadding(new Insets(30, 0, 10, 0)); // Adiciona margem inferior
         exportBox.setSpacing(10);
 
         // Botão de exportar
@@ -228,13 +238,15 @@ public class MeuCronogramaContent extends HBox {
             // Obtém os valores selecionados do ComboBox e carrega as tarefas
             String selectedStatus = statusFilterComboBox.getValue();
             String selectedTitulo = tituloFilterComboBox.getValue();
-            loadTarefas(selectedStatus, selectedTitulo);
+            LocalDate dataInicial = dataFilterDatePickerInicial.getValue();
+            LocalDate dataFinal = dataFilterDatePickerFinal.getValue();
+            loadTarefas(selectedStatus, selectedTitulo, dataInicial, dataFinal);
         } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace(); // Tratar erros adequadamente
         }
     }
 
-    private void loadTarefas(String statusFiltro, String tituloFiltro) throws IOException, GeneralSecurityException {
+    private void loadTarefas(String statusFiltro, String tituloFiltro, LocalDate dataInicial, LocalDate dataFinal) throws IOException, GeneralSecurityException {
         List<Tarefa> tarefas = MeuCronograma.getTarefasPorUsuario(userId);
 
         // Filtra as tarefas com base no status selecionado
@@ -245,6 +257,11 @@ public class MeuCronogramaContent extends HBox {
         // Filtra as tarefas com base no título selecionado
         if (!tituloFiltro.equals("Todos")) {
             tarefas.removeIf(tarefa -> !tarefa.getTitulo().equals(tituloFiltro));
+        }
+
+        // Filtra as tarefas com base no intervalo de datas selecionado
+        if (dataInicial != null && dataFinal != null) {
+            tarefas.removeIf(tarefa -> tarefa.getDia() == null || tarefa.getDia().isBefore(dataInicial) || tarefa.getDia().isAfter(dataFinal));
         }
 
         // Ordena a lista de tarefas por data (do dia mais antigo para o mais atual)
@@ -271,7 +288,7 @@ public class MeuCronogramaContent extends HBox {
             Label descriptionLabel = new Label("Descrição/Empresa: " + tarefa.getDescricao());
             descriptionLabel.getStyleClass().add("tarefa-descricao");
 
-            Label dayLabel = new Label("Dia: " + (tarefa.getDia() != null ? tarefa.getDia().toString() : "Não definido"));
+            Label dayLabel = new Label("Data: " + (tarefa.getDia() != null ? tarefa.getDia().toString() : "Não definido"));
             dayLabel.getStyleClass().add("tarefa-dia");
 
             Label statusLabel = new Label("Status: " + tarefa.getStatus());
@@ -338,7 +355,7 @@ public class MeuCronogramaContent extends HBox {
     private void showTarefasDiaContent(int day) {
         LocalDate selectedDate = LocalDate.of(currentDate.getYear(), currentDate.getMonth(), day);
         tarefaContentBox.getChildren().clear();
-        tarefaContentBox.getChildren().add(new Label("Tarefas para o dia " + selectedDate));
+        tarefaContentBox.getChildren().add(new Label("Tarefas para a data " + selectedDate));
 
         try {
             List<Tarefa> tarefasParaDia = MeuCronograma.getTarefasPorDia(userId, selectedDate);
@@ -361,7 +378,7 @@ public class MeuCronogramaContent extends HBox {
                 Label descriptionLabel = new Label("Descrição/Empresa: " + tarefa.getDescricao());
                 descriptionLabel.getStyleClass().add("tarefa-descricao");
 
-                Label dayLabel = new Label("Dia: " + tarefa.getDia());
+                Label dayLabel = new Label("Data: " + tarefa.getDia());
                 dayLabel.getStyleClass().add("tarefa-dia");
 
                 Label statusLabel = new Label("Status: " + tarefa.getStatus());
@@ -401,8 +418,8 @@ public class MeuCronogramaContent extends HBox {
 
             // Cria e estiliza o ComboBox
             ComboBox<String> statusComboBox = new ComboBox<>();
-            statusComboBox.getItems().addAll("Pendente", "Concluída", "Pendência", "Atrasada");
-            statusComboBox.setValue("Pendente"); // Define o valor padrão
+            statusComboBox.getItems().addAll("Aberta", "Concluída", "Pendência Interna", "Pendência Externa", "Atrasada");
+            statusComboBox.setValue("Aberta"); // Define o valor padrão
             statusComboBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
 
             // Cria e estiliza o botão
@@ -422,7 +439,7 @@ public class MeuCronogramaContent extends HBox {
                         try {
                             MeuCronograma.atualizarStatusTarefa(tarefaId, selectedStatus);
                             tarefaContentBox.getChildren().clear();
-                            tarefaContentBox.getChildren().add(new Label("Tarefas para o dia " + currentDate));
+                            tarefaContentBox.getChildren().add(new Label("Tarefas para a data " + currentDate));
                             atualizarTarefas(); // Atualiza a lista de tarefas
                             statusStage.close();
                         } catch (IOException | GeneralSecurityException ex) {
@@ -446,7 +463,7 @@ public class MeuCronogramaContent extends HBox {
 
     private void setTarefaBorderColor(VBox tarefaBox, String status) {
         switch (status) {
-            case "Pendente":
+            case "Aberta":
                 tarefaBox.setStyle("-fx-border-color: gray; -fx-border-width: 2px;");
                 break;
             case "Atrasada":
@@ -455,8 +472,11 @@ public class MeuCronogramaContent extends HBox {
             case "Concluída":
                 tarefaBox.setStyle("-fx-border-color: green; -fx-border-width: 2px; -fx-background-color: #99ff7d");
                 break;
-            case "Pendência":
+            case "Pendência Interna":
                 tarefaBox.setStyle("-fx-border-color: yellow; -fx-border-width: 2px; -fx-background-color: #ffff7d");
+                break;
+            case "Pendência Externa":
+                tarefaBox.setStyle("-fx-border-color: #c800ff; -fx-border-width: 2px; -fx-background-color: #c87dff");
                 break;
             default:
                 tarefaBox.setStyle("-fx-border-color: black; -fx-border-width: 2px;"); // Cor padrão
@@ -503,7 +523,7 @@ public class MeuCronogramaContent extends HBox {
                         try {
                             MeuCronograma.atualizarDataTarefa(tarefaId, selectedDate);
                             tarefaContentBox.getChildren().clear();
-                            tarefaContentBox.getChildren().add(new Label("Tarefas para o dia " + selectedDate));
+                            tarefaContentBox.getChildren().add(new Label("Tarefas para a data " + selectedDate));
                             atualizarTarefas(); // Atualiza a lista de tarefas
                             dateStage.close();
                         } catch (IOException | GeneralSecurityException ex) {
@@ -572,7 +592,7 @@ public class MeuCronogramaContent extends HBox {
             PdfPCell cell1 = new PdfPCell();
             cell1.addElement(new Paragraph("Tipo: " + tarefa1.getTitulo()));
             cell1.addElement(new Paragraph("Descrição/Empresa: " + tarefa1.getDescricao()));
-            cell1.addElement(new Paragraph("Dia: " + (tarefa1.getDia() != null ? tarefa1.getDia().toString() : "Não definido")));
+            cell1.addElement(new Paragraph("Data: " + (tarefa1.getDia() != null ? tarefa1.getDia().toString() : "Não definido")));
             cell1.addElement(new Paragraph("Status: " + tarefa1.getStatus()));
             table.addCell(cell1);
 
@@ -582,7 +602,7 @@ public class MeuCronogramaContent extends HBox {
                 PdfPCell cell2 = new PdfPCell();
                 cell2.addElement(new Paragraph("Tipo: " + tarefa2.getTitulo()));
                 cell2.addElement(new Paragraph("Descrição/Empresa: " + tarefa2.getDescricao()));
-                cell2.addElement(new Paragraph("Dia: " + (tarefa2.getDia() != null ? tarefa2.getDia().toString() : "Não definido")));
+                cell2.addElement(new Paragraph("Data: " + (tarefa2.getDia() != null ? tarefa2.getDia().toString() : "Não definido")));
                 cell2.addElement(new Paragraph("Status: " + tarefa2.getStatus()));
                 table.addCell(cell2);
             } else {
@@ -655,12 +675,91 @@ public class MeuCronogramaContent extends HBox {
         }
     }
 
-    private void resetarTarefas() {
-        try {
-            MeuCronograma.resetarTarefas(userId); // Reseta todas as tarefas do usuário
-            atualizarTarefas(); // Atualiza a lista de tarefas na interface
-        } catch (IOException | GeneralSecurityException ex) {
-            ex.printStackTrace(); // Tratar erros adequadamente
-        }
+    private void duplicarTarefas() {
+        Stage duplicarStage = new Stage();
+        duplicarStage.initModality(Modality.APPLICATION_MODAL);
+        duplicarStage.setTitle("Duplicar Tarefas");
+
+        VBox duplicarLayout = new VBox();
+        duplicarLayout.setPadding(new Insets(20));
+        duplicarLayout.setSpacing(10);
+        duplicarLayout.setAlignment(Pos.CENTER);
+
+        Label mesCopiaLabel = new Label("Selecione o mês de origem:");
+        mesCopiaLabel.getStyleClass().add("duplicar-dialog-label");
+
+        ComboBox<String> mesCopiaComboBox = new ComboBox<>();
+        mesCopiaComboBox.getItems().addAll(
+                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        );
+        mesCopiaComboBox.getStyleClass().add("duplicar-dialog-combobox");
+
+        Label mesAlvoLabel = new Label("Selecione o mês de destino:");
+        mesAlvoLabel.getStyleClass().add("duplicar-dialog-label");
+
+        ComboBox<String> mesAlvoComboBox = new ComboBox<>();
+        mesAlvoComboBox.getItems().addAll(
+                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        );
+        mesAlvoComboBox.getStyleClass().add("duplicar-dialog-combobox");
+
+        Button duplicarButton = new Button("Duplicar");
+        duplicarButton.getStyleClass().add("duplicar-dialog-button");
+        duplicarButton.setOnAction(e -> {
+            String mesCopia = mesCopiaComboBox.getValue();
+            String mesAlvo = mesAlvoComboBox.getValue();
+            if (mesCopia != null && mesAlvo != null) {
+                // Lógica para duplicar as tarefas aqui, usando mesCopia e mesAlvo
+                try {
+                    duplicarTarefasPorMes(userId, mesCopia, mesAlvo);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                } catch (GeneralSecurityException ex) {
+                    throw new RuntimeException(ex);
+                }
+                duplicarStage.close();
+            }
+        });
+
+        duplicarLayout.getChildren().addAll(mesCopiaLabel, mesCopiaComboBox, mesAlvoLabel, mesAlvoComboBox, duplicarButton);
+
+        Scene scene = new Scene(duplicarLayout, 300, 250);
+        scene.getStylesheets().add(getClass().getResource("/org/project/styles/content-styles.css").toExternalForm()); // Atualize o caminho para o CSS
+        duplicarStage.setScene(scene);
+        duplicarStage.showAndWait();
+    }
+
+    private void duplicarTarefasPorMes(String userId, String mesCopia, String mesAlvo) throws IOException, GeneralSecurityException {
+        int mesOrigem = obterNumeroDoMes(mesCopia);
+        int mesDestino = obterNumeroDoMes(mesAlvo);
+
+        // Chama a função de duplicar tarefas do pacote org.project.functions.MeuCronograma
+        MeuCronograma.duplicarTarefas(userId, mesOrigem, mesDestino);
+
+        // Atualizar a interface do usuário para refletir as mudanças
+        atualizarTarefas();
+    }
+
+    private static final Map<String, Integer> mesMap = new HashMap<>();
+
+    static {
+        mesMap.put("Janeiro", 1);
+        mesMap.put("Fevereiro", 2);
+        mesMap.put("Março", 3);
+        mesMap.put("Abril", 4);
+        mesMap.put("Maio", 5);
+        mesMap.put("Junho", 6);
+        mesMap.put("Julho", 7);
+        mesMap.put("Agosto", 8);
+        mesMap.put("Setembro", 9);
+        mesMap.put("Outubro", 10);
+        mesMap.put("Novembro", 11);
+        mesMap.put("Dezembro", 12);
+    }
+
+    public static int obterNumeroDoMes(String mes) {
+        return mesMap.getOrDefault(mes, -1);
     }
 }

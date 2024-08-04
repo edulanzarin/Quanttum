@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.time.format.DateTimeParseException;
-
+import java.time.DayOfWeek;
 
 public class MeuCronograma {
 
@@ -19,7 +19,6 @@ public class MeuCronograma {
     private static final String SHEET_NAME = "tarefas"; // Nome da aba da planilha onde você quer adicionar a tarefa
 
     // Função para adicionar uma nova tarefa
-// Função para adicionar uma nova tarefa
     public static void addTarefa(String titulo, String descricao, LocalDate data, String usuarioId) throws IOException, GeneralSecurityException {
         Sheets service = SheetsServiceUtil.getSheetsService();
 
@@ -33,7 +32,7 @@ public class MeuCronograma {
         rowData.add(titulo);                 // Título
         rowData.add(descricao);              // Descrição
         rowData.add(data != null ? data.toString() : ""); // Dia
-        rowData.add("Pendente");               // Status (definido como "Aberta")
+        rowData.add("Aberta");               // Status (definido como "Aberta")
         rowData.add(usuarioId);              // Usuário
 
         // Adiciona a nova linha à planilha
@@ -73,7 +72,6 @@ public class MeuCronograma {
     }
 
     // Função para obter as tarefas por usuário
-// Função para obter as tarefas por usuário
     public static List<Tarefa> getTarefasPorUsuario(String usuarioId) throws IOException, GeneralSecurityException {
         Sheets service = SheetsServiceUtil.getSheetsService();
         String range = SHEET_NAME + "!A:F"; // Colunas da planilha (A a F)
@@ -111,7 +109,6 @@ public class MeuCronograma {
         return tarefasUsuario;
     }
 
-
     // Função para obter as tarefas por data
     public static List<Tarefa> getTarefasPorDia(String usuarioId, LocalDate data) throws IOException, GeneralSecurityException {
         Sheets service = SheetsServiceUtil.getSheetsService();
@@ -139,7 +136,6 @@ public class MeuCronograma {
         return tarefasPorDia;
     }
 
-    // Atualiza a data de uma tarefa existente
     // Atualiza a data de uma tarefa existente e define o status como "Aberta"
     public static void atualizarDataTarefa(String tarefaId, LocalDate novaData) throws IOException, GeneralSecurityException {
         Sheets service = SheetsServiceUtil.getSheetsService();
@@ -157,7 +153,7 @@ public class MeuCronograma {
             for (List<Object> row : values) {
                 if (row.size() > 0 && tarefaId.equals(row.get(0).toString())) {
                     row.set(3, novaData.toString()); // Atualiza a data na quarta coluna (índice 3)
-                    row.set(4, "Pendente"); // Define o status como "Aberta" na quinta coluna (índice 4)
+                    row.set(4, "Aberta"); // Define o status como "Aberta" na quinta coluna (índice 4)
                 }
                 updatedData.add(row);
             }
@@ -171,32 +167,47 @@ public class MeuCronograma {
                 .execute();
     }
 
-    public static void resetarTarefas(String userId) throws IOException, GeneralSecurityException {
-        Sheets service = SheetsServiceUtil.getSheetsService();
-        String range = SHEET_NAME + "!A:F"; // Colunas da planilha (A a F)
+    // Função para duplicar tarefas de um mês para outro
+    public static void duplicarTarefas(String userId, int mesCopia, int mesAlvo) throws IOException, GeneralSecurityException {
+        List<Tarefa> tarefasDoMes = getTarefasDoMes(userId, mesCopia);
+        for (Tarefa tarefa : tarefasDoMes) {
+            // Atualiza a data para o novo mês mantendo o mesmo dia
+            LocalDate novaData = tarefa.getDia().withMonth(mesAlvo);
 
-        // Obtém todas as tarefas
-        ValueRange response = service.spreadsheets().values()
-                .get(SPREADSHEET_ID, range)
-                .execute();
-        List<List<Object>> values = response.getValues();
-
-        // Verifica se há tarefas a serem atualizadas
-        if (values != null && !values.isEmpty()) {
-            List<ValueRange> data = new ArrayList<>();
-            for (List<Object> row : values) {
-                // Verifica se a tarefa pertence ao usuário
-                if (row.size() >= 6 && row.get(5).equals(userId)) {
-                    row.set(4, "Pendente"); // Define o status da tarefa como "Aberta"
-                    String updateRange = SHEET_NAME + "!A" + (values.indexOf(row) + 1) + ":F" + (values.indexOf(row) + 1);
-                    data.add(new ValueRange().setRange(updateRange).setValues(Collections.singletonList(row)));
-                }
+            // Verifica se a data resultante é um dia útil
+            if (!isDiaUtil(novaData)) {
+                // Ajusta para o próximo dia útil se a data resultante não for um dia útil
+                novaData = ajustarParaProximoDiaUtil(novaData);
             }
 
-            // Atualiza todas as tarefas na planilha
-            BatchUpdateValuesRequest body = new BatchUpdateValuesRequest().setValueInputOption("RAW").setData(data);
-            service.spreadsheets().values().batchUpdate(SPREADSHEET_ID, body).execute();
+            addTarefa(tarefa.getTitulo(), tarefa.getDescricao(), novaData, userId);
         }
+    }
+
+    // Função para obter as tarefas de um mês específico para um usuário
+    private static List<Tarefa> getTarefasDoMes(String usuarioId, int mes) throws IOException, GeneralSecurityException {
+        List<Tarefa> todasTarefas = getTarefasPorUsuario(usuarioId);
+        List<Tarefa> tarefasDoMes = new ArrayList<>();
+        for (Tarefa tarefa : todasTarefas) {
+            if (tarefa.getDia() != null && tarefa.getDia().getMonthValue() == mes) {
+                tarefasDoMes.add(tarefa);
+            }
+        }
+        return tarefasDoMes;
+    }
+
+    // Função para verificar se uma data é um dia útil (segunda a sexta)
+    private static boolean isDiaUtil(LocalDate data) {
+        DayOfWeek diaDaSemana = data.getDayOfWeek();
+        return diaDaSemana != DayOfWeek.SATURDAY && diaDaSemana != DayOfWeek.SUNDAY;
+    }
+
+    // Função para ajustar uma data para o próximo dia útil
+    private static LocalDate ajustarParaProximoDiaUtil(LocalDate data) {
+        while (!isDiaUtil(data)) {
+            data = data.plusDays(1);
+        }
+        return data;
     }
 
     public static void atualizarStatusTarefa(String tarefaId, String novoStatus) throws IOException, GeneralSecurityException {
@@ -227,6 +238,4 @@ public class MeuCronograma {
                 .setValueInputOption("RAW")
                 .execute();
     }
-
 }
-
