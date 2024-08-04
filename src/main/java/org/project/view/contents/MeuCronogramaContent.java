@@ -268,7 +268,7 @@ public class MeuCronogramaContent extends HBox {
             Label titleLabel = new Label("Tipo: " + tarefa.getTitulo());
             titleLabel.getStyleClass().add("tarefa-titulo");
 
-            Label descriptionLabel = new Label("Descrição: " + tarefa.getDescricao());
+            Label descriptionLabel = new Label("Descrição/Empresa: " + tarefa.getDescricao());
             descriptionLabel.getStyleClass().add("tarefa-descricao");
 
             Label dayLabel = new Label("Dia: " + (tarefa.getDia() != null ? tarefa.getDia().toString() : "Não definido"));
@@ -358,7 +358,7 @@ public class MeuCronogramaContent extends HBox {
                 Label titleLabel = new Label("Tipo: " + tarefa.getTitulo());
                 titleLabel.getStyleClass().add("tarefa-titulo");
 
-                Label descriptionLabel = new Label("Descrição: " + tarefa.getDescricao());
+                Label descriptionLabel = new Label("Descrição/Empresa: " + tarefa.getDescricao());
                 descriptionLabel.getStyleClass().add("tarefa-descricao");
 
                 Label dayLabel = new Label("Dia: " + tarefa.getDia());
@@ -447,16 +447,16 @@ public class MeuCronogramaContent extends HBox {
     private void setTarefaBorderColor(VBox tarefaBox, String status) {
         switch (status) {
             case "Pendente":
-                tarefaBox.setStyle("-fx-border-color: lightgray; -fx-border-width: 2px;");
+                tarefaBox.setStyle("-fx-border-color: gray; -fx-border-width: 2px;");
                 break;
             case "Atrasada":
-                tarefaBox.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+                tarefaBox.setStyle("-fx-border-color: red; -fx-border-width: 2px; -fx-background-color: #ff7d7d");
                 break;
             case "Concluída":
-                tarefaBox.setStyle("-fx-border-color: green; -fx-border-width: 2px;");
+                tarefaBox.setStyle("-fx-border-color: green; -fx-border-width: 2px; -fx-background-color: #99ff7d");
                 break;
             case "Pendência":
-                tarefaBox.setStyle("-fx-border-color: yellow; -fx-border-width: 2px;");
+                tarefaBox.setStyle("-fx-border-color: yellow; -fx-border-width: 2px; -fx-background-color: #ffff7d");
                 break;
             default:
                 tarefaBox.setStyle("-fx-border-color: black; -fx-border-width: 2px;"); // Cor padrão
@@ -571,7 +571,7 @@ public class MeuCronogramaContent extends HBox {
             Tarefa tarefa1 = tarefas.get(i);
             PdfPCell cell1 = new PdfPCell();
             cell1.addElement(new Paragraph("Tipo: " + tarefa1.getTitulo()));
-            cell1.addElement(new Paragraph("Descrição ou Empresa: " + tarefa1.getDescricao()));
+            cell1.addElement(new Paragraph("Descrição/Empresa: " + tarefa1.getDescricao()));
             cell1.addElement(new Paragraph("Dia: " + (tarefa1.getDia() != null ? tarefa1.getDia().toString() : "Não definido")));
             cell1.addElement(new Paragraph("Status: " + tarefa1.getStatus()));
             table.addCell(cell1);
@@ -581,7 +581,7 @@ public class MeuCronogramaContent extends HBox {
                 Tarefa tarefa2 = tarefas.get(i + 1);
                 PdfPCell cell2 = new PdfPCell();
                 cell2.addElement(new Paragraph("Tipo: " + tarefa2.getTitulo()));
-                cell2.addElement(new Paragraph("Descrição ou Empresa: " + tarefa2.getDescricao()));
+                cell2.addElement(new Paragraph("Descrição/Empresa: " + tarefa2.getDescricao()));
                 cell2.addElement(new Paragraph("Dia: " + (tarefa2.getDia() != null ? tarefa2.getDia().toString() : "Não definido")));
                 cell2.addElement(new Paragraph("Status: " + tarefa2.getStatus()));
                 table.addCell(cell2);
@@ -612,7 +612,7 @@ public class MeuCronogramaContent extends HBox {
                 headerCell0.setCellValue("Tipo");
 
                 Cell headerCell1 = headerRow.createCell(1);
-                headerCell1.setCellValue("Descrição");
+                headerCell1.setCellValue("Descrição/Empresa");
 
                 Cell headerCell2 = headerRow.createCell(2);
                 headerCell2.setCellValue("Data");
