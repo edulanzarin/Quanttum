@@ -86,7 +86,7 @@ public class GerenciarNaturezas {
                 for (int i = 0; i < values.length(); i++) {
                     JSONArray row = values.getJSONArray(i);
                     if (row.length() > 3 && row.getString(3).equals(codigo)) {
-                        int id = Integer.parseInt(row.getString(0)); // ID está na primeira coluna
+                        String id = String.format(row.getString(0)); // ID está na primeira coluna
                         String natureza = row.getString(1);
                         String conta = row.getString(2);
                         String codigoNatureza = row.getString(3);
@@ -114,24 +114,25 @@ public class GerenciarNaturezas {
         }
     }
 
-    public void cadastrarNatureza(String codigo, String natureza, String conta) {
+    public void cadastrarNaturezas(List<NaturezaConta> naturezas, String codigo) {
         try {
-            // Verificar se a natureza já existe para o código da empresa
-            if (naturezaExiste(codigo, natureza, conta)) {
-                return; // Não prossegue se a natureza já existe
-            }
-
             Sheets sheetsService = SheetsServiceUtil.getSheetsService();
 
-            // 1. Encontrar o maior ID existente
-            int maxId = encontrarMaiorId(sheetsService);
+            // Cria a lista de valores para a requisição em lote
+            List<List<Object>> values = new ArrayList<>();
+            for (NaturezaConta natureza : naturezas) {
+                values.add(Arrays.asList(
+                        UUID.randomUUID().toString(), // Gera um novo ID UUID para cada natureza
+                        natureza.getNatureza(),
+                        natureza.getConta(),
+                        codigo
+                ));
+            }
 
-            // 2. Adicionar o novo registro com o ID incrementado
-            int novoId = maxId + 1;
-            ValueRange body = new ValueRange()
-                    .setValues(Arrays.asList(
-                            Arrays.asList(novoId, natureza, conta, codigo)
-                    ));
+            // Cria o corpo da requisição
+            ValueRange body = new ValueRange().setValues(values);
+
+            // Faz a requisição para adicionar as naturezas
             Sheets.Spreadsheets.Values.Append request = sheetsService.spreadsheets().values()
                     .append(SHEET_ID, NATUREZAS_RANGE, body);
             request.setValueInputOption("RAW");
@@ -143,46 +144,13 @@ public class GerenciarNaturezas {
         }
     }
 
-    private int encontrarMaiorId(Sheets sheetsService) throws IOException {
-        // Ler os dados da planilha para encontrar o maior ID
-        URL url = new URL("https://sheets.googleapis.com/v4/spreadsheets/" + SHEET_ID + "/values/" + NATUREZAS_RANGE + "?key=" + API_KEY);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-
-        int responseCode = conn.getResponseCode();
-        int maxId = 0;
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            Scanner scanner = new Scanner(conn.getInputStream());
-            StringBuilder response = new StringBuilder();
-            while (scanner.hasNext()) {
-                response.append(scanner.nextLine());
-            }
-            scanner.close();
-
-            JSONObject jsonResponse = new JSONObject(response.toString());
-            JSONArray values = jsonResponse.optJSONArray("values");
-            if (values != null) {
-                for (int i = 0; i < values.length(); i++) {
-                    JSONArray row = values.getJSONArray(i);
-                    if (row.length() > 0) {
-                        int id = Integer.parseInt(row.getString(0));
-                        if (id > maxId) {
-                            maxId = id;
-                        }
-                    }
-                }
-            }
-        }
-        return maxId > 0 ? maxId : 1; // Retorna 1 se nenhum ID for encontrado
-    }
-
-    private static void duplicarNaturezas(GerenciarNaturezas gerenciarNaturezas, String codigoOriginal, String novoCodigo) {
-        // 1. Recupera todas as naturezas da empresa original
-        List<NaturezaConta> naturezasOriginal = gerenciarNaturezas.verificarCodigoECarregarNaturezas(codigoOriginal);
+    public void duplicarNaturezas(String codigoOriginal, String novoCodigo) {
+        // Recupera todas as naturezas da empresa original
+        List<NaturezaConta> naturezasOriginal = verificarCodigoECarregarNaturezas(codigoOriginal);
 
         if (naturezasOriginal != null) {
-            // 2. Recupera todas as naturezas da nova empresa para comparação
-            List<NaturezaConta> naturezasNovaEmpresa = gerenciarNaturezas.verificarCodigoECarregarNaturezas(novoCodigo);
+            // Recupera todas as naturezas da nova empresa para comparação
+            List<NaturezaConta> naturezasNovaEmpresa = verificarCodigoECarregarNaturezas(novoCodigo);
 
             // Cria um conjunto para verificar rapidamente a existência
             Set<String> naturezasExistentes = new HashSet<>();
@@ -192,16 +160,22 @@ public class GerenciarNaturezas {
                 }
             }
 
-            // 3. Para cada natureza da empresa original
+            // Cria uma lista para armazenar as naturezas a serem adicionadas
+            List<NaturezaConta> naturezasParaAdicionar = new ArrayList<>();
+
+            // Para cada natureza da empresa original
             for (NaturezaConta naturezaOriginal : naturezasOriginal) {
                 String chaveNatureza = naturezaOriginal.getNatureza() + "|" + naturezaOriginal.getConta();
 
-                // 4. Verifica se a combinação já existe na nova empresa
+                // Verifica se a combinação já existe na nova empresa
                 if (!naturezasExistentes.contains(chaveNatureza)) {
-                    // Adiciona a natureza na nova empresa
-                    gerenciarNaturezas.cadastrarNatureza(novoCodigo, naturezaOriginal.getNatureza(), naturezaOriginal.getConta());
+                    // Adiciona a natureza à lista de naturezas a serem adicionadas
+                    naturezasParaAdicionar.add(naturezaOriginal);
                 }
             }
+
+            // Adiciona todas as naturezas de uma vez
+            cadastrarNaturezas(naturezasParaAdicionar, novoCodigo);
         }
     }
 
@@ -246,17 +220,17 @@ public class GerenciarNaturezas {
     }
 
     public static class NaturezaConta {
-        private int id;
+        private String id; // Alterado para String
         private String natureza;
         private String conta;
 
-        public NaturezaConta(int id, String natureza, String conta, String codigo) {
+        public NaturezaConta(String id, String natureza, String conta, String codigo) {
             this.id = id;
             this.natureza = natureza;
             this.conta = conta;
         }
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 

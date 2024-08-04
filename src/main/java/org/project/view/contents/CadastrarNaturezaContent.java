@@ -9,8 +9,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CadastrarNaturezaContent {
 
@@ -40,23 +41,26 @@ public class CadastrarNaturezaContent {
         btnCadastrar.getStyleClass().add("botao-edicao"); // Alterado para botao-edicao
         btnCadastrar.setOnAction(e -> {
             String natureza = txtNatureza.getText();
+            String conta = txtConta.getText();
 
-            if (!natureza.isEmpty() && !txtConta.getText().isEmpty()) {
+            if (!natureza.isEmpty() && !conta.isEmpty()) {
                 // Verifica se a natureza já existe para a empresa
                 boolean naturezaExiste = verificarNaturezaExistente(codigo, natureza);
 
                 if (!naturezaExiste) {
                     // Natureza não existe, então faz o cadastro
-                    String conta = txtConta.getText();
+                    List<GerenciarNaturezas.NaturezaConta> naturezasParaAdicionar = new ArrayList<>();
+                    String id = UUID.randomUUID().toString(); // Gera um UUID aleatório
                     GerenciarNaturezas.NaturezaConta novaNatureza = new GerenciarNaturezas.NaturezaConta(
-                            0, // ID será definido após o cadastro
+                            id, // ID gerado aleatoriamente
                             natureza,
                             conta,
                             codigo
                     );
+                    naturezasParaAdicionar.add(novaNatureza);
 
-                    // Atualiza a planilha
-                    gerenciarNaturezas.cadastrarNatureza(codigo, natureza, conta);
+                    // Atualiza a planilha com todas as naturezas de uma vez
+                    gerenciarNaturezas.cadastrarNaturezas(naturezasParaAdicionar, codigo);
 
                     // Adiciona na tabela e fecha o diálogo
                     tabela.getItems().add(novaNatureza);
@@ -105,4 +109,3 @@ public class CadastrarNaturezaContent {
         alert.showAndWait();
     }
 }
-

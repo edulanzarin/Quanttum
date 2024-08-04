@@ -2,14 +2,12 @@ package org.project.functions;
 
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.*;
-import org.project.view.contents.Tarefa;
+import org.project.model.Tarefa;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.time.format.DateTimeParseException;
 import java.time.DayOfWeek;
 
@@ -22,18 +20,17 @@ public class MeuCronograma {
     public static void addTarefa(String titulo, String descricao, LocalDate data, String usuarioId) throws IOException, GeneralSecurityException {
         Sheets service = SheetsServiceUtil.getSheetsService();
 
-        // Obtém o último ID para auto-incremento
-        int lastId = getLastId(service);
-        int newId = lastId + 1;
+        // Gera um UUID aleatório para o ID
+        String newId = UUID.randomUUID().toString();
 
         // Cria a nova linha de dados
         List<Object> rowData = new ArrayList<>();
-        rowData.add(String.valueOf(newId));  // ID
-        rowData.add(titulo);                 // Título
-        rowData.add(descricao);              // Descrição
+        rowData.add(newId);                      // ID
+        rowData.add(titulo);                     // Título
+        rowData.add(descricao);                  // Descrição
         rowData.add(data != null ? data.toString() : ""); // Dia
-        rowData.add("Aberta");               // Status (definido como "Aberta")
-        rowData.add(usuarioId);              // Usuário
+        rowData.add("Aberta");                   // Status (definido como "Aberta")
+        rowData.add(usuarioId);                  // Usuário
 
         // Adiciona a nova linha à planilha
         List<List<Object>> dataList = new ArrayList<>();
@@ -44,31 +41,6 @@ public class MeuCronograma {
                 .append(SPREADSHEET_ID, SHEET_NAME, body)
                 .setValueInputOption("RAW")
                 .execute();
-    }
-
-    // Função para obter o último ID da planilha
-    private static int getLastId(Sheets service) throws IOException {
-        String range = SHEET_NAME + "!A:A"; // Coluna de IDs
-        ValueRange response = service.spreadsheets().values()
-                .get(SPREADSHEET_ID, range)
-                .execute();
-        List<List<Object>> values = response.getValues();
-
-        // O último ID é o maior número na coluna A
-        int lastId = 0;
-        if (values != null && !values.isEmpty()) {
-            for (List<Object> row : values) {
-                try {
-                    int id = Integer.parseInt(row.get(0).toString());
-                    if (id > lastId) {
-                        lastId = id;
-                    }
-                } catch (NumberFormatException e) {
-                    // Ignora valores não numéricos
-                }
-            }
-        }
-        return lastId;
     }
 
     // Função para obter as tarefas por usuário
@@ -170,6 +142,8 @@ public class MeuCronograma {
     // Função para duplicar tarefas de um mês para outro
     public static void duplicarTarefas(String userId, int mesCopia, int mesAlvo) throws IOException, GeneralSecurityException {
         List<Tarefa> tarefasDoMes = getTarefasDoMes(userId, mesCopia);
+        List<List<Object>> novasTarefas = new ArrayList<>();
+
         for (Tarefa tarefa : tarefasDoMes) {
             // Atualiza a data para o novo mês mantendo o mesmo dia
             LocalDate novaData = tarefa.getDia().withMonth(mesAlvo);
@@ -180,8 +154,34 @@ public class MeuCronograma {
                 novaData = ajustarParaProximoDiaUtil(novaData);
             }
 
-            addTarefa(tarefa.getTitulo(), tarefa.getDescricao(), novaData, userId);
+            // Adiciona a nova tarefa à lista
+            List<Object> novaTarefa = Arrays.asList(
+                    UUID.randomUUID().toString(), // ID
+                    tarefa.getTitulo(),            // Título
+                    tarefa.getDescricao(),         // Descrição
+                    novaData.toString(),           // Data
+                    "Aberta",                    // Status
+                    userId                         // Usuário
+            );
+            novasTarefas.add(novaTarefa);
         }
+
+        // Insere todas as novas tarefas de uma vez
+        if (!novasTarefas.isEmpty()) {
+            inserirTarefasEmLote(novasTarefas);
+        }
+    }
+
+    // Função para inserir várias tarefas de uma vez
+    private static void inserirTarefasEmLote(List<List<Object>> novasTarefas) throws IOException, GeneralSecurityException {
+        Sheets service = SheetsServiceUtil.getSheetsService();
+        String range = SHEET_NAME + "!A:F"; // Colunas da planilha (A a F)
+
+        ValueRange body = new ValueRange().setValues(novasTarefas);
+        service.spreadsheets().values()
+                .append(SPREADSHEET_ID, range, body)
+                .setValueInputOption("RAW")
+                .execute();
     }
 
     // Função para obter as tarefas de um mês específico para um usuário

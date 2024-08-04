@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class RegistrarLog {
 
@@ -20,31 +21,14 @@ public class RegistrarLog {
         try {
             Sheets service = SheetsServiceUtil.getSheetsService();
 
-            // Obter o último ID
-            ValueRange response = service.spreadsheets().values()
-                    .get(SPREADSHEET_ID, RANGE)
-                    .execute();
-            List<List<Object>> values = response.getValues();
-
-            int nextId = 1; // Valor inicial se a planilha estiver vazia
-            if (values != null && !values.isEmpty()) {
-                List<Object> lastRow = values.get(values.size() - 1);
-                if (lastRow != null && !lastRow.isEmpty()) {
-                    try {
-                        String lastIdStr = lastRow.get(0).toString();
-                        nextId = Integer.parseInt(lastIdStr) + 1;
-                    } catch (NumberFormatException e) {
-                        // Se a célula não contém um número, o próximo ID será 1
-                        nextId = 1;
-                    }
-                }
-            }
+            // Gera um UUID aleatório
+            String uuid = UUID.randomUUID().toString();
 
             String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             String ip = InetAddress.getLocalHost().getHostAddress();
             String hostname = InetAddress.getLocalHost().getHostName();
 
-            List<Object> row = List.of(nextId, timestamp, username, ip, hostname, action);
+            List<Object> row = List.of(uuid, timestamp, username, ip, hostname, action);
             ValueRange appendBody = new ValueRange()
                     .setValues(Collections.singletonList(row));
 

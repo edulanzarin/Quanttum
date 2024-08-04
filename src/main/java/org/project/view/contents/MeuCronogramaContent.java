@@ -25,8 +25,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-
+import org.project.model.Tarefa;
 
 
 import javax.imageio.ImageIO;
@@ -54,6 +53,12 @@ public class MeuCronogramaContent extends HBox {
     private ComboBox<String> tituloFilterComboBox;
     private DatePicker dataFilterDatePickerInicial;
     private DatePicker dataFilterDatePickerFinal;
+    private Label monthLabel;
+
+    private final String[] meses = {
+            "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO",
+            "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
+    };
 
     public MeuCronogramaContent(Stage primaryStage, String userId) {
         this.primaryStage = primaryStage;
@@ -165,7 +170,7 @@ public class MeuCronogramaContent extends HBox {
         prevMonthButton.setOnAction(e -> changeMonth(-1));
         nextMonthButton.setOnAction(e -> changeMonth(1));
 
-        Label monthLabel = new Label(currentDate.getMonth().name());
+        monthLabel = new Label(formatMonthYear(currentDate));
         monthLabel.getStyleClass().add("month-label");
 
         navBox.getChildren().addAll(prevMonthButton, monthLabel, nextMonthButton);
@@ -313,8 +318,19 @@ public class MeuCronogramaContent extends HBox {
         tarefasBox.layout();
     }
 
-    private void changeMonth(int offset) {
-        currentDate = currentDate.plusMonths(offset);
+    private String formatMonthYear(LocalDate date) {
+        int monthIndex = date.getMonthValue() - 1; // Meses em Java são de 1 a 12, mas o índice da lista começa em 0
+        return meses[monthIndex] + " - " + date.getYear();
+    }
+
+    private void changeMonth(int increment) {
+        // Atualiza a data atual
+        currentDate = currentDate.plusMonths(increment);
+
+        // Atualiza o rótulo do mês com o nome do mês e o ano em português
+        monthLabel.setText(formatMonthYear(currentDate));
+
+        // Atualiza o calendário
         updateCalendar();
     }
 
@@ -355,9 +371,6 @@ public class MeuCronogramaContent extends HBox {
 
             calendarGrid.add(dayButton, (day + startColumn - 1) % 7, (day + startColumn - 1) / 7 + 1);
         }
-
-        Label monthLabel = (Label) ((HBox) calendarBox.getChildren().get(0)).getChildren().get(1);
-        monthLabel.setText(currentDate.getMonth().name());
     }
 
     private void showTarefasDiaContent(int day) {

@@ -1,4 +1,4 @@
-package org.project.view.contents;
+package org.project.model;
 
 import java.time.LocalDate;
 

@@ -45,9 +45,8 @@ public class EditarContaContent extends VBox {
             naturezaConta.setConta(txtConta.getText());
             GerenciarNaturezas gerenciarNaturezas = new GerenciarNaturezas();
 
-            // Ajuste para o intervalo correto: a coluna C deve ser usada
-            int rowIndex = naturezaConta.getId() + 1; // Ajuste para a linha correta, considerando que o índice começa em 0
-            String range = "naturezas!C" + rowIndex; // Coluna C é para Conta
+            // Ajustar o intervalo correto para o UUID
+            String range = "naturezas!C" + buscarLinhaPorUUID(naturezaConta.getId()); // Usar UUID para encontrar a linha
 
             try {
                 gerenciarNaturezas.atualizarConta(GerenciarNaturezas.SHEET_ID, range, txtConta.getText());
@@ -62,6 +61,12 @@ public class EditarContaContent extends VBox {
         } else {
             showAlert(Alert.AlertType.WARNING, "Atenção", "Conta não pode estar vazia.");
         }
+    }
+
+    private int buscarLinhaPorUUID(String uuid) {
+        // Implementar lógica para buscar a linha na planilha usando o UUID
+        // Retornar o índice da linha que contém o UUID
+        return 0; // Substituir com a lógica correta
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
