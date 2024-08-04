@@ -1,13 +1,17 @@
 package org.project.view.contents;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.*;
+import com.itextpdf.text.Font;
+import org.project.functions.MeuCronograma;
+import org.project.model.HeaderFooterPageEvent;
+
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -16,18 +20,22 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.project.functions.MeuCronograma;
 
+
+
+
+import javax.imageio.ImageIO;
 import java.io.*;
 import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.List;
 
 public class MeuCronogramaContent extends HBox {
 
@@ -569,52 +577,83 @@ public class MeuCronogramaContent extends HBox {
         // Obtém as tarefas do usuário
         List<Tarefa> tarefas = MeuCronograma.getTarefasPorUsuario(userId);
 
-        // Cria o documento PDF
-        Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(file));
+        // Filtra as tarefas para o mês atual
+        LocalDate hoje = LocalDate.now();
+        int mesAtual = hoje.getMonthValue();
+        tarefas.removeIf(tarefa -> tarefa.getDia() == null || tarefa.getDia().getMonthValue() != mesAtual);
+
+        // Ordena as tarefas por data em ordem crescente
+        tarefas.sort((t1, t2) -> t1.getDia().compareTo(t2.getDia()));
+
+        // Cria o documento PDF com margens ajustadas
+        Document document = new Document(PageSize.A4, 50, 50, 60, 50); // Margens: esquerda, direita, superior, inferior
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        HeaderFooterPageEvent event = new HeaderFooterPageEvent(getLogo(), new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+        writer.setPageEvent(event);
         document.open();
 
         // Adiciona o título ao PDF
-        Paragraph titulo = new Paragraph("Lista de Tarefas", new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 16, com.itextpdf.text.Font.BOLD));
+        Paragraph titulo = new Paragraph("Cronograma", new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD));
         titulo.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(titulo);
-        document.add(new Paragraph("")); // Adiciona uma linha em branco
 
-        // Cria uma tabela com duas colunas
-        PdfPTable table = new PdfPTable(2);
-        table.setWidthPercentage(100); // Define a largura da tabela como 100% da largura da página
-        table.setSpacingBefore(10); // Espaço antes da tabela
-        table.setSpacingAfter(10); // Espaço depois da tabela
+        // Cria uma tabela com colunas para tipo, descrição, data e status
+        PdfPTable table = new PdfPTable(4); // Usa 4 colunas
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10f); // Espaço antes da tabela
 
-        // Adiciona as tarefas à tabela
-        for (int i = 0; i < tarefas.size(); i += 2) {
-            Tarefa tarefa1 = tarefas.get(i);
-            PdfPCell cell1 = new PdfPCell();
-            cell1.addElement(new Paragraph("Tipo: " + tarefa1.getTitulo()));
-            cell1.addElement(new Paragraph("Descrição/Empresa: " + tarefa1.getDescricao()));
-            cell1.addElement(new Paragraph("Data: " + (tarefa1.getDia() != null ? tarefa1.getDia().toString() : "Não definido")));
-            cell1.addElement(new Paragraph("Status: " + tarefa1.getStatus()));
-            table.addCell(cell1);
+        // Define o estilo das células da tabela
+        Font headerFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.WHITE);
+        Font contentFont = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
 
-            // Adiciona a segunda tarefa se houver
-            if (i + 1 < tarefas.size()) {
-                Tarefa tarefa2 = tarefas.get(i + 1);
-                PdfPCell cell2 = new PdfPCell();
-                cell2.addElement(new Paragraph("Tipo: " + tarefa2.getTitulo()));
-                cell2.addElement(new Paragraph("Descrição/Empresa: " + tarefa2.getDescricao()));
-                cell2.addElement(new Paragraph("Data: " + (tarefa2.getDia() != null ? tarefa2.getDia().toString() : "Não definido")));
-                cell2.addElement(new Paragraph("Status: " + tarefa2.getStatus()));
-                table.addCell(cell2);
-            } else {
-                // Se houver apenas uma tarefa, adiciona uma célula vazia na segunda coluna
-                table.addCell("");
-            }
+        // Cabeçalhos das colunas
+        addCellToTable(table, "Data", headerFont, BaseColor.BLUE);
+        addCellToTable(table, "Tipo", headerFont, BaseColor.BLUE);
+        addCellToTable(table, "Descrição/Empresa", headerFont, BaseColor.BLUE);
+        addCellToTable(table, "Status", headerFont, BaseColor.BLUE);
+
+        for (Tarefa tarefa : tarefas) {
+            addCellToTable(table, (tarefa.getDia() != null ? tarefa.getDia().toString() : "Não definido"), contentFont);
+            addCellToTable(table, tarefa.getTitulo(), contentFont);
+            addCellToTable(table, tarefa.getDescricao(), contentFont);
+            addCellToTable(table, tarefa.getStatus(), contentFont);
         }
 
         document.add(table);
-
         document.close();
     }
+
+    private void addCellToTable(PdfPTable table, String text, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setPadding(5f); // Ajusta o padding para um layout mais compacto
+        cell.setBorderColor(BaseColor.LIGHT_GRAY);
+        cell.setBorderWidth(0.5f);
+        table.addCell(cell);
+    }
+
+    private void addCellToTable(PdfPTable table, String text, Font font, BaseColor backgroundColor) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setPadding(5f); // Ajusta o padding para um layout mais compacto
+        cell.setBackgroundColor(backgroundColor);
+        cell.setBorderColor(BaseColor.LIGHT_GRAY);
+        cell.setBorderWidth(0.5f);
+        table.addCell(cell);
+    }
+
+    private Image getLogo() throws IOException, BadElementException {
+        // Carrega o logo a partir do classpath
+        String logoPath = "/org/project/images/icon.png";
+        InputStream logoStream = getClass().getResourceAsStream(logoPath);
+        if (logoStream == null) {
+            throw new FileNotFoundException("Logo não encontrado: " + logoPath);
+        }
+        Image logo = Image.getInstance(ImageIO.read(logoStream), null);
+        float width = 30f;
+        float height = 30f;
+        logo.scaleToFit(width, height);
+        return logo;
+    }
+
 
     private void exportarPlanilha() {
         FileChooser fileChooser = new FileChooser();
@@ -642,6 +681,15 @@ public class MeuCronogramaContent extends HBox {
 
                 // Adiciona as tarefas
                 List<Tarefa> tarefas = MeuCronograma.getTarefasPorUsuario(userId);
+
+                // Filtra as tarefas para o mês atual
+                LocalDate hoje = LocalDate.now();
+                int mesAtual = hoje.getMonthValue();
+                tarefas.removeIf(tarefa -> tarefa.getDia() == null || tarefa.getDia().getMonthValue() != mesAtual);
+
+                // Ordena as tarefas por data em ordem crescente
+                tarefas.sort((t1, t2) -> t1.getDia().compareTo(t2.getDia()));
+
                 int rowNum = 1;
                 for (Tarefa tarefa : tarefas) {
                     Row row = sheet.createRow(rowNum++);
