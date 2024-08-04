@@ -91,7 +91,7 @@ public class MeuCronogramaContent extends HBox {
         cadastrarTarefaButton.getStyleClass().add("cadastrar-tarefa-button");
         cadastrarTarefaButton.setOnAction(e -> new CadastrarTarefaContent(primaryStage, userId, this::atualizarTarefas));
 
-        Button duplicarTarefasButton = new Button("Duplicar");
+        Button duplicarTarefasButton = new Button("Duplicar Tarefas");
         duplicarTarefasButton.setMinSize(100, 30);
         duplicarTarefasButton.getStyleClass().add("duplicar-tarefas-button");
         duplicarTarefasButton.setOnAction(e -> duplicarTarefas());
@@ -514,8 +514,8 @@ public class MeuCronogramaContent extends HBox {
             datePicker.setValue(LocalDate.now()); // Define a data atual
             datePicker.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
 
-            // Cria e estiliza o botão
-            Button selectButton = new Button("Selecionar Data");
+            // Cria e estiliza o botão de Selecionar Data
+            Button selectButton = new Button("Selecionar");
             selectButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 10px; -fx-border-radius: 5px; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;");
             selectButton.setOnAction(e -> {
                 LocalDate selectedDate = datePicker.getValue();
@@ -541,8 +541,36 @@ public class MeuCronogramaContent extends HBox {
                 }
             });
 
+            // Cria e estiliza o botão de Excluir
+            Button deleteButton = new Button("Excluir");
+            deleteButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-padding: 10px; -fx-border-radius: 5px; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;");
+            deleteButton.setOnAction(e -> {
+                // Obtém o ID da tarefa a partir do userData do VBox
+                String tarefaId = null;
+                Object userData = tarefaBox.getUserData();
+                if (userData instanceof String) {
+                    tarefaId = (String) userData;
+                }
+
+                if (tarefaId != null) {
+                    try {
+                        MeuCronograma.excluirTarefa(tarefaId);
+                        tarefaContentBox.getChildren().clear();
+                        atualizarTarefas(); // Atualiza a lista de tarefas
+                        dateStage.close();
+                    } catch (IOException | GeneralSecurityException ex) {
+                        ex.printStackTrace(); // Tratar erros adequadamente
+                    }
+                }
+            });
+
+            // Cria um HBox para manter os botões lado a lado
+            HBox buttonBox = new HBox(10); // Espaçamento de 10px entre os botões
+            buttonBox.setAlignment(Pos.CENTER);
+            buttonBox.getChildren().addAll(selectButton, deleteButton);
+
             // Adiciona os componentes ao layout
-            dateLayout.getChildren().addAll(selectDateLabel, datePicker, selectButton);
+            dateLayout.getChildren().addAll(selectDateLabel, datePicker, buttonBox);
 
             // Cria a cena e configura a janela
             Scene scene = new Scene(dateLayout, 300, 200);

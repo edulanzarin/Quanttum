@@ -238,4 +238,54 @@ public class MeuCronograma {
                 .setValueInputOption("RAW")
                 .execute();
     }
+
+    // Função para excluir uma tarefa pelo ID
+    public static void excluirTarefa(String tarefaId) throws IOException, GeneralSecurityException {
+        Sheets service = SheetsServiceUtil.getSheetsService();
+        String range = SHEET_NAME + "!A:F"; // Colunas da planilha (A a F)
+
+        // Obter todas as tarefas
+        ValueRange response = service.spreadsheets().values()
+                .get(SPREADSHEET_ID, range)
+                .execute();
+        List<List<Object>> values = response.getValues();
+
+        // Identificar o índice da linha a ser excluída
+        int rowIndexToDelete = -1;
+        if (values != null) {
+            for (int i = 0; i < values.size(); i++) {
+                List<Object> row = values.get(i);
+                if (row.size() > 0 && tarefaId.equals(row.get(0).toString())) {
+                    rowIndexToDelete = i;
+                    break;
+                }
+            }
+        }
+
+        if (rowIndexToDelete != -1) {
+            // Remover a linha
+            List<Request> requests = new ArrayList<>();
+            requests.add(new Request()
+                    .setDeleteDimension(new DeleteDimensionRequest()
+                            .setRange(new DimensionRange()
+                                    .setSheetId(getSheetId(service, SHEET_NAME))
+                                    .setDimension("ROWS")
+                                    .setStartIndex(rowIndexToDelete)
+                                    .setEndIndex(rowIndexToDelete + 1))));
+
+            BatchUpdateSpreadsheetRequest body = new BatchUpdateSpreadsheetRequest().setRequests(requests);
+            service.spreadsheets().batchUpdate(SPREADSHEET_ID, body).execute();
+        }
+    }
+
+    // Função auxiliar para obter o SheetId a partir do nome da aba
+    private static int getSheetId(Sheets service, String sheetName) throws IOException {
+        Spreadsheet spreadsheet = service.spreadsheets().get(SPREADSHEET_ID).execute();
+        for (Sheet sheet : spreadsheet.getSheets()) {
+            if (sheet.getProperties().getTitle().equals(sheetName)) {
+                return sheet.getProperties().getSheetId();
+            }
+        }
+        throw new IOException("Sheet with name '" + sheetName + "' not found");
+    }
 }
