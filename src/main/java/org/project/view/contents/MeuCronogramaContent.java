@@ -112,7 +112,7 @@ public class MeuCronogramaContent extends HBox {
         tipoLabel.getStyleClass().add("filter-label");
 
         tituloFilterComboBox = new ComboBox<>();
-        tituloFilterComboBox.getItems().addAll("Digitação", "Fechamento", "Obrigação Acessória", "Outros");
+        tituloFilterComboBox.getItems().addAll("Todos", "Digitação", "Fechamento", "Obrigação Acessória", "Outros");
         tituloFilterComboBox.setValue("Todos"); // Define o valor padrão
         tituloFilterComboBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
 
