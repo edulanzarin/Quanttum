@@ -27,7 +27,6 @@ import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 public class MeuCronogramaContent extends HBox {
 
@@ -57,30 +56,25 @@ public class MeuCronogramaContent extends HBox {
         setAlignment(Pos.CENTER);
 
         // VBox para a lista de tarefas
-// Criação do VBox para a lista de tarefas
         tarefasBox = new VBox();
-        tarefasBox.setPrefWidth(357);
+        tarefasBox.setPrefWidth(347);
         tarefasBox.setSpacing(10); // Espaço entre os elementos
         tarefasBox.getStyleClass().add("container");
 
-// Criação do título
         Label tarefasTitle = new Label("Lista de Tarefas");
         tarefasTitle.getStyleClass().add("tarefas-title");
 
-// Criação do VBox para botões e filtros
         buttonAndFilterBox = new VBox();
         buttonAndFilterBox.setSpacing(10);
         buttonAndFilterBox.setMinHeight(70); // Aumentado para garantir espaço
         buttonAndFilterBox.setMinWidth(300);
         buttonAndFilterBox.setAlignment(Pos.CENTER); // Alinha os filhos ao centro
 
-// Criação do HBox para os botões
         buttonBox = new HBox();
         buttonBox.setSpacing(10);
         buttonBox.setPadding(new Insets(10));
         buttonBox.setAlignment(Pos.CENTER);
 
-// Criação dos botões
         Button cadastrarTarefaButton = new Button("Cadastrar Tarefa");
         cadastrarTarefaButton.setMinSize(100, 30);
         cadastrarTarefaButton.getStyleClass().add("cadastrar-tarefa-button");
@@ -93,7 +87,6 @@ public class MeuCronogramaContent extends HBox {
 
         buttonBox.getChildren().addAll(cadastrarTarefaButton, resetarTarefasButton);
 
-// Criação do Label e ComboBox para o filtro de status
         Label statusLabel = new Label("Status:");
         statusLabel.getStyleClass().add("filter-label");
 
@@ -102,12 +95,10 @@ public class MeuCronogramaContent extends HBox {
         statusFilterComboBox.setValue("Todos"); // Define o valor padrão
         statusFilterComboBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
 
-// Criação do HBox para o filtro de status
         HBox statusFilterBox = new HBox(10); // Espaço entre o Label e o ComboBox
         statusFilterBox.setAlignment(Pos.CENTER); // Alinha ao centro
         statusFilterBox.getChildren().addAll(statusLabel, statusFilterComboBox);
 
-// Criação do Label e ComboBox para o filtro de tipo
         Label tipoLabel = new Label("Tipo:");
         tipoLabel.getStyleClass().add("filter-label");
 
@@ -116,23 +107,18 @@ public class MeuCronogramaContent extends HBox {
         tituloFilterComboBox.setValue("Todos"); // Define o valor padrão
         tituloFilterComboBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5px;");
 
-// Criação do HBox para o filtro de tipo
         HBox tipoFilterBox = new HBox(10); // Espaço entre o Label e o ComboBox
         tipoFilterBox.setAlignment(Pos.CENTER); // Alinha ao centro
         tipoFilterBox.getChildren().addAll(tipoLabel, tituloFilterComboBox);
 
-// Criação do botão Filtrar
         Button filtrarButton = new Button("Filtrar");
         filtrarButton.setMinSize(100, 30);
         filtrarButton.getStyleClass().add("filtrar-button");
         filtrarButton.setOnAction(e -> atualizarTarefas()); // Chama a função de atualizar as tarefas
 
-// Adiciona os HBoxes e o botão Filtrar ao VBox de botões e filtros
         buttonAndFilterBox.getChildren().addAll(buttonBox, statusFilterBox, tipoFilterBox, filtrarButton);
 
-// Adiciona o título e o VBox de botões e filtros ao VBox principal
         tarefasBox.getChildren().addAll(tarefasTitle, buttonAndFilterBox);
-
 
         // Cria o ScrollPane para a lista de tarefas
         tarefasScrollPane = new ScrollPane(tarefasBox);
@@ -208,7 +194,7 @@ public class MeuCronogramaContent extends HBox {
 
         // VBox para o conteúdo das tarefas do dia
         tarefaContentBox = new VBox();
-        tarefaContentBox.setPrefWidth(357);
+        tarefaContentBox.setPrefWidth(347);
         tarefaContentBox.setSpacing(10);
         tarefaContentBox.getStyleClass().add("container");
 
