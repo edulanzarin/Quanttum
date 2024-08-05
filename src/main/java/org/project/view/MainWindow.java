@@ -1,5 +1,6 @@
 package org.project.view;
 
+import javafx.scene.control.ScrollPane;
 import org.project.view.contents.*;
 
 import javafx.application.Application;
@@ -40,12 +41,34 @@ public class MainWindow extends Application {
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream(iconPath)));
 
         BorderPane mainLayout = new BorderPane(); // Layout principal da janela
-        VBox sidebar = createSidebar(); // Cria a barra lateral
-        mainLayout.setLeft(sidebar);
 
+        // Cria o menu lateral com largura fixa e adiciona um ScrollPane
+        VBox sidebar = createSidebar();
+        sidebar.setPrefWidth(250); // Largura fixa para o menu lateral
+        sidebar.setMinWidth(250); // Largura mínima para o menu lateral
+        sidebar.setMaxWidth(250); // Largura máxima para o menu lateral
+
+        // Coloca o menu lateral dentro de um ScrollPane
+        ScrollPane sidebarScrollPane = new ScrollPane();
+        sidebarScrollPane.setContent(sidebar);
+        sidebarScrollPane.setFitToWidth(true); // Ajusta a largura do conteúdo ao ScrollPane
+        sidebarScrollPane.setFitToHeight(true); // Ajusta a altura do conteúdo ao ScrollPane
+        sidebarScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Desativa a barra horizontal
+        sidebarScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Barra vertical aparecerá se necessário
+
+        mainLayout.setLeft(sidebarScrollPane);
+
+        // Adiciona o ScrollPane ao contentPanel
+        ScrollPane contentScrollPane = new ScrollPane();
         contentPanel = new StackPane(); // Painel central para exibir o conteúdo
         contentPanel.setStyle("-fx-background-color: #f8f9fa;");
-        mainLayout.setCenter(contentPanel);
+        contentScrollPane.setContent(contentPanel);
+        contentScrollPane.setFitToWidth(true); // Ajusta a largura do conteúdo ao ScrollPane
+        contentScrollPane.setFitToHeight(true); // Ajusta a altura do conteúdo ao ScrollPane
+        contentScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Barra horizontal aparecerá se necessário
+        contentScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Barra vertical aparecerá se necessário
+
+        mainLayout.setCenter(contentScrollPane);
 
         // Define o conteúdo inicial
         showContent(new MainContent(), "Início");
