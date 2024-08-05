@@ -24,7 +24,7 @@ public class SupermercadoJK {
                 String textoPagina = pdfStripper.getText(document);
                 String[] linhas = textoPagina.split("\n");
 
-                int linhasPular = (paginaNum == 1) ? 6 : 3;
+                int linhasPular = (paginaNum == 1) ? 6 : 0;
 
                 for (int i = linhasPular; i < linhas.length; i++) {
                     String linha = linhas[i].trim();

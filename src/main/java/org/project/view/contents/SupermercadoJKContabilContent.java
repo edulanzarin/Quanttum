@@ -62,7 +62,6 @@ public class SupermercadoJKContabilContent extends VBox {
         checkBoxLoterica = new CheckBox("Processar Lotérica");
         checkBoxLoterica.getStyleClass().add("custom-checkbox");
 
-        // Ações para garantir que apenas um CheckBox seja selecionado por vez
         checkBoxRelatorio.setOnAction(e -> {
             if (checkBoxRelatorio.isSelected()) {
                 checkBoxLoterica.setSelected(false);

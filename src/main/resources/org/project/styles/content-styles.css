@@ -1209,19 +1209,25 @@
 
 .custom-checkbox {
     -fx-font-size: 14px;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: #333333;
     -fx-padding: 5 10;
 }
 
 .custom-checkbox .box {
-    -fx-border-color: #007bff;
+    -fx-border-color: #333333;
     -fx-border-radius: 3;
     -fx-background-color: #ffffff;
     -fx-background-radius: 3;
+    -fx-text-fill: #ffffff;
 }
 
 .custom-checkbox:selected .box {
     -fx-background-color: #007bff;
+    -fx-border-color: #007bff;
+}
+
+.custom-checkbox:selected .box .mark {
+    -fx-background-color: #ffffff; /* Muda a cor do checkmark para branco */
 }
 
 
