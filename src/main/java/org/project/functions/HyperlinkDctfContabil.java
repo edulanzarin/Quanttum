@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -105,7 +107,7 @@ public class HyperlinkDctfContabil {
                         Cell cellI = row.createCell(8); // Column I (index 8)
                         CreationHelper creationHelper = sheet.getWorkbook().getCreationHelper();
                         Hyperlink hyperlink = creationHelper.createHyperlink(HyperlinkType.FILE);
-                        String filePath = file.getAbsolutePath().replace("\\", "/"); // Corrigir caminho para URI
+                        String filePath = file.toURI().toString(); // Corrigir caminho para URI
                         hyperlink.setAddress(filePath);
 
                         // Determine the content to set based on file name
