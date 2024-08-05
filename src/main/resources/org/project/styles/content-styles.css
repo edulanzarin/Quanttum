@@ -1207,5 +1207,21 @@
     -fx-background-color: #ffffff;
 }
 
+.custom-checkbox {
+    -fx-font-size: 14px;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5 10;
+}
+
+.custom-checkbox .box {
+    -fx-border-color: #007bff;
+    -fx-border-radius: 3;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 3;
+}
+
+.custom-checkbox:selected .box {
+    -fx-background-color: #007bff;
+}
 
 

@@ -19,6 +19,8 @@ public class SupermercadoJKContabilContent extends VBox {
     private TextField filePathField;
     private File selectedFile;
     private TableView<Transaction> tableView;
+    private CheckBox checkBoxRelatorio;
+    private CheckBox checkBoxLoterica;
 
     public SupermercadoJKContabilContent(Stage primaryStage) {
         // Configura o layout principal
@@ -55,7 +57,28 @@ public class SupermercadoJKContabilContent extends VBox {
         exportButton.getStyleClass().add("export-button");
         exportButton.setOnAction(e -> exportTableData(primaryStage));
 
-        // Criação de HBox para alinhamento do campo de texto e botão do caminho do arquivo
+        checkBoxRelatorio = new CheckBox("Processar Relatório");
+        checkBoxRelatorio.getStyleClass().add("custom-checkbox");
+        checkBoxLoterica = new CheckBox("Processar Lotérica");
+        checkBoxLoterica.getStyleClass().add("custom-checkbox");
+
+        // Ações para garantir que apenas um CheckBox seja selecionado por vez
+        checkBoxRelatorio.setOnAction(e -> {
+            if (checkBoxRelatorio.isSelected()) {
+                checkBoxLoterica.setSelected(false);
+            }
+        });
+
+        checkBoxLoterica.setOnAction(e -> {
+            if (checkBoxLoterica.isSelected()) {
+                checkBoxRelatorio.setSelected(false);
+            }
+        });
+
+        HBox checkBoxBox = new HBox(10, checkBoxRelatorio, checkBoxLoterica);
+        checkBoxBox.setAlignment(Pos.CENTER);
+        VBox.setMargin(checkBoxBox, new Insets(0, 0, 15, 0));
+
         HBox fileBox = new HBox(10, filePathField, chooseFileButton);
         fileBox.setAlignment(Pos.CENTER);
         fileBox.setMaxWidth(500);
@@ -85,13 +108,20 @@ public class SupermercadoJKContabilContent extends VBox {
         buttonBox.setAlignment(Pos.CENTER);
         VBox.setMargin(buttonBox, new Insets(15, 0, 50, 0));
 
-        parentBox.getChildren().addAll(titleLabel, fileBox, buttonBox, tableView);
+        parentBox.getChildren().addAll(titleLabel, checkBoxBox, fileBox, buttonBox, tableView);
         getChildren().add(parentBox);
     }
 
     private void chooseFile(Stage primaryStage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Escolha um arquivo");
+
+        if (checkBoxRelatorio.isSelected()) {
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Relatório Bancário", "*.pdf"));
+        } else if (checkBoxLoterica.isSelected()) {
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Relatório Lotérica", "*.pdf"));
+        }
+
         selectedFile = fileChooser.showOpenDialog(primaryStage);
         if (selectedFile != null) {
             filePathField.setText(selectedFile.getAbsolutePath());
@@ -106,7 +136,15 @@ public class SupermercadoJKContabilContent extends VBox {
 
         try {
             // Processar o arquivo e obter os dados
-            List<SupermercadoJK.RegistroSupermercadoJK> registros = SupermercadoJK.processSupermercadoJK(selectedFile);
+            List<SupermercadoJK.RegistroSupermercadoJK> registros;
+            if (checkBoxRelatorio.isSelected()) {
+                registros = SupermercadoJK.processSupermercadoJK(selectedFile);
+            } else if (checkBoxLoterica.isSelected()) {
+                registros = SupermercadoJK.processCaixaSupermercadoJK(selectedFile);
+            } else {
+                showAlert(Alert.AlertType.WARNING, "Atenção", "Por favor, selecione um tipo de processamento.");
+                return;
+            }
 
             // Limpar a tabela antes de adicionar novos dados
             tableView.getItems().clear();
@@ -190,24 +228,12 @@ public class SupermercadoJKContabilContent extends VBox {
             return date;
         }
 
-        public void setDate(String date) {
-            this.date = date;
-        }
-
         public String getDescription() {
             return description;
         }
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
         public String getValue() {
             return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
         }
     }
 }
