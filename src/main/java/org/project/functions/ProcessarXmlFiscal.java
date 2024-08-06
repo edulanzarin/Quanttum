@@ -60,7 +60,9 @@ public class ProcessarXmlFiscal {
                 NodeList nodeList = (NodeList) xPath.evaluate("//*[local-name()='" + campo + "']", doc, XPathConstants.NODESET);
                 List<String> valores = new ArrayList<>();
                 for (int i = 0; i < nodeList.getLength(); i++) {
-                    valores.add(nodeList.item(i).getTextContent());
+                    // Garante que o valor seja tratado como string
+                    String valor = nodeList.item(i).getTextContent();
+                    valores.add(valor != null ? valor : "");  // Adiciona uma string vazia se o valor for null
                 }
 
                 if (valores.isEmpty()) {
