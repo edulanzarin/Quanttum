@@ -60,13 +60,13 @@ public class ProcessarXmlFiscal {
                 NodeList nodeList = (NodeList) xPath.evaluate("//*[local-name()='" + campo + "']", doc, XPathConstants.NODESET);
                 List<String> valores = new ArrayList<>();
                 for (int i = 0; i < nodeList.getLength(); i++) {
-                    // Garante que o valor seja tratado como string
+                    // Garantir que o valor seja tratado como string e adicionar apóstrofo
                     String valor = nodeList.item(i).getTextContent();
-                    valores.add(valor != null ? valor : "");  // Adiciona uma string vazia se o valor for null
+                    valores.add("'" + valor);
                 }
 
                 if (valores.isEmpty()) {
-                    valores.add("");
+                    valores.add("'");
                 }
 
                 dados.put(campo, valores);
@@ -80,7 +80,7 @@ public class ProcessarXmlFiscal {
                     if (i < valores.size()) {
                         row.append(valores.get(i));
                     } else {
-                        row.append("-");
+                        row.append("'-");
                     }
                     row.append(";");
                 }
