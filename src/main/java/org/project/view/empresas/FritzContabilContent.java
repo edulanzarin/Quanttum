@@ -27,7 +27,7 @@ public class FritzContabilContent extends VBox {
         // Configura o layout principal
         setPadding(new Insets(20));
         setSpacing(15);
-        getStyleClass().add("fritzcontabil-content");
+        getStyleClass().add("qualitplacas-content");
 
         // VBox pai para centralização vertical
         VBox parentBox = new VBox();
@@ -35,7 +35,7 @@ public class FritzContabilContent extends VBox {
         VBox.setVgrow(parentBox, Priority.ALWAYS); // Expande verticalmente
 
         // Título
-        Label titleLabel = new Label("Fritz Contábil");
+        Label titleLabel = new Label("Qualitplacas Contábil");
         titleLabel.setFont(new Font("Arial", 20));
         titleLabel.getStyleClass().add("title");
         VBox.setMargin(titleLabel, new Insets(0, 0, 20, 0)); // Adiciona margem inferior
@@ -75,25 +75,22 @@ public class FritzContabilContent extends VBox {
 
         TableColumn<Transaction, String> dateColumn = new TableColumn<>("Data");
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        dateColumn.setPrefWidth(100);
+        dateColumn.setPrefWidth(105);
 
         TableColumn<Transaction, String> supplierColumn = new TableColumn<>("Fornecedor");
         supplierColumn.setCellValueFactory(new PropertyValueFactory<>("supplier"));
-        supplierColumn.setPrefWidth(310);
+        supplierColumn.setPrefWidth(410);
 
         TableColumn<Transaction, String> noteColumn = new TableColumn<>("Nota");
         noteColumn.setCellValueFactory(new PropertyValueFactory<>("note"));
-        noteColumn.setPrefWidth(140);
+        noteColumn.setPrefWidth(150);
 
         TableColumn<Transaction, String> valueColumn = new TableColumn<>("Valor");
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
-        valueColumn.setPrefWidth(110);
+        valueColumn.setPrefWidth(130);
 
-        TableColumn<Transaction, String> discountColumn = new TableColumn<>("Desconto");
-        discountColumn.setCellValueFactory(new PropertyValueFactory<>("discount"));
-        discountColumn.setPrefWidth(110);
-
-        tableView.getColumns().addAll(dateColumn, supplierColumn, noteColumn, valueColumn, discountColumn);
+        // Remove a coluna de desconto
+        tableView.getColumns().addAll(dateColumn, supplierColumn, noteColumn, valueColumn);
 
         // Adiciona os controles ao layout do VBox pai
         HBox buttonBox = new HBox(10, processButton, exportButton);
@@ -134,7 +131,7 @@ public class FritzContabilContent extends VBox {
 
             // Adicionar os dados processados à tabela
             for (RegistroFritzContabil registro : registros) {
-                Transaction transaction = new Transaction(registro.getData(), registro.getFornecedor(), registro.getNota(), registro.getValor(), registro.getDesconto());
+                Transaction transaction = new Transaction(registro.getData(), registro.getFornecedor(), registro.getNota(), registro.getValor());
                 tableView.getItems().add(transaction);
             }
 
@@ -166,16 +163,15 @@ public class FritzContabilContent extends VBox {
 
             try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {
                 // Escreve o cabeçalho
-                writer.println("Data;Fornecedor;Nota;Valor;Desconto");
+                writer.println("Data;Fornecedor;Nota;Valor");
 
                 // Escreve os dados
                 for (Transaction transaction : transactions) {
-                    writer.printf("%s;%s;%s;%s;%s%n",
+                    writer.printf("%s;%s;%s;%s%n",
                             escapeSpecialCharacters(transaction.getDate()),
                             escapeSpecialCharacters(transaction.getSupplier()),
                             escapeSpecialCharacters(transaction.getNote()),
-                            escapeSpecialCharacters(transaction.getValue()),
-                            escapeSpecialCharacters(transaction.getDiscount()));
+                            escapeSpecialCharacters(transaction.getValue()));
                 }
             } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, "Erro", "Erro ao salvar o arquivo: " + e.getMessage());
@@ -204,14 +200,12 @@ public class FritzContabilContent extends VBox {
         private String supplier;
         private String note;
         private String value;
-        private String discount;
 
-        public Transaction(String date, String supplier, String note, String value, String discount) {
+        public Transaction(String date, String supplier, String note, String value) {
             this.date = date;
             this.supplier = supplier;
             this.note = note;
             this.value = value;
-            this.discount = discount;
         }
 
         public String getDate() {
@@ -226,32 +220,12 @@ public class FritzContabilContent extends VBox {
             return supplier;
         }
 
-        public void setSupplier(String supplier) {
-            this.supplier = supplier;
-        }
-
         public String getNote() {
             return note;
         }
 
-        public void setNote(String note) {
-            this.note = note;
-        }
-
         public String getValue() {
             return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        public String getDiscount() {
-            return discount;
-        }
-
-        public void setDiscount(String discount) {
-            this.discount = discount;
         }
     }
 }

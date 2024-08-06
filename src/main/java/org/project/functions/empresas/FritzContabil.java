@@ -1,55 +1,121 @@
 package org.project.functions.empresas;
 
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 
 public class FritzContabil {
 
-    private static String joinRange(String delimiter, String[] array, int start, int end) {
-        List<String> subList = Arrays.asList(array).subList(start, end);
-        return String.join(delimiter, subList);
-    }
-
-    public static List<RegistroFritzContabil> processFritz(File pdfFile, boolean removeCommas) throws IOException {
+    public static List<RegistroFritzContabil> processFritz(File excelFile, boolean removeCommas) throws IOException {
         List<RegistroFritzContabil> registrosFritzContabil = new ArrayList<>();
-        try (PDDocument document = PDDocument.load(pdfFile)) {
-            PDFTextStripper pdfStripper = new PDFTextStripper();
-            int totalPages = document.getNumberOfPages();
 
-            for (int paginaNum = 1; paginaNum <= totalPages; paginaNum++) {
-                pdfStripper.setStartPage(paginaNum);
-                pdfStripper.setEndPage(paginaNum);
-                String textoPagina = pdfStripper.getText(document);
-                String[] linhas = textoPagina.split("\n");
+        try (FileInputStream fis = new FileInputStream(excelFile);
+             Workbook workbook = new XSSFWorkbook(fis)) {
 
-                for (String linha : linhas) {
-                    String[] partes = linha.split("\\s+");
+            Sheet sheet = workbook.getSheetAt(0); // Supondo que você deseja processar a primeira aba
 
-                    // Verifica se a linha tem pelo menos 15 partes
-                    if (partes.length >= 15) {
-                        String nota = partes[0]; // Parte 1: Nota
-                        String data = partes[partes.length - 6]; // Parte 6: Data
-                        String valor = partes[partes.length - 4]; // Parte 4 de trás para frente: Valor
-                        String fornecedor = joinRange(" ", partes, partes.length - 9, partes.length - 6); // Fornecedor da parte 7 até a parte 9 de trás para frente
-                        String desconto = ""; // Desconto removido
+            for (Row row : sheet) {
+                // Pular a primeira linha se for o cabeçalho
+                if (row.getRowNum() == 0) {
+                    continue;
+                }
 
-                        if (removeCommas) {
-                            valor = valor.replace(",", "");
+                Cell cellData = row.getCell(4); // Coluna E (Data)
+                Cell cellValor = row.getCell(5); // Coluna F (Valor)
+                Cell cellDesconto = row.getCell(6); // Coluna G (Desconto)
+                Cell cellFornecedor = row.getCell(2); // Coluna C (Fornecedor)
+                Cell cellJuros = row.getCell(7); // Coluna H (Juros), ajustar a coluna conforme necessário
+                Cell cellNota = row.getCell(10); // Coluna K (Nota)
+
+                if (cellData != null && cellValor != null && cellFornecedor != null && cellNota != null) {
+                    String data = convertData(cellData.toString());
+                    String valor = cellValor.toString();
+                    String desconto = (cellDesconto != null) ? cellDesconto.toString() : "";
+                    String fornecedor = cellFornecedor.toString();
+                    String nota = processNota(cellNota.toString());
+
+                    if (removeCommas) {
+                        valor = valor.replace(",", "");
+                        if (desconto != null && !desconto.isEmpty()) {
+                            desconto = desconto.replace(",", "");
                         }
+                        if (cellJuros != null && !cellJuros.toString().isEmpty()) {
+                            String juros = cellJuros.toString().replace(",", "");
+                        }
+                    }
 
-                        registrosFritzContabil.add(new RegistroFritzContabil(data, fornecedor, nota, valor, desconto));
+                    // Adiciona o lançamento original
+                    registrosFritzContabil.add(new RegistroFritzContabil(data, fornecedor, nota, valor, desconto));
+
+                    // Verifica se há desconto e adiciona um novo lançamento
+                    if (isGreaterThanZero(desconto)) {
+                        String descricaoDesconto = fornecedor + " - DESCONTO";
+                        registrosFritzContabil.add(new RegistroFritzContabil(data, descricaoDesconto, nota, desconto, ""));
+                    }
+
+                    // Verifica se há juros e adiciona um novo lançamento
+                    if (isGreaterThanZero(cellJuros)) {
+                        String juros = cellJuros.toString();
+                        String descricaoJuros = fornecedor + " - JUROS";
+                        registrosFritzContabil.add(new RegistroFritzContabil(data, descricaoJuros, nota, juros, ""));
                     }
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
+
         return registrosFritzContabil;
+    }
+
+    private static String convertData(String data) {
+        // Define o formato da data de entrada
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MMM-uuuu");
+
+        // Define o formato da data de saída
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        try {
+            // Faz o parse da data usando o formato de entrada
+            LocalDate date = LocalDate.parse(data, inputFormatter);
+
+            // Formata a data no formato de saída
+            return date.format(outputFormatter);
+        } catch (DateTimeParseException e) {
+            // Retorna a data original se houver um erro de parse
+            return data;
+        }
+    }
+
+
+    private static boolean isGreaterThanZero(String value) {
+        try {
+            double number = Double.parseDouble(value.replace(",", ""));
+            return number > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private static boolean isGreaterThanZero(Cell cell) {
+        if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+            double number = cell.getNumericCellValue();
+            return number > 0;
+        }
+        return false;
+    }
+
+    private static String processNota(String nota) {
+        if (nota != null && nota.contains("-")) {
+            return nota.split("-")[0].trim();
+        }
+        return nota; // Retorna a nota original se não contiver um hífen
     }
 
     public static class RegistroFritzContabil {
@@ -81,10 +147,6 @@ public class FritzContabil {
 
         public String getValor() {
             return valor;
-        }
-
-        public String getDesconto() {
-            return desconto;
         }
     }
 }
