@@ -22,6 +22,9 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.ToggleButton;
+import org.project.view.empresas.FritzContabilContent;
+import org.project.view.empresas.QualitplacasContabilContent;
+import org.project.view.empresas.SupermercadoJKContabilContent;
 
 
 public class MainWindow extends Application {
@@ -231,7 +234,7 @@ public class MainWindow extends Application {
     private String[] getDropdownItems(String title) {
         switch (title) {
             case "Bancos": return new String[]{"Processar Extrato"};
-            case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas", "Supermercado JK"};
+            case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas", "Fritz Distribuidora", "Supermercado JK"};
             case "Conciliação": return new String[]{"Conciliar Planilha de Pagos", };
             case "Hyperlink": return new String[]{"DCTF"};
             case "Contábil": return new String[]{"Arquivos Reinf"};
@@ -288,6 +291,9 @@ public class MainWindow extends Application {
             case "Supermercado JK":
                 showContent(new SupermercadoJKContabilContent(primaryStage), "Supermercado JK - Contábil");
                 break;
+            case "Fritz Distribuidora":
+                showContent(new FritzContabilContent(primaryStage), "Fritz Distribuidora - Contábil");
+                break;
             default:
                 // Gerenciar outros itens do menu, se necessário
                 break;
@@ -309,6 +315,7 @@ public class MainWindow extends Application {
             case ConferenciaFiscalAnaliticoContent conferenciaFiscalAnaliticoContent -> conferenciaFiscalAnaliticoContent;
             case GerenciarNaturezasContabilContent cadastrarNaturezaContabilContent -> cadastrarNaturezaContabilContent;
             case SupermercadoJKContabilContent supermercadoJKContabilContent -> supermercadoJKContabilContent;
+            case FritzContabilContent fritzContabilContent -> fritzContabilContent;
             case null, default -> (MainContent) contentInstance;
         };
 

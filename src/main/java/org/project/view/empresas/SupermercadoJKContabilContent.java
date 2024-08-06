@@ -1,4 +1,4 @@
-package org.project.view.contents;
+package org.project.view.empresas;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,7 +9,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert;
-import org.project.empresas.SupermercadoJK;
+import org.project.functions.empresas.SupermercadoJK;
 
 import java.io.*;
 import java.util.List;

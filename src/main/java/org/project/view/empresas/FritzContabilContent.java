@@ -1,4 +1,7 @@
-package org.project.view.contents;
+package org.project.view.empresas;
+
+import org.project.functions.empresas.FritzContabil;
+import org.project.functions.empresas.FritzContabil.RegistroFritzContabil;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,25 +12,22 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert;
-import org.project.empresas.QualitplacasContabil;
-import org.project.empresas.QualitplacasContabil.RegistroQualitplacas;
-import org.project.functions.ExportarPlanilha;
 
 import java.io.*;
 import java.util.List;
 
-public class QualitplacasContabilContent extends VBox {
+public class FritzContabilContent extends VBox {
 
     private TextField filePathField;
     private File selectedFile;
     private TableView<Transaction> tableView;
     private CheckBox removeCommasCheckBox;
 
-    public QualitplacasContabilContent(Stage primaryStage) {
+    public FritzContabilContent(Stage primaryStage) {
         // Configura o layout principal
         setPadding(new Insets(20));
         setSpacing(15);
-        getStyleClass().add("qualitplacas-content");
+        getStyleClass().add("fritzcontabil-content");
 
         // VBox pai para centralização vertical
         VBox parentBox = new VBox();
@@ -35,7 +35,7 @@ public class QualitplacasContabilContent extends VBox {
         VBox.setVgrow(parentBox, Priority.ALWAYS); // Expande verticalmente
 
         // Título
-        Label titleLabel = new Label("Qualitplacas Contábil");
+        Label titleLabel = new Label("Fritz Contábil");
         titleLabel.setFont(new Font("Arial", 20));
         titleLabel.getStyleClass().add("title");
         VBox.setMargin(titleLabel, new Insets(0, 0, 20, 0)); // Adiciona margem inferior
@@ -127,13 +127,13 @@ public class QualitplacasContabilContent extends VBox {
 
         try {
             // Processar o arquivo e obter os dados
-            List<RegistroQualitplacas> registros = QualitplacasContabil.processQualitplacas(selectedFile, removeCommas);
+            List<RegistroFritzContabil> registros = FritzContabil.processFritz(selectedFile, removeCommas);
 
             // Limpar a tabela antes de adicionar novos dados
             tableView.getItems().clear();
 
             // Adicionar os dados processados à tabela
-            for (RegistroQualitplacas registro : registros) {
+            for (RegistroFritzContabil registro : registros) {
                 Transaction transaction = new Transaction(registro.getData(), registro.getFornecedor(), registro.getNota(), registro.getValor(), registro.getDesconto());
                 tableView.getItems().add(transaction);
             }

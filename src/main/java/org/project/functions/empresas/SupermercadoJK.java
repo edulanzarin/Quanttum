@@ -1,4 +1,4 @@
-package org.project.empresas;
+package org.project.functions.empresas;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
