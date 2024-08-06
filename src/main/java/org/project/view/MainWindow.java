@@ -1,6 +1,8 @@
 package org.project.view;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.control.ScrollPane;
+import javafx.util.Duration;
 import org.project.view.contents.*;
 
 import javafx.application.Application;
@@ -19,6 +21,8 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.ToggleButton;
+
 
 public class MainWindow extends Application {
 
@@ -58,17 +62,15 @@ public class MainWindow extends Application {
 
         mainLayout.setLeft(sidebarScrollPane);
 
-        // Adiciona o ScrollPane ao contentPanel
-        ScrollPane contentScrollPane = new ScrollPane();
+        // Cria o painel de conteúdo sem ScrollPane
         contentPanel = new StackPane(); // Painel central para exibir o conteúdo
         contentPanel.setStyle("-fx-background-color: #f8f9fa;");
-        contentScrollPane.setContent(contentPanel);
-        contentScrollPane.setFitToWidth(true); // Ajusta a largura do conteúdo ao ScrollPane
-        contentScrollPane.setFitToHeight(true); // Ajusta a altura do conteúdo ao ScrollPane
-        contentScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Barra horizontal aparecerá se necessário
-        contentScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Barra vertical aparecerá se necessário
+        mainLayout.setCenter(contentPanel);
 
-        mainLayout.setCenter(contentScrollPane);
+        // Adiciona o botão de alternância
+        ToggleButton toggleButton = new ToggleButton("Menu");
+        toggleButton.setOnAction(e -> toggleSidebar(sidebarScrollPane, toggleButton));
+        mainLayout.setTop(toggleButton); // Coloca o botão no topo do layout
 
         // Define o conteúdo inicial
         showContent(new MainContent(), "Início");
@@ -85,6 +87,26 @@ public class MainWindow extends Application {
         primaryStage.setScene(scene); // Define a cena para o estágio principal
         primaryStage.setMaximized(true); // Maximiza a janela
         primaryStage.show(); // Exibe a janela
+    }
+
+    private void toggleSidebar(ScrollPane sidebarScrollPane, ToggleButton toggleButton) {
+        boolean isVisible = sidebarScrollPane.isVisible();
+        double sidebarWidth = 250;
+
+        sidebarScrollPane.setVisible(!isVisible);
+        sidebarScrollPane.setManaged(!isVisible);
+
+        if (isVisible) {
+            // Menu está oculto, expande o conteúdo para preencher toda a largura
+            contentPanel.setMaxWidth(Double.MAX_VALUE);
+        } else {
+            // Menu está visível, ajusta a largura do conteúdo
+            PauseTransition pause = new PauseTransition(Duration.millis(300));
+            pause.setOnFinished(e -> {
+                contentPanel.setMaxWidth(primaryStage.getWidth() - sidebarWidth);
+            });
+            pause.play();
+        }
     }
 
     private VBox createSidebar() {
@@ -273,39 +295,33 @@ public class MainWindow extends Application {
     }
 
     private void showContent(Object contentInstance, String title) {
+        Region content = switch (contentInstance) {
+            case MoverArquivosExpressContent moverArquivosExpressContent -> moverArquivosExpressContent;
+            case ProcessarExtratoContabilContent processarExtratoContabilContent -> processarExtratoContabilContent;
+            case EmpresasContabilContent empresasContabilContent -> empresasContabilContent;
+            case ConciliarPagosContabilContent conciliarPagosContabilContent -> conciliarPagosContabilContent;
+            case HyperlinkDctfContabilContent hyperlinkDctfContabilContent -> hyperlinkDctfContabilContent;
+            case ProcessarXmlFiscalContent processarXmlFiscalContent -> processarXmlFiscalContent;
+            case RenomearGuiasExpressContent renomearGuiasExpressContent -> renomearGuiasExpressContent;
+            case QualitplacasContabilContent qualitplacasContabilContent -> qualitplacasContabilContent;
+            case ArquivosReinfExpressContent arquivosReinfExpressContent -> arquivosReinfExpressContent;
+            case MeuCronogramaContent cronogramaContent -> cronogramaContent;
+            case ConferenciaFiscalAnaliticoContent conferenciaFiscalAnaliticoContent -> conferenciaFiscalAnaliticoContent;
+            case GerenciarNaturezasContabilContent cadastrarNaturezaContabilContent -> cadastrarNaturezaContabilContent;
+            case SupermercadoJKContabilContent supermercadoJKContabilContent -> supermercadoJKContabilContent;
+            case null, default -> (MainContent) contentInstance;
+        };
 
-        switch (contentInstance) {
-            case MoverArquivosExpressContent moverArquivosExpressContent ->
-                    contentPanel.getChildren().setAll(moverArquivosExpressContent);
-            case ProcessarExtratoContabilContent processarExtratoContabilContent ->
-                    contentPanel.getChildren().setAll(processarExtratoContabilContent);
-            case EmpresasContabilContent empresasContabilContent ->
-                    contentPanel.getChildren().setAll(empresasContabilContent);
-            case ConciliarPagosContabilContent conciliarPagosContabilContent ->
-                    contentPanel.getChildren().setAll(conciliarPagosContabilContent);
-            case HyperlinkDctfContabilContent hyperlinkDctfContabilContent ->
-                    contentPanel.getChildren().setAll(hyperlinkDctfContabilContent);
-            case ProcessarXmlFiscalContent processarXmlFiscalContent ->
-                    contentPanel.getChildren().setAll(processarXmlFiscalContent);
-            case RenomearGuiasExpressContent renomearGuiasExpressContent ->
-                    contentPanel.getChildren().setAll(renomearGuiasExpressContent);
-            case QualitplacasContabilContent qualitplacasContabilContent ->
-                    contentPanel.getChildren().setAll(qualitplacasContabilContent);
-            case ArquivosReinfExpressContent arquivosReinfExpressContent ->
-                    contentPanel.getChildren().setAll(arquivosReinfExpressContent);
-            case MeuCronogramaContent cronogramaContent ->
-                    contentPanel.getChildren().setAll(cronogramaContent);
-            case ConferenciaFiscalAnaliticoContent conferenciaFiscalAnaliticoContent ->
-                contentPanel.getChildren().setAll(conferenciaFiscalAnaliticoContent);
-            case GerenciarNaturezasContabilContent cadastrarNaturezaContabilContent ->
-                contentPanel.getChildren().setAll(cadastrarNaturezaContabilContent);
-            case SupermercadoJKContabilContent supermercadoJKContabilContent ->
-                contentPanel.getChildren().setAll(supermercadoJKContabilContent);
-            case null, default -> contentPanel.getChildren().setAll((MainContent) contentInstance);
-        }
+        contentPanel.getChildren().setAll(content);
+        bindContentSize(content);
 
         applyContentStyles();
         primaryStage.setTitle("Quanttum - " + title);
+    }
+
+    private void bindContentSize(Region content) {
+        content.prefWidthProperty().bind(contentPanel.widthProperty());
+        content.prefHeightProperty().bind(contentPanel.heightProperty());
     }
 
     private void openChangePasswordWindow() {
