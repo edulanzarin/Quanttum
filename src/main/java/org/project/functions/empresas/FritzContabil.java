@@ -53,19 +53,19 @@ public class FritzContabil {
                     }
 
                     // Adiciona o lançamento original
-                    registrosFritzContabil.add(new RegistroFritzContabil(data, fornecedor, nota, valor, desconto));
+                    registrosFritzContabil.add(new RegistroFritzContabil(data, fornecedor, nota, valor));
 
                     // Verifica se há desconto e adiciona um novo lançamento
                     if (isGreaterThanZero(desconto)) {
                         String descricaoDesconto = fornecedor + " - DESCONTO";
-                        registrosFritzContabil.add(new RegistroFritzContabil(data, descricaoDesconto, nota, desconto, ""));
+                        registrosFritzContabil.add(new RegistroFritzContabil(data, descricaoDesconto, nota, desconto));
                     }
 
                     // Verifica se há juros e adiciona um novo lançamento
                     if (isGreaterThanZero(cellJuros)) {
                         String juros = cellJuros.toString();
                         String descricaoJuros = fornecedor + " - JUROS";
-                        registrosFritzContabil.add(new RegistroFritzContabil(data, descricaoJuros, nota, juros, ""));
+                        registrosFritzContabil.add(new RegistroFritzContabil(data, descricaoJuros, nota, juros));
                     }
                 }
             }
@@ -123,14 +123,12 @@ public class FritzContabil {
         private final String fornecedor;
         private final String nota;
         private final String valor;
-        private final String desconto;
 
-        public RegistroFritzContabil(String data, String fornecedor, String nota, String valor, String desconto) {
+        public RegistroFritzContabil(String data, String fornecedor, String nota, String valor) {
             this.data = data;
             this.fornecedor = fornecedor;
             this.nota = nota;
             this.valor = valor;
-            this.desconto = desconto;
         }
 
         public String getData() {
