@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.ToggleButton;
+import org.project.view.empresas.EMGSupermercadoContabilContent;
 import org.project.view.empresas.FritzContabilContent;
 import org.project.view.empresas.QualitplacasContabilContent;
 import org.project.view.empresas.SupermercadoJKContabilContent;
@@ -242,7 +243,7 @@ public class MainWindow extends Application {
     private String[] getDropdownItems(String title) {
         switch (title) {
             case "Bancos": return new String[]{"Processar Extrato"};
-            case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas", "Fritz Distribuidora", "Supermercado JK"};
+            case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas", "Fritz Distribuidora", "Supermercado JK", "EMG Supermercado"};
             case "Conciliação": return new String[]{"Conciliar Planilha de Pagos", };
             case "Hyperlink": return new String[]{"DCTF"};
             case "Contábil": return new String[]{"Arquivos Reinf"};
@@ -302,6 +303,9 @@ public class MainWindow extends Application {
             case "Fritz Distribuidora":
                 showContent(new FritzContabilContent(primaryStage), "Fritz Distribuidora - Contábil");
                 break;
+            case "EMG Supermercado":
+                showContent(new EMGSupermercadoContabilContent(primaryStage), "EMG Supermercado - Contábil");
+                break;
             default:
                 // Gerenciar outros itens do menu, se necessário
                 break;
@@ -324,6 +328,7 @@ public class MainWindow extends Application {
             case GerenciarNaturezasContabilContent cadastrarNaturezaContabilContent -> cadastrarNaturezaContabilContent;
             case SupermercadoJKContabilContent supermercadoJKContabilContent -> supermercadoJKContabilContent;
             case FritzContabilContent fritzContabilContent -> fritzContabilContent;
+            case EMGSupermercadoContabilContent emgSupermercadoContabilContent -> emgSupermercadoContabilContent;
             case null, default -> (MainContent) contentInstance;
         };
 
