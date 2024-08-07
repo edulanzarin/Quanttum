@@ -42,7 +42,6 @@ public class EMGSupermercadoContabilContent extends VBox {
         filePathField.setPromptText("Caminho do arquivo");
         filePathField.getStyleClass().add("text-field");
         filePathField.setPrefWidth(300);
-        filePathField.setDisable(true); // Desabilitado para edição
 
         Button chooseFileButton = new Button("...");
         chooseFileButton.getStyleClass().add("select-button");

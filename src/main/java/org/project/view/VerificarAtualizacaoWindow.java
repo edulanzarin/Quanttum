@@ -1,9 +1,5 @@
 package org.project.view;
 
-import javafx.animation.PauseTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -17,10 +13,12 @@ import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.util.Duration;
 import org.project.functions.VerificarAtualizacao;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class VerificarAtualizacaoWindow extends Application {
 
@@ -34,7 +32,6 @@ public class VerificarAtualizacaoWindow extends Application {
     private Label changeLabel;
     private TextField filePathField;
     private Button downloadButton;
-    private Label loadingIndicator;
 
     public static void setVersions(String actual, String newV, String link) {
         actualVersion = actual;
@@ -84,10 +81,6 @@ public class VerificarAtualizacaoWindow extends Application {
         downloadButton.getStyleClass().add("download-button");
         downloadButton.setOnAction(e -> startDownload());
 
-        // Indicador de carregamento
-        loadingIndicator = createLoadingIndicator();
-        loadingIndicator.setVisible(false); // Inicialmente invisível
-
         HBox fileBox = new HBox(10, filePathField, chooseDirButton);
         fileBox.setAlignment(Pos.CENTER); // Alinha horizontalmente no centro
 
@@ -96,7 +89,7 @@ public class VerificarAtualizacaoWindow extends Application {
         buttonBox.setAlignment(Pos.CENTER); // Alinha horizontalmente no centro
 
         // Layout vertical
-        VBox vbox = new VBox(10, titleLabel, currentVersionLabel, newVersionLabel, fileBox, buttonBox, loadingIndicator, messageLabel, changeLabel);
+        VBox vbox = new VBox(10, titleLabel, currentVersionLabel, newVersionLabel, fileBox, buttonBox, messageLabel, changeLabel);
         vbox.setPadding(new Insets(20));
         vbox.setAlignment(Pos.CENTER); // Alinha verticalmente no centro
         vbox.getStyleClass().add("update-container");
@@ -108,6 +101,7 @@ public class VerificarAtualizacaoWindow extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 
     private void showDirectoryChooser(Window window) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -125,37 +119,16 @@ public class VerificarAtualizacaoWindow extends Application {
             return;
         }
 
-        // Exibir o indicador de carregamento e mensagem de progresso
-        loadingIndicator.setVisible(true);
-        messageLabel.setText("Download em progresso...");
-
-        // Iniciar o download em uma nova thread
+        // Iniciar o download
         new Thread(() -> {
             // Baixar o arquivo para o caminho especificado
             VerificarAtualizacao.downloadFile(downloadLink, filePath);
 
             // Atualizar a interface gráfica no FX Application Thread
-            Platform.runLater(() -> {
-                loadingIndicator.setVisible(false); // Esconder o indicador de carregamento
-                messageLabel.setText("Download concluído!");
-            });
+            Platform.runLater(() -> messageLabel.setText("Download concluído!"));
         }).start();
+
+        // Atualizar a mensagem
+        Platform.runLater(() -> messageLabel.setText("Download em progresso..."));
     }
-
-    private Label createLoadingIndicator() {
-        Label indicator = new Label();
-        indicator.setText("°");
-        indicator.setStyle("-fx-font-size: 20; -fx-text-fill: gray;");
-
-        // Animação de rotação
-        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1), indicator);
-        rotateTransition.setFromAngle(0);
-        rotateTransition.setToAngle(360);
-        rotateTransition.setCycleCount(RotateTransition.INDEFINITE);
-
-        rotateTransition.play();
-
-        return indicator;
-    }
-
 }
