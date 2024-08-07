@@ -1,6 +1,6 @@
 package org.project.functions;
 
-import org.project.view.contents.ProcessarExtratoContabilContent.Transaction;
+import org.project.view.bancos.ProcessarExtratoContabilContent.Transaction;
 
 import java.io.BufferedWriter;
 import java.io.File;

@@ -3,6 +3,8 @@ package org.project.view;
 import javafx.animation.PauseTransition;
 import javafx.scene.control.ScrollPane;
 import javafx.util.Duration;
+import org.project.view.bancos.CartaoBBContabilContent;
+import org.project.view.bancos.ProcessarExtratoContabilContent;
 import org.project.view.contents.*;
 
 import javafx.application.Application;
@@ -133,7 +135,7 @@ public class MainWindow extends Application {
         sidebar.getChildren().add(header);
 
         // Cria os menus da barra lateral
-        TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Empresas", "Conciliação", "Hyperlink", "Conferência Fiscal");
+        TitledPane contabilMenu = createMenu("Contábil", "Bancos", "Cartões", "Empresas", "Conciliação", "Hyperlink", "Conferência Fiscal");
         TitledPane fiscalMenu = createMenu("Fiscal", "Processar XML");
         TitledPane expressMenu = createMenu("Express", "Contábil", "Fiscal", "RH");
         TitledPane cronogramaMenu = createMenu("Cronograma", "Cronogramas");
@@ -209,7 +211,7 @@ public class MainWindow extends Application {
     }
 
     private boolean isDropdownItem(String item) {
-        return item.equals("Bancos") || item.equals("Empresas") || item.equals("Conciliação") || item.equals("Hyperlink") || item.equals("Contábil") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML") || item.equals("Cronogramas") || item.equals("Conferência Fiscal");
+        return item.equals("Bancos") || item.equals("Cartões") || item.equals("Empresas") || item.equals("Conciliação") || item.equals("Hyperlink") || item.equals("Contábil") || item.equals("Fiscal") || item.equals("RH") || item.equals("Processar XML") || item.equals("Cronogramas") || item.equals("Conferência Fiscal");
     }
 
     private VBox createDropdownMenu(String title) {
@@ -243,6 +245,7 @@ public class MainWindow extends Application {
     private String[] getDropdownItems(String title) {
         switch (title) {
             case "Bancos": return new String[]{"Processar Extrato"};
+            case "Cartões": return new String[]{"Banco do Brasil"};
             case "Empresas": return new String[]{"Lojão", "Capital Six", "Qualitplacas", "Fritz Distribuidora", "Supermercado JK", "EMG Supermercado"};
             case "Conciliação": return new String[]{"Conciliar Planilha de Pagos", };
             case "Hyperlink": return new String[]{"DCTF"};
@@ -306,6 +309,9 @@ public class MainWindow extends Application {
             case "EMG Supermercado":
                 showContent(new EMGSupermercadoContabilContent(primaryStage), "EMG Supermercado - Contábil");
                 break;
+            case "Banco do Brasil":
+                showContent(new CartaoBBContabilContent(primaryStage), "Cartão Banco do Brasil - Contábil");
+                break;
             default:
                 // Gerenciar outros itens do menu, se necessário
                 break;
@@ -329,6 +335,7 @@ public class MainWindow extends Application {
             case SupermercadoJKContabilContent supermercadoJKContabilContent -> supermercadoJKContabilContent;
             case FritzContabilContent fritzContabilContent -> fritzContabilContent;
             case EMGSupermercadoContabilContent emgSupermercadoContabilContent -> emgSupermercadoContabilContent;
+            case CartaoBBContabilContent cartaoBBContabilContent -> cartaoBBContabilContent;
             case null, default -> (MainContent) contentInstance;
         };
 

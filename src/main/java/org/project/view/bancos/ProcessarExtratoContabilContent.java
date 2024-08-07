@@ -1,6 +1,6 @@
-package org.project.view.contents;
+package org.project.view.bancos;
 
-import org.project.bancos.*;
+import org.project.functions.bancos.*;
 import org.project.functions.ExportarPlanilha;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

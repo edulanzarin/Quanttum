@@ -1,4 +1,4 @@
-package org.project.bancos;
+package org.project.functions.bancos;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -6,13 +6,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
-public class ItauModeloAntigo {
+public class ProcessarSicredi {
 
     public static List<String[]> processarPDF(File pdfFile, String codigo, boolean useComma) throws IOException {
         List<String[]> dataRows = new ArrayList<>();
 
         try (PDDocument document = PDDocument.load(pdfFile)) {
+
             PDFTextStripper pdfStripper = new PDFTextStripper();
             int totalPages = document.getNumberOfPages();
 
@@ -22,50 +24,39 @@ public class ItauModeloAntigo {
                 String text = pdfStripper.getText(document);
 
                 String[] lines = text.split("\n");
-                int linhasAPular = 4;
+                int linhasAPular = 7; // Sempre pular as primeiras 7 linhas
 
                 for (int linhaNum = linhasAPular; linhaNum < lines.length; linhaNum++) {
                     String linha = lines[linhaNum];
 
-                    if (linha.contains("SALDO ANTERIOR") || linha.contains("SDO CTA")) {
-                        continue;
+                    if (linha.contains("Taxa de")) {
+                        break;
                     }
 
-                    if (linha.contains("S A L D O")) {
-                        return dataRows;
-                    }
-
-                    String[] partes = linha.split("\\s+");
-                    if (partes.length < 4) {
-                        continue;
+                    String[] partes = linha.trim().split("\\s+");
+                    if (partes.length < 3) {
+                        continue; // Linha não tem partes suficientes para processar
                     }
 
                     String data = partes[0];
-                    StringBuilder descricao = new StringBuilder();
-                    String ultimaParte = partes[partes.length - 1];
-                    String valor;
+                    String valor = partes[partes.length - 2];
+                    String descricao = String.join(" ", Arrays.copyOfRange(partes, 1, partes.length - 2));
+
                     String debito = "";
                     String credito = "";
 
-                    if (ultimaParte.equals("-")) {
-                        for (int i = 1; i < partes.length - 3; i++) {
-                            descricao.append(partes[i]).append(" ");
-                        }
-                        valor = partes[partes.length - 2];
-                        credito = codigo;
+                    if (valor.contains("-")) {
+                        credito = codigo;  // Código no crédito
+                        valor = valor.replace("-", "");
                     } else {
-                        for (int i = 1; i < partes.length - 2; i++) {
-                            descricao.append(partes[i]).append(" ");
-                        }
-                        valor = ultimaParte;
-                        debito = codigo;
+                        debito = codigo;   // Código no débito
                     }
 
                     if (useComma) {
                         valor = valor.replace(".", "").replace(",", ".");
                     }
 
-                    dataRows.add(new String[]{data, descricao.toString().trim(), valor, debito, credito});
+                    dataRows.add(new String[]{data, descricao, valor, debito, credito});
                 }
             }
         }

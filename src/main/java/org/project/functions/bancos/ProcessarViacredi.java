@@ -1,4 +1,4 @@
-package org.project.bancos;
+package org.project.functions.bancos;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
