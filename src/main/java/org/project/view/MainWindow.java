@@ -70,10 +70,18 @@ public class MainWindow extends Application {
         contentPanel.setStyle("-fx-background-color: #f8f9fa;");
         mainLayout.setCenter(contentPanel);
 
+        // Cria uma faixa no topo para o botão de alternância
+        HBox topBar = new HBox();
+        topBar.setStyle("-fx-background-color: #1f2937; -fx-border-width: 3px; -fx-border-color: #1f2937");
+        topBar.setAlignment(Pos.CENTER_LEFT); // Alinha o botão à esquerda
+
         // Adiciona o botão de alternância
-        ToggleButton toggleButton = new ToggleButton("Menu");
+        ToggleButton toggleButton = new ToggleButton("☰");
+        toggleButton.getStyleClass().add("toggle-button");
         toggleButton.setOnAction(e -> toggleSidebar(sidebarScrollPane, toggleButton));
-        mainLayout.setTop(toggleButton); // Coloca o botão no topo do layout
+        topBar.getChildren().add(toggleButton);
+
+        mainLayout.setTop(topBar); // Coloca o HBox no topo do layout
 
         // Define o conteúdo inicial
         showContent(new MainContent(), "Início");

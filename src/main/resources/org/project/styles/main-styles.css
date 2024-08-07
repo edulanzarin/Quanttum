@@ -115,3 +115,21 @@
   -fx-font-size: 12px; /* Define o tamanho da fonte do texto do rodapé */
   -fx-font-weight: bold; /* Define a fonte em negrito para o texto do rodapé */
 }
+
+/* menu-button-styles.css */
+
+.toggle-button {
+  -fx-background-color: #374151;
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-padding: 5px 10px;
+  -fx-border-radius: 3px;
+  -fx-background-radius: 3px;
+}
+
+.toggle-button:hover {
+  -fx-background-color: #444f62;
+}
+
+
+
