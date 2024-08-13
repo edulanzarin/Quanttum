@@ -1,19 +1,19 @@
 package org.project.functions;
 
-import org.project.view.VerificarAtualizacaoWindow;
+import javafx.application.Application;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.json.JSONObject;
 import org.project.view.LoginWindow;
+import org.project.view.VerificarAtualizacaoWindow;
+
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import javafx.application.Application;
-import org.json.JSONObject;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
 
 public class VerificarAtualizacao {
@@ -37,10 +37,7 @@ public class VerificarAtualizacao {
             }
 
             String newVersion = (String) values.get(0).get(0);
-            String viewLink = (String) values.get(0).get(1);
-
-            // Gerar o link de download direto
-            String downloadLink = convertToDirectDownloadLink(viewLink);
+            String downloadLink = (String) values.get(0).get(1); // Link direto do GitHub
 
             // Ler a versão atual do arquivo JSON
             String actualVersion = readVersionFromFile();
@@ -73,47 +70,62 @@ public class VerificarAtualizacao {
         }
     }
 
-    // Converter o link do Google Drive para um link de download direto
-    private static String convertToDirectDownloadLink(String viewLink) {
-        // Extrair o ID do arquivo
-        String fileId = viewLink.split("/d/")[1].split("/")[0];
-        return "https://drive.google.com/uc?export=download&id=" + fileId;
-    }
-
     // Função para baixar o arquivo
-    public static void downloadFile(String fileURL, String saveDir) {
-        try {
-            // Cria o arquivo e diretório se não existir
+    public static void downloadFile(String fileURL, String saveDir, ProgressListener listener) {
+        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             File saveFile = new File(saveDir);
             if (!saveFile.getParentFile().exists()) {
                 saveFile.getParentFile().mkdirs();
             }
 
-            // Cria a conexão e baixa o arquivo
-            HttpURLConnection httpConn = (HttpURLConnection) new URL(fileURL).openConnection();
-            int responseCode = httpConn.getResponseCode();
+            System.out.println("Iniciando download do arquivo: " + fileURL);
 
-            // Verifica o código de resposta HTTP
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                try (InputStream inputStream = httpConn.getInputStream();
-                     FileOutputStream outputStream = new FileOutputStream(saveFile)) {
+            HttpGet request = new HttpGet(fileURL);
+            request.setHeader("User-Agent", "Mozilla/5.0");
 
-                    // Define o buffer para leitura do arquivo
-                    byte[] buffer = new byte[4096];
-                    int bytesRead;
-
-                    // Lê e grava o arquivo
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        outputStream.write(buffer, 0, bytesRead);
+            try (var response = httpclient.execute(request)) {
+                int status = response.getCode();
+                if (status >= 200 && status < 300) {
+                    HttpEntity entity = response.getEntity();
+                    if (entity != null) {
+                        long contentLength = entity.getContentLength();
+                        try (InputStream inputStream = entity.getContent();
+                             FileOutputStream outputStream = new FileOutputStream(saveFile)) {
+                            byte[] buffer = new byte[8192];
+                            long totalBytesRead = 0;
+                            int bytesRead;
+                            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                outputStream.write(buffer, 0, bytesRead);
+                                totalBytesRead += bytesRead;
+                                double progress = (double) totalBytesRead / contentLength;
+                                listener.onProgress(progress);
+                            }
+                            // Ensure the output stream is fully flushed and closed
+                            outputStream.flush();
+                            EntityUtils.consume(entity);
+                            System.out.println("Download concluído!");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            System.out.println("Erro ao processar o conteúdo do arquivo.");
+                        }
+                    } else {
+                        throw new IOException("Entidade HTTP nula.");
                     }
-                    System.out.println("Download concluído!");
+                } else {
+                    throw new IOException("Status de resposta inesperado: " + status);
                 }
-            } else {
-                System.out.println("Nenhum arquivo encontrado. Código de resposta: " + responseCode);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Erro ao executar a requisição HTTP.");
             }
-            httpConn.disconnect();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Erro ao criar cliente HTTP.");
         }
+    }
+
+    // Interface para atualizar o progresso
+    public interface ProgressListener {
+        void onProgress(double progress);
     }
 }

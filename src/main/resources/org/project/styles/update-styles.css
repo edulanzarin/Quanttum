@@ -1,0 +1,58 @@
+/* update-styles.css */
+
+/* Estilo global */
+.root {
+    -fx-font-family: "Arial";
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 20px;
+}
+
+/* Título */
+.title {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 0;
+}
+
+/* Barra de progresso */
+.progress-bar {
+    -fx-accent: #007bff;
+    -fx-pref-width: 300px; /* Ajuste a largura conforme necessário */
+    -fx-padding: 10;
+}
+
+/* Labels */
+.label, .message-label {
+    -fx-text-fill: #666;
+    -fx-font-size: 14px;
+    -fx-padding: 5;
+}
+
+/* Campo de texto */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 4px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+/* Botões */
+.button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 4px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #0056b3;
+}
+
+.button:pressed {
+    -fx-background-color: #003f7f;
+}

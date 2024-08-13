@@ -7,18 +7,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.project.functions.VerificarAtualizacao;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class VerificarAtualizacaoWindow extends Application {
 
@@ -29,9 +23,11 @@ public class VerificarAtualizacaoWindow extends Application {
     private Label currentVersionLabel;
     private Label newVersionLabel;
     private Label messageLabel;
-    private Label changeLabel;
-    private TextField filePathField;
     private Button downloadButton;
+    private Button finishButton;
+    private ProgressBar progressBar;
+
+    private static final String DEFAULT_SAVE_PATH = "C://Quanttum/quanttum.jar";
 
     public static void setVersions(String actual, String newV, String link) {
         actualVersion = actual;
@@ -41,7 +37,7 @@ public class VerificarAtualizacaoWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Verificar Atualização");
+        primaryStage.setTitle("Atualização Disponível");
 
         // Adicionar o ícone
         String iconPath = "/org/project/images/icon.ico";
@@ -49,7 +45,7 @@ public class VerificarAtualizacaoWindow extends Application {
 
         // Título
         Label titleLabel = new Label("Atualizar Versão");
-        titleLabel.setFont(new Font("Arial", 20));
+        titleLabel.setFont(new Font("Arial", 16));
         titleLabel.getStyleClass().add("title");
 
         // Criação dos componentes
@@ -62,73 +58,54 @@ public class VerificarAtualizacaoWindow extends Application {
         messageLabel = new Label();
         messageLabel.getStyleClass().add("message-label");
 
-        changeLabel = new Label();
-        changeLabel.getStyleClass().add("change-label");
-
-        filePathField = new TextField();
-        filePathField.setPromptText("Selecione um diretório");
-        filePathField.setPrefWidth(300);
-        String quanttumPath = "C:\\Quanttum\\quanttum.jar";
-        filePathField.setText(quanttumPath);
-        filePathField.getStyleClass().add("text-field");
-
-        Button chooseDirButton = new Button("...");
-        chooseDirButton.getStyleClass().add("select-button");
-        chooseDirButton.setOnAction(e -> showDirectoryChooser(primaryStage));
-
         // Botão de download
         downloadButton = new Button("Baixar");
-        downloadButton.getStyleClass().add("download-button");
-        downloadButton.setOnAction(e -> startDownload());
+        downloadButton.getStyleClass().add("button");
+        downloadButton.setOnAction(e -> startDownload(downloadLink, DEFAULT_SAVE_PATH));
 
-        HBox fileBox = new HBox(10, filePathField, chooseDirButton);
-        fileBox.setAlignment(Pos.CENTER); // Alinha horizontalmente no centro
+        // Botão de concluir
+        finishButton = new Button("Concluir");
+        finishButton.getStyleClass().add("button");
+        finishButton.setDisable(true);
+        finishButton.setOnAction(e -> primaryStage.close());
 
-        // Layout horizontal para botões
-        HBox buttonBox = new HBox(10, downloadButton);
-        buttonBox.setAlignment(Pos.CENTER); // Alinha horizontalmente no centro
+        // Barra de progresso
+        progressBar = new ProgressBar(0);
+        progressBar.setPrefWidth(300); // Ajuste o tamanho conforme necessário
+        progressBar.getStyleClass().add("progress-bar");
 
-        // Layout vertical
-        VBox vbox = new VBox(10, titleLabel, currentVersionLabel, newVersionLabel, fileBox, buttonBox, messageLabel, changeLabel);
-        vbox.setPadding(new Insets(20));
-        vbox.setAlignment(Pos.CENTER); // Alinha verticalmente no centro
-        vbox.getStyleClass().add("update-container");
+        // Layout
+        BorderPane borderPane = new BorderPane();
 
-        // Scene
-        Scene scene = new Scene(vbox, 400, 300);
-        scene.getStylesheets().add(getClass().getResource("/org/project/styles/auth-styles.css").toExternalForm());
+        VBox topLayout = new VBox(5); // Reduzi o espaçamento
+        topLayout.setPadding(new Insets(20));
+        topLayout.setAlignment(Pos.CENTER);
+        topLayout.getChildren().addAll(titleLabel, currentVersionLabel, newVersionLabel, progressBar, messageLabel);
+
+        HBox bottomLayout = new HBox(10);
+        bottomLayout.setPadding(new Insets(10, 0, 0, 0)); // Remover padding superior
+        bottomLayout.setAlignment(Pos.CENTER);
+        bottomLayout.getChildren().addAll(downloadButton, finishButton);
+
+        borderPane.setTop(topLayout);
+        borderPane.setBottom(bottomLayout);
+
+        Scene scene = new Scene(borderPane, 400, 300);
+        scene.getStylesheets().add("/org/project/styles/update-styles.css");
 
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-
-    private void showDirectoryChooser(Window window) {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Selecione o Diretório de Download");
-        File selectedDirectory = directoryChooser.showDialog(window);
-        if (selectedDirectory != null) {
-            filePathField.setText(selectedDirectory.getAbsolutePath() + "\\quanttum.jar");
-        }
-    }
-
-    private void startDownload() {
-        String filePath = filePathField.getText();
-        if (filePath == null || filePath.isEmpty()) {
-            messageLabel.setText("Por favor, selecione um diretório de download.");
-            return;
-        }
-
-        // Iniciar o download
-        new Thread(() -> {
-            // Baixar o arquivo para o caminho especificado
-            VerificarAtualizacao.downloadFile(downloadLink, filePath);
-
-            // Atualizar a interface gráfica no FX Application Thread
-            Platform.runLater(() -> messageLabel.setText("Download concluído!"));
-        }).start();
-
-        // Atualizar a mensagem
-        Platform.runLater(() -> messageLabel.setText("Download em progresso..."));
+    private void startDownload(String url, String savePath) {
+        new Thread(() -> VerificarAtualizacao.downloadFile(url, savePath, progress -> {
+            Platform.runLater(() -> progressBar.setProgress(progress));
+            if (progress >= 1.0) {
+                Platform.runLater(() -> {
+                    messageLabel.setText("Download concluído!");
+                    finishButton.setDisable(false); // Habilitar o botão "Concluir"
+                });
+            }
+        })).start();
     }
 }
