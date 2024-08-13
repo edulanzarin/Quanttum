@@ -2,11 +2,12 @@ package org.project.functions.bancos;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 public class ProcessarSicredi {
 
@@ -24,12 +25,13 @@ public class ProcessarSicredi {
                 String text = pdfStripper.getText(document);
 
                 String[] lines = text.split("\n");
-                int linhasAPular = 7; // Sempre pular as primeiras 7 linhas
+                // Defina linhas a pular apenas na primeira página
+                int linhasAPular = paginaNum == 1 ? 6 : 0;
 
                 for (int linhaNum = linhasAPular; linhaNum < lines.length; linhaNum++) {
                     String linha = lines[linhaNum];
 
-                    if (linha.contains("Taxa de")) {
+                    if (linha.contains("Saldo da conta") || linha.contains("Saldo Atual")) {
                         break;
                     }
 

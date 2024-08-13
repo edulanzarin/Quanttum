@@ -6,13 +6,16 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
 public class ExportarPlanilha {
 
     public static void exportExtrato(File file, List<Transaction> transactions, String userId) throws IOException, GeneralSecurityException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        // Usa FileOutputStream com OutputStreamWriter para definir a codificação UTF-8
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
             // Cabeçalho
             writer.write("Data;Descrição;Valor;Débito;Crédito");
             writer.newLine();
@@ -45,7 +48,8 @@ public class ExportarPlanilha {
         if (!file.getName().endsWith(".csv")) {
             file = new File(file.getAbsolutePath() + ".csv");
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        // Usa FileOutputStream com OutputStreamWriter para definir a codificação UTF-8
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
             // Adicionar o cabeçalho
             writer.write("Data;Descrição;Valor");
             writer.newLine();
