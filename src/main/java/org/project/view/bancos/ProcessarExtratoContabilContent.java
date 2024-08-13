@@ -52,7 +52,7 @@ public class ProcessarExtratoContabilContent extends VBox {
 
         // Adiciona o ComboBox ao lado do campo de código
         codeTypeComboBox = new ComboBox<>();
-        codeTypeComboBox.getItems().addAll("VIACREDI", "SICREDI", "ITAÚ MODELO ANTIGO", "SICOOB");
+        codeTypeComboBox.getItems().addAll("VIACREDI", "SICREDI", "ITAÚ MODELO ANTIGO", "SICOOB", "BANCO DO BRASIL");
         codeTypeComboBox.setValue("Selecionar banco");
         codeTypeComboBox.getStyleClass().add("codigo-combobox");
         codeTypeComboBox.setPrefWidth(150);
@@ -167,6 +167,9 @@ public class ProcessarExtratoContabilContent extends VBox {
                     break;
                 case "SICOOB":
                     dataRows = ProcessarSicoob.processarPDF(selectedFile, codigo, useComma);
+                    break;
+                case "BANCO DO BRASIL":
+                    dataRows = ProcessarBB.processarPDF(selectedFile, codigo, useComma);
                     break;
                 default:
                     showAlert(Alert.AlertType.INFORMATION, "Atenção", "Processamento para o banco " + bancoSelecionado + " não está disponível ainda.");
