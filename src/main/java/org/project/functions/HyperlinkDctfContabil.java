@@ -112,10 +112,13 @@ public class HyperlinkDctfContabil {
 
                         // Determine the content to set based on file name
                         String content;
-                        if (file.getName().contains("RECIBO")) {
+                        String lowerCaseFileName = file.getName().toLowerCase();
+                        if (lowerCaseFileName.contains("recibo")) {
                             content = "RECIBO";
-                        } else if (file.getName().contains("ERRO")) {
+                        } else if (lowerCaseFileName.contains("erro")) {
                             content = "ERRO";
+                        } else if (lowerCaseFileName.contains("declaracao")) { // Check for "declaracao" in any case
+                            content = "DECLARAÇÃO"; // or any desired content
                         } else {
                             content = "Link para Arquivo";
                         }
