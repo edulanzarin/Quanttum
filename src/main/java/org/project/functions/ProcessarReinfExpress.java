@@ -10,10 +10,8 @@ import com.itextpdf.text.Element;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,15 +59,14 @@ public class ProcessarReinfExpress {
 
                     try {
                         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                        String imagePath = "org/project/images/icon.png";
-                        java.net.URL imageUrl = classLoader.getResource(imagePath);
-                        if (imageUrl != null) {
-                            Image image = Image.getInstance(imageUrl);
+                        InputStream imageStream = classLoader.getResourceAsStream("org/project/images/icon.png");
+                        if (imageStream != null) {
+                            Image image = Image.getInstance(ImageIO.read(imageStream), null);
                             image.scaleToFit(70, 70);
                             image.setAlignment(Image.ALIGN_CENTER);
                             document.add(image);
                         } else {
-                            System.err.println("Imagem não encontrada: " + imagePath);
+                            System.err.println("Imagem não encontrada: org/project/images/icon.png");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
